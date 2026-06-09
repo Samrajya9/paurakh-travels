@@ -3,6 +3,12 @@ import { Prisma, UserType } from "@prisma/client"
 import { prisma } from "@/lib/prisma"
 import { UserSchema } from "@/types/users.type"
 
+export type CreateUserInput = Omit<UserSchema, "user_type"> & {
+  user_type?: UserType
+}
+
+export type UpdateUserInput = Partial<UserSchema>
+
 const userSelect = {
   id: true,
   email: true,
@@ -29,11 +35,20 @@ export async function getUserById(id: string) {
   })
 }
 
+export async function getUserByEmail(email: string) {
+  return prisma.users.findUnique({
+    where: {
+      email,
+    },
+    select: userSelect,
+  })
+}
+
 export async function createUser({
   email,
   password,
   user_type = UserType.CUSTOMER,
-}: UserSchema) {
+}: CreateUserInput) {
   return prisma.users.create({
     data: {
       email,
@@ -44,7 +59,7 @@ export async function createUser({
   })
 }
 
-export async function updateUser(id: string, input: Partial<UserSchema>) {
+export async function updateUser(id: string, input: UpdateUserInput) {
   const data: Prisma.UsersUpdateInput = {}
 
   if (input.email !== undefined) {

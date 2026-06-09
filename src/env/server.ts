@@ -3,7 +3,7 @@ import * as z from "zod"
 
 export const serverEnv = createEnv({
   server: {
-    DATABASE_URL: z.url(),
+    DATABASE_URL: z.string().url(),
     PEPPER: z.string(),
   },
 
