@@ -4,6 +4,7 @@ import * as z from "zod"
 export const serverEnv = createEnv({
   server: {
     DATABASE_URL: z.url(),
+    PEPPER: z.string(),
   },
 
   experimental__runtimeEnv: process.env,
