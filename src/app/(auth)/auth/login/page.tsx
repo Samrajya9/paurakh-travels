@@ -6,11 +6,14 @@ import { useState } from "react"
 import { useForm } from "react-hook-form"
 import { Button } from "@/components/ui/button"
 import { loginSchema } from "@/schemas/login.schema"
+import { useRouter } from "next/navigation"
+
 import type { LoginSchema } from "@/types/login.type"
 
 export default function LoginPage() {
   const [errorMessage, setErrorMessage] = useState("")
   const [successMessage, setSuccessMessage] = useState("")
+  const router = useRouter()
 
   const {
     register,
@@ -47,7 +50,7 @@ export default function LoginPage() {
     }
 
     reset()
-    setSuccessMessage("Login complete.")
+    router.push("/")
   }
 
   return (
