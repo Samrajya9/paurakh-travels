@@ -5,6 +5,7 @@ import { AppError } from "@/lib/errors"
 import {
   accessTokenCookieOptions,
   refreshTokenCookieOptions,
+  serializeCookie,
 } from "@/lib/cookies"
 
 export async function POST(req: NextRequest) {
@@ -43,25 +44,3 @@ export async function POST(req: NextRequest) {
 }
 
 // ── helper ────────────────────────────────────────────────────────────────────
-
-function serializeCookie(
-  name: string,
-  value: string,
-  options: {
-    httpOnly?: boolean
-    sameSite?: "lax" | "strict" | "none"
-    secure?: boolean
-    path?: string
-    maxAge?: number
-  }
-): string {
-  const parts = [`${name}=${encodeURIComponent(value)}`]
-
-  if (options.path) parts.push(`Path=${options.path}`)
-  if (options.maxAge !== undefined) parts.push(`Max-Age=${options.maxAge}`)
-  if (options.httpOnly) parts.push("HttpOnly")
-  if (options.secure) parts.push("Secure")
-  if (options.sameSite) parts.push(`SameSite=${options.sameSite}`)
-
-  return parts.join("; ")
-}
