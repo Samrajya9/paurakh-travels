@@ -7,8 +7,5 @@ datasource db {
 }
 
 
-enum UserType {
-  ADMIN
-  CUSTOMER
-}
+
 
