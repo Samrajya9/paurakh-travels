@@ -19,10 +19,10 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      suppressHydrationWarning
+      suppressHydrationWarning 
       className={cn("antialiased", fontMono.variable, "font-sans", spaceGrotesk.variable)}
     >
-      <body>
+      <body cz-shortcut-listen="true">
         <ThemeProvider>{children}</ThemeProvider>
       </body>
     </html>
