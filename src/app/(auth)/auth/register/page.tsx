@@ -1,21 +1,14 @@
 "use client"
 
 import { zodResolver } from "@hookform/resolvers/zod"
-import { UserType } from "@prisma/client"
 import { useState } from "react"
-import { useForm, type Resolver } from "react-hook-form"
-import * as z from "zod"
-
+import { useForm,  } from "react-hook-form"
 import { Button } from "@/components/ui/button"
 import { userSchema } from "@/schemas/user.shema"
 import { UserSchema } from "@/types/users.type"
+import { UserType } from "@/types/users_type.type"
 
-type RegisterFormValues = z.input<typeof userSchema>
-const registerResolver = zodResolver(userSchema as never) as Resolver<
-  RegisterFormValues,
-  unknown,
-  UserSchema
->
+
 
 export default function RegisterPage() {
   const [errorMessage, setErrorMessage] = useState("")
@@ -26,13 +19,13 @@ export default function RegisterPage() {
     handleSubmit,
     formState: { errors, isSubmitting },
     reset,
-  } = useForm<RegisterFormValues, unknown, UserSchema>({
-    resolver: registerResolver,
+  } = useForm({
     defaultValues: {
       email: "",
       password: "",
       user_type: UserType.CUSTOMER,
     },
+    resolver: zodResolver(userSchema),
   })
 
   async function onSubmit(values: UserSchema) {

@@ -4,6 +4,7 @@ import { register } from "@/services/auth.service"
 import { userSchema } from "@/schemas/user.shema"
 import { AppError } from "@/lib/errors"
 
+
 export async function POST(req: NextRequest) {
   const body: unknown = await req.json().catch(() => null)
 

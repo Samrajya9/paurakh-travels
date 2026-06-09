@@ -1,7 +1,7 @@
 import { Prisma, UserType } from "@prisma/client"
 
-import { prisma } from "@/lib/prisma"
 import { UserSchema } from "@/types/users.type"
+import prisma from "@/lib/prisma"
 
 export type CreateUserInput = Omit<UserSchema, "user_type"> & {
   user_type?: UserType

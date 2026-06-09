@@ -12,12 +12,12 @@
     "typecheck": "tsc --noEmit",
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate dev",
-    "prisma:push": "prisma db push --schema=src/prisma/schema.prisma"
+    "prisma:push": "prisma db push --schema=src/prisma/schema.prisma",
+    "postinstall": "prisma generate --no-engine"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.4.0",
-    "@prisma/adapter-mariadb": "^7.8.0",
-    "@prisma/client": "^7.8.0",
+    "@prisma/client": "^6.9.0",
     "@t3-oss/env-nextjs": "^0.13.11",
     "argon2": "^0.44.0",
     "class-variance-authority": "^0.7.1",
@@ -44,7 +44,7 @@
     "eslint-config-next": "16.2.6",
     "prettier": "^3.8.3",
     "prettier-plugin-tailwindcss": "^0.8.0",
-    "prisma": "^7.8.0",
+    "prisma": "^6.9.0",
     "tailwindcss": "^4",
     "typescript": "^5"
   }
