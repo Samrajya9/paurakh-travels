@@ -2,18 +2,18 @@
 
 import { zodResolver } from "@hookform/resolvers/zod"
 import Link from "next/link"
-import { useState } from "react"
+import { useRouter } from "next/navigation"
 import { useForm } from "react-hook-form"
 import { Button } from "@/components/ui/button"
+import { useAuth } from "@/context/auth.context"
 import { loginSchema } from "@/schemas/login.schema"
-import { useRouter } from "next/navigation"
-
 import type { LoginSchema } from "@/types/login.type"
+import { useState } from "react"
 
 export default function LoginPage() {
-  const [errorMessage, setErrorMessage] = useState("")
-  const [successMessage, setSuccessMessage] = useState("")
   const router = useRouter()
+  const { login } = useAuth()
+  const [errorMessage, setErrorMessage] = useState("")
 
   const {
     register,
@@ -21,36 +21,24 @@ export default function LoginPage() {
     formState: { errors, isSubmitting },
     reset,
   } = useForm<LoginSchema>({
-    defaultValues: {
-      email: "",
-      password: "",
-    },
+    defaultValues: { email: "", password: "" },
     resolver: zodResolver(loginSchema),
   })
 
   async function onSubmit(values: LoginSchema) {
     setErrorMessage("")
-    setSuccessMessage("")
 
-    const response = await fetch("/api/auth/login", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(values),
-    })
-
-    const payload: unknown = await response.json().catch(() => null)
-
-    if (!response.ok) {
-      const message = getErrorMessage(payload)
-
-      setErrorMessage(message)
-      return
+    try {
+      await login(values)
+      reset()
+      router.push("/")
+    } catch (err) {
+      setErrorMessage(
+        err instanceof Error
+          ? err.message
+          : "Unable to sign in. Please try again."
+      )
     }
-
-    reset()
-    router.push("/")
   }
 
   return (
@@ -102,10 +90,6 @@ export default function LoginPage() {
           <p className="text-sm text-destructive">{errorMessage}</p>
         ) : null}
 
-        {successMessage ? (
-          <p className="text-sm text-muted-foreground">{successMessage}</p>
-        ) : null}
-
         <Button type="submit" disabled={isSubmitting} className="h-9">
           {isSubmitting ? "Signing in..." : "Sign in"}
         </Button>
@@ -122,28 +106,4 @@ export default function LoginPage() {
       </form>
     </main>
   )
-}
-
-function getErrorMessage(payload: unknown) {
-  if (!payload || typeof payload !== "object" || !("error" in payload)) {
-    return "Unable to sign in. Please try again."
-  }
-
-  const { error } = payload
-
-  if (typeof error === "string") {
-    return error
-  }
-
-  if (error && typeof error === "object") {
-    const firstFieldError = Object.values(error)
-      .flat()
-      .find((message): message is string => typeof message === "string")
-
-    if (firstFieldError) {
-      return firstFieldError
-    }
-  }
-
-  return "Unable to sign in. Please try again."
 }
