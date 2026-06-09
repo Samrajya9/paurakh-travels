@@ -2,9 +2,12 @@ import { Geist, Geist_Mono, Space_Grotesk } from "next/font/google"
 
 import "./globals.css"
 import { ThemeProvider } from "@/components/theme-provider"
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/utils"
 
-const spaceGrotesk = Space_Grotesk({subsets:['latin'],variable:'--font-sans'})
+const spaceGrotesk = Space_Grotesk({
+  subsets: ["latin"],
+  variable: "--font-sans",
+})
 
 const fontMono = Geist_Mono({
   subsets: ["latin"],
@@ -19,8 +22,13 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      suppressHydrationWarning 
-      className={cn("antialiased", fontMono.variable, "font-sans", spaceGrotesk.variable)}
+      suppressHydrationWarning
+      className={cn(
+        "antialiased",
+        fontMono.variable,
+        "font-sans",
+        spaceGrotesk.variable
+      )}
     >
       <body cz-shortcut-listen="true">
         <ThemeProvider>{children}</ThemeProvider>
