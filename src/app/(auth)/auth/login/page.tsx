@@ -1,14 +1,14 @@
 "use client"
 
 import { zodResolver } from "@hookform/resolvers/zod"
+import Link from "next/link"
 import { useState } from "react"
 import { useForm } from "react-hook-form"
 import { Button } from "@/components/ui/button"
-import { userSchema } from "@/schemas/user.shema"
-import { UserSchema } from "@/types/users.type"
-import { UserType } from "@/types/users_type.type"
+import { loginSchema } from "@/schemas/login.schema"
+import type { LoginSchema } from "@/types/login.type"
 
-export default function RegisterPage() {
+export default function LoginPage() {
   const [errorMessage, setErrorMessage] = useState("")
   const [successMessage, setSuccessMessage] = useState("")
 
@@ -17,20 +17,19 @@ export default function RegisterPage() {
     handleSubmit,
     formState: { errors, isSubmitting },
     reset,
-  } = useForm({
+  } = useForm<LoginSchema>({
     defaultValues: {
       email: "",
       password: "",
-      user_type: UserType.CUSTOMER,
     },
-    resolver: zodResolver(userSchema),
+    resolver: zodResolver(loginSchema),
   })
 
-  async function onSubmit(values: UserSchema) {
+  async function onSubmit(values: LoginSchema) {
     setErrorMessage("")
     setSuccessMessage("")
 
-    const response = await fetch("/api/auth/register", {
+    const response = await fetch("/api/auth/login", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -38,25 +37,17 @@ export default function RegisterPage() {
       body: JSON.stringify(values),
     })
 
-    console.log(response)
-
     const payload: unknown = await response.json().catch(() => null)
 
     if (!response.ok) {
-      const message =
-        payload &&
-        typeof payload === "object" &&
-        "error" in payload &&
-        typeof payload.error === "string"
-          ? payload.error
-          : "Unable to register. Please try again."
+      const message = getErrorMessage(payload)
 
       setErrorMessage(message)
       return
     }
 
     reset()
-    setSuccessMessage("Registration complete.")
+    setSuccessMessage("Login complete.")
   }
 
   return (
@@ -66,13 +57,11 @@ export default function RegisterPage() {
         className="flex w-full max-w-sm flex-col gap-4"
       >
         <div className="space-y-1">
-          <h1 className="text-xl font-medium">Create account</h1>
+          <h1 className="text-xl font-medium">Sign in</h1>
           <p className="text-sm text-muted-foreground">
-            Register a customer account.
+            Access your Paurakh Travels account.
           </p>
         </div>
-
-        <input type="hidden" {...register("user_type")} />
 
         <label className="flex flex-col gap-1.5 text-sm font-medium">
           Email
@@ -94,7 +83,7 @@ export default function RegisterPage() {
           Password
           <input
             type="password"
-            autoComplete="new-password"
+            autoComplete="current-password"
             aria-invalid={Boolean(errors.password)}
             className="h-9 rounded-md border border-input bg-background px-3 text-sm transition-colors outline-none focus:border-ring focus:ring-2 focus:ring-ring/30 aria-invalid:border-destructive aria-invalid:ring-destructive/20"
             {...register("password")}
@@ -115,9 +104,43 @@ export default function RegisterPage() {
         ) : null}
 
         <Button type="submit" disabled={isSubmitting} className="h-9">
-          {isSubmitting ? "Creating..." : "Create account"}
+          {isSubmitting ? "Signing in..." : "Sign in"}
         </Button>
+
+        <p className="text-center text-sm text-muted-foreground">
+          Need an account?{" "}
+          <Link
+            href="/auth/register"
+            className="font-medium text-foreground underline-offset-4 hover:underline"
+          >
+            Create one
+          </Link>
+        </p>
       </form>
     </main>
   )
+}
+
+function getErrorMessage(payload: unknown) {
+  if (!payload || typeof payload !== "object" || !("error" in payload)) {
+    return "Unable to sign in. Please try again."
+  }
+
+  const { error } = payload
+
+  if (typeof error === "string") {
+    return error
+  }
+
+  if (error && typeof error === "object") {
+    const firstFieldError = Object.values(error)
+      .flat()
+      .find((message): message is string => typeof message === "string")
+
+    if (firstFieldError) {
+      return firstFieldError
+    }
+  }
+
+  return "Unable to sign in. Please try again."
 }

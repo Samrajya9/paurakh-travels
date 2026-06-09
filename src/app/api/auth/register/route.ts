@@ -1,43 +1,28 @@
-import { Prisma } from "@prisma/client"
-import { ZodError } from "zod/v4"
+import type { NextRequest } from "next/server"
 
-import { userSchema } from "@/schemas/user.shema"
 import { register } from "@/services/auth.service"
+import { userSchema } from "@/schemas/user.shema"
+import { AppError } from "@/lib/errors"
 
-export const runtime = "nodejs"
+export async function POST(req: NextRequest) {
+  const body: unknown = await req.json().catch(() => null)
 
-function jsonError(message: string, status: number, details?: unknown) {
-  return Response.json({ error: message, details }, { status })
-}
+  const parsed = userSchema.safeParse(body)
 
-export async function POST(request: Request) {
-  const body: unknown = await request.json().catch(() => null)
-  const result = userSchema.safeParse(body)
-
-  if (!result.success) {
-    return jsonError("Invalid register payload.", 400, result.error.flatten())
+  if (!parsed.success) {
+    return Response.json(
+      { error: parsed.error.flatten().fieldErrors },
+      { status: 400 }
+    )
   }
 
   try {
-    const user = await register(result.data)
-
-    return Response.json({ user }, { status: 201 })
-  } catch (error) {
-    if (error instanceof Error && error.message === "Email already exist") {
-      return jsonError(error.message, 409)
+    const user = await register(parsed.data)
+    return Response.json(user, { status: 201 })
+  } catch (err) {
+    if (err instanceof AppError) {
+      return Response.json({ error: err.message }, { status: err.status })
     }
-
-    if (
-      error instanceof Prisma.PrismaClientKnownRequestError &&
-      error.code === "P2002"
-    ) {
-      return jsonError("Email already exist", 409)
-    }
-
-    if (error instanceof ZodError) {
-      return jsonError("Invalid register payload.", 400, error.flatten())
-    }
-
-    throw error
+    return Response.json({ error: "Internal server error" }, { status: 500 })
   }
 }

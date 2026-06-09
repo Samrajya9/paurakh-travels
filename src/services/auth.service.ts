@@ -1,8 +1,14 @@
 import { serverEnv } from "@/env/server"
 import { UserSchema } from "@/types/users.type"
-import { createUser, getUserByEmail } from "@/services/user.service"
+import {
+  createUser,
+  getUserByEmail,
+  getUserPasswordByEmail,
+} from "@/services/user.service"
 import * as argon2 from "argon2"
 import { AppError } from "@/lib/errors"
+import { LoginSchema } from "@/types/login.type"
+import * as jose from "jose"
 
 const pepper = Buffer.from(serverEnv.PEPPER)
 
@@ -24,6 +30,35 @@ export async function verifyPassword(password: string, hash: string) {
   })
 }
 
+const accessSecret = new TextEncoder().encode(serverEnv.ACCESS_TOKEN_SECRET)
+const refreshSecret = new TextEncoder().encode(serverEnv.REFRESH_TOKEN_SECRET)
+
+export async function signAccessToken(payload: jose.JWTPayload) {
+  return new jose.SignJWT(payload)
+    .setProtectedHeader({ alg: "HS256" })
+    .setIssuedAt()
+    .setExpirationTime("15m")
+    .sign(accessSecret)
+}
+
+export async function signRefreshToken(payload: jose.JWTPayload) {
+  return new jose.SignJWT(payload)
+    .setProtectedHeader({ alg: "HS256" })
+    .setIssuedAt()
+    .setExpirationTime("7d")
+    .sign(refreshSecret)
+}
+
+export async function verifyAccessToken(token: string) {
+  const { payload } = await jose.jwtVerify(token, accessSecret)
+  return payload
+}
+
+export async function verifyRefreshToken(token: string) {
+  const { payload } = await jose.jwtVerify(token, refreshSecret)
+  return payload
+}
+
 export async function register(dto: UserSchema) {
   const existingUser = await getUserByEmail(dto.email)
 
@@ -37,4 +72,35 @@ export async function register(dto: UserSchema) {
     ...dto,
     password: hashedPassword,
   })
+}
+
+export async function login({ email, password }: LoginSchema) {
+  const user = await getUserByEmail(email)
+
+  if (!user) {
+    throw new AppError("Invalid email or password", 401)
+  }
+
+  const passwordField = await getUserPasswordByEmail(email)
+
+  if (!passwordField) {
+    throw new AppError("Invalid email or password", 401)
+  }
+
+  const isValid = await verifyPassword(password, passwordField.password)
+
+  if (!isValid) {
+    throw new AppError("Invalid email or password", 401)
+  }
+
+  const tokenPayload: jose.JWTPayload = {
+    sub: user.id,
+    email: user.email,
+    user_type: user.user_type,
+  }
+
+  const accessToken = await signAccessToken(tokenPayload)
+  const refreshToken = await signRefreshToken({ sub: user.id })
+
+  return { accessToken, refreshToken }
 }

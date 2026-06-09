@@ -43,6 +43,12 @@ export async function getUserByEmail(email: string) {
     select: userSelect,
   })
 }
+export async function getUserPasswordByEmail(email: string) {
+  return prisma.users.findUnique({
+    where: { email },
+    select: { password: true },
+  })
+}
 
 export async function createUser({
   email,
