@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button"
 import { userSchema } from "@/schemas/user.shema"
 import { UserSchema } from "@/types/users.type"
 import { UserType } from "@/types/users_type.type"
+import Link from "next/link"
 
 export default function RegisterPage() {
   const [errorMessage, setErrorMessage] = useState("")
@@ -117,6 +118,16 @@ export default function RegisterPage() {
         <Button type="submit" disabled={isSubmitting} className="h-9">
           {isSubmitting ? "Creating..." : "Create account"}
         </Button>
+
+        <p className="text-center text-sm text-muted-foreground">
+          Already have an account?{" "}
+          <Link
+            href="/auth/login"
+            className="font-medium text-foreground underline-offset-4 hover:underline"
+          >
+            Login
+          </Link>
+        </p>
       </form>
     </main>
   )
