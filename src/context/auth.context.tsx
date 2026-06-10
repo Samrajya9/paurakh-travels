@@ -26,36 +26,18 @@ export interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | null>(null)
 
-export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [user, setUser] = useState<User | null>(null)
-  const [isLoading, setIsLoading] = useState(true)
+interface AuthProviderProps {
+  children: React.ReactNode
+  initialUser: User | null
+}
+
+export function AuthProvider({ children, initialUser }: AuthProviderProps) {
+  const [user, setUser] = useState<User | null>(initialUser)
+  const [isLoading] = useState(false)
 
   useEffect(() => {
-    async function fetchMe() {
-      try {
-        const response = await fetch("/api/auth/me")
-
-        if (!response.ok) {
-          setUser(null)
-          return
-        }
-
-        const payload = await response.json()
-
-        setUser({
-          id: payload.sub as string,
-          email: payload.email as string,
-          user_type: payload.user_type as User["user_type"],
-        })
-      } catch {
-        setUser(null)
-      } finally {
-        setIsLoading(false)
-      }
-    }
-
-    fetchMe()
-  }, [])
+    setUser(initialUser)
+  }, [initialUser])
 
   const login = useCallback(async (credentials: LoginSchema) => {
     const response = await fetch("/api/auth/login", {

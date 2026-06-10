@@ -1,9 +1,10 @@
-import { Geist, Geist_Mono, Space_Grotesk } from "next/font/google"
+import { Geist_Mono, Space_Grotesk } from "next/font/google"
 
 import "./globals.css"
 import { ThemeProvider } from "@/components/theme-provider"
 import { cn } from "@/lib/utils"
 import { AuthProvider } from "@/context/auth.context"
+import { getCurrentUser } from "@/lib/auth-server"
 
 const spaceGrotesk = Space_Grotesk({
   subsets: ["latin"],
@@ -15,11 +16,13 @@ const fontMono = Geist_Mono({
   variable: "--font-mono",
 })
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode
 }>) {
+  const user = await getCurrentUser()
+
   return (
     <html
       lang="en"
@@ -33,7 +36,7 @@ export default function RootLayout({
     >
       <body cz-shortcut-listen="true">
         <ThemeProvider>
-          <AuthProvider>{children}</AuthProvider>
+          <AuthProvider initialUser={user}>{children}</AuthProvider>
         </ThemeProvider>
       </body>
     </html>

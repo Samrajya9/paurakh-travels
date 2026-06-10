@@ -100,7 +100,7 @@ export async function login({ email, password }: LoginSchema) {
   }
 
   const accessToken = await signAccessToken(tokenPayload)
-  const refreshToken = await signRefreshToken({ sub: user.id })
+  const refreshToken = await signRefreshToken(tokenPayload)
 
   return { accessToken, refreshToken }
 }
