@@ -8,6 +8,8 @@ import { Button } from "@/components/ui/button"
 import { userSchema } from "@/schemas/user.shema"
 import type { UserSchema } from "@/types/users.type"
 import { UserType } from "@/types/users_type.type"
+import { PasswordInput } from "@/components/password-input"
+import { EmailInput } from "@/components/email-input"
 
 export function RegisterForm() {
   const [errorMessage, setErrorMessage] = useState("")
@@ -72,12 +74,10 @@ export function RegisterForm() {
 
       <label className="flex flex-col gap-1.5 text-sm font-medium">
         Email
-        <input
-          type="email"
-          autoComplete="email"
-          aria-invalid={Boolean(errors.email)}
-          className="h-9 rounded-md border border-input bg-background px-3 text-sm transition-colors outline-none focus:border-ring focus:ring-2 focus:ring-ring/30 aria-invalid:border-destructive aria-invalid:ring-destructive/20"
+        <EmailInput
           {...register("email")}
+          aria-invalid={Boolean(errors.email)}
+          className="h-9"
         />
         {errors.email ? (
           <span className="text-xs text-destructive">
@@ -88,12 +88,10 @@ export function RegisterForm() {
 
       <label className="flex flex-col gap-1.5 text-sm font-medium">
         Password
-        <input
-          type="password"
-          autoComplete="new-password"
-          aria-invalid={Boolean(errors.password)}
-          className="h-9 rounded-md border border-input bg-background px-3 text-sm transition-colors outline-none focus:border-ring focus:ring-2 focus:ring-ring/30 aria-invalid:border-destructive aria-invalid:ring-destructive/20"
+        <PasswordInput
           {...register("password")}
+          aria-invalid={Boolean(errors.password)}
+          className="h-9"
         />
         {errors.password ? (
           <span className="text-xs text-destructive">
