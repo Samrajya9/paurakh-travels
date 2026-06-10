@@ -1,6 +1,7 @@
 import Link from "next/link"
 import { Button } from "./ui/button"
 import { EmailInput } from "./email-input"
+import { Section } from "./ui/section"
 
 const NAV_COLUMNS = [
   {
@@ -100,9 +101,8 @@ const SOCIAL_LINKS = [
 
 export function Footer() {
   return (
-    <footer className="bg-background text-foreground">
-      {/* ── main grid ── */}
-      <div className="mx-auto max-w-7xl px-6 py-16 lg:px-10">
+    <Section asChild width={"constrained"} className="space-y-6">
+      <footer>
         <div className="grid grid-cols-1 gap-10 md:grid-cols-2 lg:grid-cols-5">
           {/* brand column — spans 2 cols on large screens */}
           <div className="flex flex-col gap-8 lg:col-span-2">
@@ -187,34 +187,34 @@ export function Footer() {
             </div>
           ))}
         </div>
-      </div>
 
-      {/* ── bottom bar ── */}
-      <div className="mx-auto flex max-w-7xl flex-col gap-3 px-6 py-5 text-xs text-[oklch(0.45_0_0)] sm:flex-row sm:items-center sm:justify-between lg:px-10">
-        <p>
-          © {new Date().getFullYear()} Paurakh Travels. All rights reserved.
-        </p>
-        <div className="flex items-center gap-5">
-          <Link
-            href="/privacy"
-            className="transition-colors hover:text-[oklch(0.75_0_0)]"
-          >
-            Privacy Policy
-          </Link>
-          <Link
-            href="/terms"
-            className="transition-colors hover:text-[oklch(0.75_0_0)]"
-          >
-            Terms of Service
-          </Link>
-          <Link
-            href="/cookies"
-            className="transition-colors hover:text-[oklch(0.75_0_0)]"
-          >
-            Cookie Settings
-          </Link>
+        {/* ── bottom bar ── */}
+        <div className="flex flex-col gap-3 text-xs text-[oklch(0.45_0_0)] sm:flex-row sm:items-center sm:justify-between">
+          <p>
+            © {new Date().getFullYear()} Paurakh Travels. All rights reserved.
+          </p>
+          <div className="flex items-center gap-5">
+            <Link
+              href="/privacy"
+              className="transition-colors hover:text-[oklch(0.75_0_0)]"
+            >
+              Privacy Policy
+            </Link>
+            <Link
+              href="/terms"
+              className="transition-colors hover:text-[oklch(0.75_0_0)]"
+            >
+              Terms of Service
+            </Link>
+            <Link
+              href="/cookies"
+              className="transition-colors hover:text-[oklch(0.75_0_0)]"
+            >
+              Cookie Settings
+            </Link>
+          </div>
         </div>
-      </div>
-    </footer>
+      </footer>
+    </Section>
   )
 }
