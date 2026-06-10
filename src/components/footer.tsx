@@ -1,6 +1,5 @@
 import Link from "next/link"
 import { Button } from "./ui/button"
-import { Input } from "./ui/input"
 import { EmailInput } from "./email-input"
 
 const NAV_COLUMNS = [
@@ -109,7 +108,7 @@ export function Footer() {
           <div className="flex flex-col gap-8 lg:col-span-2">
             {/* logo */}
             <Link href="/" className="flex w-fit items-center gap-2.5">
-              <span className="flex h-8 w-8 items-center justify-center rounded-sm bg-[var(--primary)]">
+              <span className="flex h-8 w-8 items-center justify-center rounded-sm bg-primary">
                 <svg
                   width="18"
                   height="18"
