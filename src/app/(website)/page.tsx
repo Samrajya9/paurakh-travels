@@ -1,8 +1,90 @@
+"use client"
 import { ReviewsSection } from "@/components/reviews-section"
 import NepalDistricts from "@/components/svgs/nepal-districts"
 import { Button } from "@/components/ui/button"
+import { useState } from "react"
 
+const districts = [
+  "achham",
+  "arghakhanchi",
+  "baglung",
+  "baitadi",
+  "bajhang",
+  "bajura",
+  "banke",
+  "bara",
+  "bardiya",
+  "bhaktapur",
+  "bhojpur",
+  "chitwan",
+  "dadeldhura",
+  "dailekh",
+  "dang",
+  "darchula",
+  "dhading",
+  "dhankuta",
+  "dhanusha",
+  "dholkha",
+  "dolpa",
+  "doti",
+  "gorkha",
+  "gulmi",
+  "humla",
+  "ilam",
+  "jajarkot",
+  "jhapa",
+  "jumla",
+  "kailali",
+  "kalikot",
+  "kanchanpur",
+  "kapilvastu",
+  "kaski",
+  "kathmandu",
+  "kavrepalanchok",
+  "khotang",
+  "lalitpur",
+  "lamjung",
+  "mahottari",
+  "makwanpur",
+  "manang",
+  "morang",
+  "mugu",
+  "mustang",
+  "myagdi",
+  "nawalparasi_east",
+  "nawalparasi_west",
+  "nuwakot",
+  "okhaldhunga",
+  "palpa",
+  "panchthar",
+  "parbat",
+  "parsa",
+  "pyuthan",
+  "ramechhap",
+  "rasuwa",
+  "rautahat",
+  "rolpa",
+  "rukum_east",
+  "rukum_west",
+  "rupandehi",
+  "salyan",
+  "sankhuwasabha",
+  "saptari",
+  "sarlahi",
+  "sindhuli",
+  "sindhupalchok",
+  "siraha",
+  "solukhumbu",
+  "sunsari",
+  "surkhet",
+  "syangja",
+  "tanahun",
+  "taplejung",
+  "terhathum",
+  "udayapur",
+]
 export default function Page() {
+  const [hoveredDistrict, setHoveredDistrict] = useState<string | null>(null)
   return (
     <>
       {/* <div className="flex min-h-svh p-6">
@@ -18,7 +100,15 @@ export default function Page() {
           </div>
         </div>
       </div> */}
-      <NepalDistricts />
+      <NepalDistricts data-active-district={hoveredDistrict} />
+      {districts.map((d) => {
+        return (
+          <>
+            <Button onClick={() => setHoveredDistrict(d)}>{d}</Button>
+          </>
+        )
+      })}
+
       <ReviewsSection />
     </>
   )
