@@ -46,9 +46,9 @@
   --radius-3xl: calc(var(--radius) * 2.2);
   --radius-4xl: calc(var(--radius) * 2.6);
 
-  /*  */
-  --container-8xl: 96rem;
-  --container-9xl: 102rem;
+  /*Added new  */
+  --container-8xl: 88rem;
+  --container-9xl: 96rem;
 }
 
 :root {

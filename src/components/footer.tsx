@@ -138,16 +138,16 @@ export function Footer() {
             {/* social icons */}
             <div className="flex items-center gap-3">
               {SOCIAL_LINKS.map((s) => (
-                <a
+                <Link
                   key={s.label}
                   href={s.href}
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label={s.label}
-                  className="flex h-8 w-8 items-center justify-center rounded-md text-[oklch(0.55_0_0)] transition-colors hover:bg-[oklch(0.2_0.008_285)] hover:text-[oklch(0.97_0_0)]"
+                  className="flex size-8 items-center justify-center rounded-md text-[oklch(0.55_0_0)] transition-colors hover:bg-[oklch(0.2_0.008_285)] hover:text-[oklch(0.97_0_0)]"
                 >
                   {s.icon}
-                </a>
+                </Link>
               ))}
             </div>
 
