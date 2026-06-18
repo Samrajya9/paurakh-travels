@@ -23,7 +23,7 @@ const data = {
   },
 }
 const PackageCard = () => {
-  return
+  return <></>
 }
 
 export default PackageCard

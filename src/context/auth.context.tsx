@@ -35,9 +35,9 @@ export function AuthProvider({ children, initialUser }: AuthProviderProps) {
   const [user, setUser] = useState<User | null>(initialUser)
   const [isLoading] = useState(false)
 
-  useEffect(() => {
-    setUser(initialUser)
-  }, [initialUser])
+  // useEffect(() => {
+  //   setUser(initialUser)
+  // }, [initialUser])
 
   const login = useCallback(async (credentials: LoginSchema) => {
     const response = await fetch("/api/auth/login", {
