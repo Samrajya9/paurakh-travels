@@ -2,13 +2,13 @@ import { serverEnv } from "@/env/server"
 import * as jose from "jose"
 
 // process.env used directly — serverEnv pulls argon2 transitively which breaks Edge
-// const accessSecret = new TextEncoder().encode(process.env.ACCESS_TOKEN_SECRET!)
-// const refreshSecret = new TextEncoder().encode(
-//   process.env.REFRESH_TOKEN_SECRET!
-// )
+const accessSecret = new TextEncoder().encode(process.env.ACCESS_TOKEN_SECRET!)
+const refreshSecret = new TextEncoder().encode(
+  process.env.REFRESH_TOKEN_SECRET!
+)
 
-const accessSecret = new TextEncoder().encode(serverEnv.ACCESS_TOKEN_SECRET)
-const refreshSecret = new TextEncoder().encode(serverEnv.REFRESH_TOKEN_SECRET)
+// const accessSecret = new TextEncoder().encode(serverEnv.ACCESS_TOKEN_SECRET)
+// const refreshSecret = new TextEncoder().encode(serverEnv.REFRESH_TOKEN_SECRET)
 
 export async function signAccessToken(payload: jose.JWTPayload) {
   return new jose.SignJWT(payload)
