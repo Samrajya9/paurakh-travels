@@ -8,7 +8,7 @@ export const accessTokenCookieOptions = {
   sameSite: "lax",
   secure: isSecure,
   path: "/",
-  maxAge: 60 * 15, // 15 minutes
+  maxAge: 60 * 20,
 } satisfies Partial<ResponseCookie>
 
 export const refreshTokenCookieOptions = {

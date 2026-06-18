@@ -9,6 +9,7 @@ import * as argon2 from "argon2"
 import { AppError } from "@/lib/errors"
 import { LoginSchema } from "@/types/login.type"
 import * as jose from "jose"
+import { signAccessToken, signRefreshToken } from "@/lib/jwt"
 
 const pepper = Buffer.from(serverEnv.PEPPER)
 
@@ -30,40 +31,40 @@ export async function verifyPassword(password: string, hash: string) {
   })
 }
 
-const accessSecret = new TextEncoder().encode(serverEnv.ACCESS_TOKEN_SECRET)
-const refreshSecret = new TextEncoder().encode(serverEnv.REFRESH_TOKEN_SECRET)
+// const accessSecret = new TextEncoder().encode(serverEnv.ACCESS_TOKEN_SECRET)
+// const refreshSecret = new TextEncoder().encode(serverEnv.REFRESH_TOKEN_SECRET)
 
-export async function signAccessToken(payload: jose.JWTPayload) {
-  return new jose.SignJWT(payload)
-    .setProtectedHeader({ alg: "HS256" })
-    .setIssuedAt()
-    .setExpirationTime("15m")
-    .sign(accessSecret)
-}
+// export async function signAccessToken(payload: jose.JWTPayload) {
+//   return new jose.SignJWT(payload)
+//     .setProtectedHeader({ alg: "HS256" })
+//     .setIssuedAt()
+//     .setExpirationTime("15m")
+//     .sign(accessSecret)
+// }
 
-export async function signRefreshToken(payload: jose.JWTPayload) {
-  return new jose.SignJWT(payload)
-    .setProtectedHeader({ alg: "HS256" })
-    .setIssuedAt()
-    .setExpirationTime("7d")
-    .sign(refreshSecret)
-}
+// export async function signRefreshToken(payload: jose.JWTPayload) {
+//   return new jose.SignJWT(payload)
+//     .setProtectedHeader({ alg: "HS256" })
+//     .setIssuedAt()
+//     .setExpirationTime("7d")
+//     .sign(refreshSecret)
+// }
 
-export async function verifyAccessToken(token: string) {
-  const { payload } = await jose.jwtVerify(token, accessSecret)
-  return payload
-}
+// export async function verifyAccessToken(token: string) {
+//   const { payload } = await jose.jwtVerify(token, accessSecret)
+//   return payload
+// }
 
-export async function verifyRefreshToken(token: string) {
-  const { payload } = await jose.jwtVerify(token, refreshSecret)
-  return payload
-}
+// export async function verifyRefreshToken(token: string) {
+//   const { payload } = await jose.jwtVerify(token, refreshSecret)
+//   return payload
+// }
 
 export async function register(dto: UserSchema) {
   const existingUser = await getUserByEmail(dto.email)
 
   if (existingUser) {
-    throw new AppError("Email already exists", 409) // 409 Conflict, not 500
+    throw new AppError("Email already exists", 409)
   }
 
   const hashedPassword = await hashPassword(dto.password)
