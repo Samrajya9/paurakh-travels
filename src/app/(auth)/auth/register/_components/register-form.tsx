@@ -8,8 +8,8 @@ import { Button } from "@/components/ui/button"
 import { userSchema } from "@/schemas/user.shema"
 import type { UserSchema } from "@/types/users.type"
 import { UserType } from "@/types/users_type.type"
-import { PasswordInput } from "@/components/password-input"
-import { EmailInput } from "@/components/email-input"
+import { PasswordInput } from "@/components/inputs/password-input"
+import { EmailInput } from "@/components/inputs/email-input"
 
 export function RegisterForm() {
   const [errorMessage, setErrorMessage] = useState("")

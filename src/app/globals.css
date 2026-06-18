@@ -58,7 +58,8 @@
   --card-foreground: oklch(0.145 0 0);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(55.423% 0.19216 35.473);
+  /* --primary: oklch(55.423% 0.19216 35.473); */
+  --primary: oklch(0.6793 0.2025 41.88);
   --primary-foreground: oklch(0.98 0.016 73.684);
   --secondary: oklch(0.967 0.001 286.375);
   --secondary-foreground: oklch(0.21 0.006 285.885);
@@ -93,7 +94,9 @@
   --card-foreground: oklch(0.985 0 0);
   --popover: oklch(0.205 0 0);
   --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.47 0.157 37.304);
+  /* --primary: oklch(0.47 0.157 37.304); */
+  --primary: oklch(0.6793 0.2025 41.88);
+
   --primary-foreground: oklch(0.98 0.016 73.684);
   --secondary: oklch(0.274 0.006 286.033);
   --secondary-foreground: oklch(0.985 0 0);
@@ -130,84 +133,4 @@
   html {
     @apply font-sans;
   }
-}
-
-svg[data-active-district="achham"] #achham,
-svg[data-active-district="arghakhanchi"] #arghakhanchi,
-svg[data-active-district="baglung"] #baglung,
-svg[data-active-district="baitadi"] #baitadi,
-svg[data-active-district="bajhang"] #bajhang,
-svg[data-active-district="bajura"] #bajura,
-svg[data-active-district="banke"] #banke,
-svg[data-active-district="bara"] #bara,
-svg[data-active-district="bardiya"] #bardiya,
-svg[data-active-district="bhaktapur"] #bhaktapur,
-svg[data-active-district="bhojpur"] #bhojpur,
-svg[data-active-district="chitwan"] #chitwan,
-svg[data-active-district="dadeldhura"] #dadeldhura,
-svg[data-active-district="dailekh"] #dailekh,
-svg[data-active-district="dang"] #dang,
-svg[data-active-district="darchula"] #darchula,
-svg[data-active-district="dhading"] #dhading,
-svg[data-active-district="dhankuta"] #dhankuta,
-svg[data-active-district="dhanusha"] #dhanusha,
-svg[data-active-district="dholkha"] #dholkha,
-svg[data-active-district="dolpa"] #dolpa,
-svg[data-active-district="doti"] #doti,
-svg[data-active-district="gorkha"] #gorkha,
-svg[data-active-district="gulmi"] #gulmi,
-svg[data-active-district="humla"] #humla,
-svg[data-active-district="ilam"] #ilam,
-svg[data-active-district="jajarkot"] #jajarkot,
-svg[data-active-district="jhapa"] #jhapa,
-svg[data-active-district="jumla"] #jumla,
-svg[data-active-district="kailali"] #kailali,
-svg[data-active-district="kalikot"] #kalikot,
-svg[data-active-district="kanchanpur"] #kanchanpur,
-svg[data-active-district="kapilvastu"] #kapilvastu,
-svg[data-active-district="kaski"] #kaski,
-svg[data-active-district="kathmandu"] #kathmandu,
-svg[data-active-district="kavrepalanchok"] #kavrepalanchok,
-svg[data-active-district="khotang"] #khotang,
-svg[data-active-district="lalitpur"] #lalitpur,
-svg[data-active-district="lamjung"] #lamjung,
-svg[data-active-district="mahottari"] #mahottari,
-svg[data-active-district="makwanpur"] #makwanpur,
-svg[data-active-district="manang"] #manang,
-svg[data-active-district="morang"] #morang,
-svg[data-active-district="mugu"] #mugu,
-svg[data-active-district="mustang"] #mustang,
-svg[data-active-district="myagdi"] #myagdi,
-svg[data-active-district="nawalparasi_east"] #nawalparasi_east,
-svg[data-active-district="nawalparasi_west"] #nawalparasi_west,
-svg[data-active-district="nuwakot"] #nuwakot,
-svg[data-active-district="okhaldhunga"] #okhaldhunga,
-svg[data-active-district="palpa"] #palpa,
-svg[data-active-district="panchthar"] #panchthar,
-svg[data-active-district="parbat"] #parbat,
-svg[data-active-district="parsa"] #parsa,
-svg[data-active-district="pyuthan"] #pyuthan,
-svg[data-active-district="ramechhap"] #ramechhap,
-svg[data-active-district="rasuwa"] #rasuwa,
-svg[data-active-district="rautahat"] #rautahat,
-svg[data-active-district="rolpa"] #rolpa,
-svg[data-active-district="rukum_east"] #rukum_east,
-svg[data-active-district="rukum_west"] #rukum_west,
-svg[data-active-district="rupandehi"] #rupandehi,
-svg[data-active-district="salyan"] #salyan,
-svg[data-active-district="sankhuwasabha"] #sankhuwasabha,
-svg[data-active-district="saptari"] #saptari,
-svg[data-active-district="sarlahi"] #sarlahi,
-svg[data-active-district="sindhuli"] #sindhuli,
-svg[data-active-district="sindhupalchok"] #sindhupalchok,
-svg[data-active-district="siraha"] #siraha,
-svg[data-active-district="solukhumbu"] #solukhumbu,
-svg[data-active-district="sunsari"] #sunsari,
-svg[data-active-district="surkhet"] #surkhet,
-svg[data-active-district="syangja"] #syangja,
-svg[data-active-district="tanahun"] #tanahun,
-svg[data-active-district="taplejung"] #taplejung,
-svg[data-active-district="terhathum"] #terhathum,
-svg[data-active-district="udayapur"] #udayapur {
-  fill: var(--foreground);
 }

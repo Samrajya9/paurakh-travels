@@ -18,7 +18,7 @@ export function PasswordInput({ className, ...props }: PasswordInputProps) {
     <InputGroup className={className}>
       <InputGroupInput
         type={visible ? "text" : "password"}
-        autoComplete="new-password"
+        autoComplete="current-password"
         {...props}
       />
       <InputGroupAddon align="inline-end">

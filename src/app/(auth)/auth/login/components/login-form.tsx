@@ -9,6 +9,8 @@ import { Button } from "@/components/ui/button"
 import { useAuth } from "@/context/auth.context"
 import { loginSchema } from "@/schemas/login.schema"
 import type { LoginSchema } from "@/types/login.type"
+import { EmailInput } from "@/components/inputs/email-input"
+import { PasswordInput } from "@/components/inputs/password-input"
 
 export function LoginForm() {
   const router = useRouter()
@@ -55,12 +57,10 @@ export function LoginForm() {
 
       <label className="flex flex-col gap-1.5 text-sm font-medium">
         Email
-        <input
-          type="email"
-          autoComplete="email"
+        <EmailInput
           aria-invalid={Boolean(errors.email)}
-          className="h-9 rounded-md border border-input bg-background px-3 text-sm transition-colors outline-none focus:border-ring focus:ring-2 focus:ring-ring/30 aria-invalid:border-destructive aria-invalid:ring-destructive/20"
           {...register("email")}
+          className="h-9"
         />
         {errors.email ? (
           <span className="text-xs text-destructive">
@@ -71,12 +71,10 @@ export function LoginForm() {
 
       <label className="flex flex-col gap-1.5 text-sm font-medium">
         Password
-        <input
-          type="password"
-          autoComplete="current-password"
+        <PasswordInput
           aria-invalid={Boolean(errors.password)}
-          className="h-9 rounded-md border border-input bg-background px-3 text-sm transition-colors outline-none focus:border-ring focus:ring-2 focus:ring-ring/30 aria-invalid:border-destructive aria-invalid:ring-destructive/20"
           {...register("password")}
+          className="h-9"
         />
         {errors.password ? (
           <span className="text-xs text-destructive">

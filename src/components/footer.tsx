@@ -1,6 +1,6 @@
 import Link from "next/link"
 import { Button } from "./ui/button"
-import { EmailInput } from "./email-input"
+import { EmailInput } from "./inputs/email-input"
 import { Section } from "./ui/section"
 
 const NAV_COLUMNS = [
