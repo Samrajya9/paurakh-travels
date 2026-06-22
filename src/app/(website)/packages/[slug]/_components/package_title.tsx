@@ -1,13 +1,27 @@
-import React from 'react'
+import { cn } from "@/lib/utils"
+import React from "react"
 
-interface PackageTitleProps {
-  title: string;
-  className?: string;
-}
+// interface PackageTitleProps {
+//   title: string
+//   className?: string
+// }
 
-const PackageTitle: React.FC<PackageTitleProps> = ({ title, className }) => {
+interface PackageTitleProps extends React.ComponentPropsWithoutRef<"h1"> {}
+
+const PackageTitle: React.FC<PackageTitleProps> = ({
+  title,
+  className,
+  ...props
+}) => {
   return (
-    <h1 className={`text-2xl sm:text-3xl font-bold text-gray-900 leading-tight max-w-2xl ${className || ''}`}>
+    <h1
+      // className={`max-w-2xl text-2xl leading-tight font-bold text-gray-900 sm:text-3xl ${className || ""}`}
+      className={cn(
+        "max-w-2xl text-2xl leading-tight font-bold text-gray-900 sm:text-3xl",
+        className
+      )}
+      {...props}
+    >
       {title}
     </h1>
   )
