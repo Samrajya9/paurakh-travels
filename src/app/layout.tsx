@@ -1,10 +1,11 @@
 import { Geist_Mono, Space_Grotesk } from "next/font/google"
-
 import "./globals.css"
 import { ThemeProvider } from "@/components/theme-provider"
 import { cn } from "@/lib/utils"
 import { AuthProvider } from "@/context/auth.context"
 import { getCurrentUser } from "@/lib/auth-server"
+import { getCompanyProfile } from "@/services/company-profile.service"
+import { CompanyProfileProvider } from "@/context/company-profile-context"
 
 const spaceGrotesk = Space_Grotesk({
   subsets: ["latin"],
@@ -22,6 +23,12 @@ export default async function RootLayout({
   children: React.ReactNode
 }>) {
   const user = await getCurrentUser()
+  let profile
+  try {
+    profile = await getCompanyProfile()
+  } catch (error) {
+    profile = null
+  }
 
   return (
     <html
@@ -36,7 +43,9 @@ export default async function RootLayout({
     >
       <body cz-shortcut-listen="true">
         <ThemeProvider>
-          <AuthProvider initialUser={user}>{children}</AuthProvider>
+          <CompanyProfileProvider initialData={profile ?? undefined}>
+            <AuthProvider initialUser={user}>{children}</AuthProvider>
+          </CompanyProfileProvider>
         </ThemeProvider>
       </body>
     </html>

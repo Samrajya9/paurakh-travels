@@ -2,20 +2,27 @@
 import React, { useState } from "react"
 import { Icon } from "../page"
 import { Button } from "@/components/ui/button"
+import Link from "next/link"
+import { useCompanyProfile } from "@/context/company-profile-context"
 
 interface BookingSidebarProps {
   className?: string
 }
 
 const BookingSidebar: React.FC<BookingSidebarProps> = ({ className }) => {
+  const { profile } = useCompanyProfile()
   const [enquiryOpen, setEnquiryOpen] = useState(false)
+
+  const whatsApp = profile?.contacts.find(
+    (contact) => contact.type === "WHATSAPP"
+  )
+
+  const email = profile?.contacts.find((contact) => contact.type === "EMAIL")
 
   return (
     <>
       {/* Desktop sticky sidebar container */}
-      <aside
-        className={`hidden w-80 flex-shrink-0 lg:block xl:w-[340px] ${className}`}
-      >
+      <aside className={`hidden w-80 shrink-0 lg:block xl:w-85 ${className}`}>
         <div className="sticky top-6 overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-lg">
           <div className="border-b border-gray-100 px-6 pt-6 pb-4">
             <div className="mb-1 flex items-center justify-between">
@@ -45,7 +52,7 @@ const BookingSidebar: React.FC<BookingSidebarProps> = ({ className }) => {
                 key={item}
                 className="flex items-start gap-2 text-sm text-gray-700"
               >
-                <span className="mt-0.5 flex-shrink-0 text-[#E63946]">
+                <span className="mt-0.5 shrink-0 text-[#E63946]">
                   <Icon.Check />
                 </span>
                 {item}
@@ -74,21 +81,25 @@ const BookingSidebar: React.FC<BookingSidebarProps> = ({ className }) => {
                   Ask the trip expert
                 </em>
               </p>
-              <a
-                href="tel:+9779851005129"
-                className="flex items-center gap-2 text-sm font-medium text-[#E63946] hover:underline"
-              >
-                <Icon.Phone /> +977 9851005129
-                <span className="rounded bg-green-500 px-1.5 py-0.5 text-[10px] font-bold text-white">
-                  WA
-                </span>
-              </a>
-              <a
-                href="mailto:info@luxuryholidaynepal.com"
-                className="flex items-center gap-2 text-sm font-medium text-[#E63946] hover:underline"
-              >
-                <Icon.Mail /> info@luxuryholidaynepal.com
-              </a>
+
+              {whatsApp?.value && (
+                <Link
+                  href={`tel:${whatsApp?.value}`}
+                  className="flex items-center gap-2 text-sm font-medium text-[#E63946] hover:underline"
+                >
+                  <Icon.Phone /> {whatsApp?.value}
+                </Link>
+              )}
+
+              {email && (
+                <Link
+                  href={`mailto:${email.value}`}
+                  className="flex items-center gap-2 text-sm font-medium text-[#E63946] hover:underline"
+                >
+                  <Icon.Mail /> {email.value}
+                </Link>
+              )}
+
               <p className="text-xs leading-relaxed text-gray-500">
                 *Travel pros with{" "}
                 <strong className="text-gray-700">

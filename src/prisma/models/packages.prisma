@@ -1,0 +1,14 @@
+model Package {
+    id    String @id @default(cuid())
+    slug  String @unique
+    title String
+
+    overview String? @db.Text
+
+    itineraries Itinerary[]
+
+    createdAt DateTime @default(now()) @map("created_at")
+    updatedAt DateTime @updatedAt @map("updated_at")
+
+    @@map("packages")
+}
