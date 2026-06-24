@@ -1,9 +1,9 @@
 model Package {
-    id    String @id @default(cuid())
-    slug  String @unique
-    title String
+    id   String @id @default(cuid())
+    slug String @unique
+    name String
 
-    overview String? @db.Text
+    overview String? @db.Text // HTML description
 
     itineraries Itinerary[]
 

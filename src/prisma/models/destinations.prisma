@@ -1,0 +1,14 @@
+model Destination {
+    id          String @id @default(cuid())
+    name        String
+    maxAltitude Int    @map("max_altitude")
+    latitude    Float
+    longitude   Float
+
+    itineraries ItineraryDestination[]
+
+    createdAt DateTime @default(now()) @map("created_at")
+    updatedAt DateTime @updatedAt @map("updated_at")
+
+    @@map("destinations")
+}
