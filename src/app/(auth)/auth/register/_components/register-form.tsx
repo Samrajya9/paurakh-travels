@@ -7,7 +7,7 @@ import { useForm } from "react-hook-form"
 import { Button } from "@/components/ui/button"
 import { userSchema } from "@/schemas/user.shema"
 import type { UserSchema } from "@/types/users.type"
-import { UserType } from "@/types/users_type.type"
+import { UserType } from "@/types/users-type.enum"
 import { PasswordInput } from "@/components/inputs/password-input"
 import { EmailInput } from "@/components/inputs/email-input"
 

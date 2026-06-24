@@ -1,0 +1,12 @@
+export enum CompanyContactType {
+  PHONE = "PHONE",
+  EMAIL = "EMAIL",
+  WHATSAPP = "WHATSAPP",
+  VIBER = "VIBER",
+  FACEBOOK = "FACEBOOK",
+  INSTAGRAM = "INSTAGRAM",
+  LINKEDIN = "LINKEDIN",
+  YOUTUBE = "YOUTUBE",
+  TIKTOK = "TIKTOK",
+  X = "X",
+}

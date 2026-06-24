@@ -3,7 +3,7 @@ import "server-only"
 import { cookies } from "next/headers"
 import * as jose from "jose"
 import type { User } from "@/context/auth.context"
-import { UserType } from "@/types/users_type.type"
+import { UserType } from "@/types/users-type.enum"
 import { verifyAccessToken } from "./jwt"
 
 export function payloadToUser(payload: jose.JWTPayload): User {

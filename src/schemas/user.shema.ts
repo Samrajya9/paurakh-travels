@@ -1,4 +1,4 @@
-import { UserType } from "@/types/users_type.type"
+import { UserType } from "@/types/users-type.enum"
 import { z } from "zod"
 
 export const userSchema = z.object({

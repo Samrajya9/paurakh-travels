@@ -1,0 +1,26 @@
+enum CompanyContactType {
+    PHONE
+    EMAIL
+    WHATSAPP
+    VIBER
+    FACEBOOK
+    INSTAGRAM
+    LINKEDIN
+    YOUTUBE
+    TIKTOK
+    X
+}
+
+model CompanyContact {
+    id         String             @id @default(cuid())
+    companyId  String                          
+    type       CompanyContactType
+    value      String
+
+    company    CompanyProfile     @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+    createdAt  DateTime           @default(now())
+    updatedAt  DateTime           @updatedAt
+
+    @@index([companyId])
+}
