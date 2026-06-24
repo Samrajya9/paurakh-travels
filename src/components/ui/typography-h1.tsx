@@ -13,3 +13,5 @@ export function TypographyH1({ className, ...props }: TypographyH1Props) {
     />
   )
 }
+
+
