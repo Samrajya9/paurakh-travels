@@ -1,18 +1,19 @@
-import { Geist_Mono, Space_Grotesk } from "next/font/google"
+import { Inter, Poppins } from "next/font/google"
 import "./globals.css"
 import { ThemeProvider } from "@/components/theme-provider"
 import { cn } from "@/lib/utils"
 import { AuthProvider } from "@/context/auth.context"
 import { getCurrentUser } from "@/lib/auth-server"
 
-const spaceGrotesk = Space_Grotesk({
+const poppins = Poppins({
   subsets: ["latin"],
-  variable: "--font-sans",
+  weight: ["300", "400", "500", "600", "700"],
+  variable: "--font-poppins",
 })
 
-const fontMono = Geist_Mono({
+const inter = Inter({
   subsets: ["latin"],
-  variable: "--font-mono",
+  variable: "--font-inter",
 })
 
 export default async function RootLayout({
@@ -28,9 +29,9 @@ export default async function RootLayout({
       suppressHydrationWarning
       className={cn(
         "antialiased",
-        fontMono.variable,
+        poppins.variable,
+        inter.variable,
         "font-sans",
-        spaceGrotesk.variable
       )}
     >
       <body cz-shortcut-listen="true">

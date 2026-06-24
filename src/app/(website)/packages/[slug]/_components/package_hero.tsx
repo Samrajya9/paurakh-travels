@@ -53,7 +53,7 @@ const PackageHero: React.FC<PackageHeroProps> = ({
   const handleShare = async () => {
     try {
       await navigator.clipboard.writeText(window.location.href)
-    } catch {}
+    } catch { }
     setShareToast(true)
     setTimeout(() => setShareToast(false), 2500)
   }
@@ -65,16 +65,17 @@ const PackageHero: React.FC<PackageHeroProps> = ({
         <div className="flex shrink-0 items-center gap-2">
           <button
             onClick={handleShare}
-            className="relative flex items-center gap-1.5 rounded-lg border border-gray-200 px-3 py-1.5 text-sm font-medium text-gray-600 transition-colors hover:border-[#E63946] hover:text-[#E63946] focus:ring-2 focus:ring-[#E63946] focus:outline-none"
+            className="relative flex items-center gap-1.5 rounded-lg border border-muted-foreground px-3 py-1.5 text-sm font-medium text-muted-foreground transition-all duration-300 ease-in hover:scale-[1] hover:border-primary hover:text-primary focus:ring-2 focus:ring-primary focus:outline-none active:scale-[0.98]"
           >
             <Icon.Share /> Share
             {shareToast && (
-              <span className="absolute -top-9 left-1/2 -translate-x-1/2 rounded-lg bg-gray-900 px-2.5 py-1 text-xs whitespace-nowrap text-white shadow-lg">
+              <span className="absolute -top-9 left-1/2 -translate-x-1/2 rounded-lg bg-gray-900 px-2.5 py-1 text-xs whitespace-nowrap text-white shadow-lg animate-in fade-in duration-300">
                 Link copied!
               </span>
             )}
           </button>
-          <button className="flex items-center gap-1.5 rounded-lg border border-gray-200 px-3 py-1.5 text-sm font-medium text-gray-600 transition-colors hover:border-[#E63946] hover:text-[#E63946] focus:ring-2 focus:ring-[#E63946] focus:outline-none">
+
+          <button className="flex items-center gap-1.5 rounded-lg border border-muted-foreground px-3 py-1.5 text-sm font-medium text-muted-foreground transition-all duration-300 ease-in hover:scale-[1] hover:border-primary hover:text-primary focus:ring-2 focus:ring-primary focus:outline-none active:scale-[0.98]">
             <Icon.Doc /> Get Brochure
           </button>
         </div>
@@ -82,12 +83,12 @@ const PackageHero: React.FC<PackageHeroProps> = ({
 
       <div className="flex items-center gap-2">
         <StarRating rating={rating} />
-        <span className="rounded-md bg-[#E63946] px-2 py-0.5 text-xs font-bold text-white">
+        <span className="rounded-md bg-primary px-2 py-2 text-xs leading-1 font-bold text-white">
           {rating.toFixed(1)}
         </span>
-        <span className="text-sm text-gray-500">
+        <span className="text-sm text-muted-foreground">
           Based on{" "}
-          <button className="font-medium text-[#E63946] hover:underline focus:outline-none">
+          <button className="font-medium text-primary hover:underline focus:outline-none transition-all duration-300">
             {reviewCount} reviews
           </button>
         </span>

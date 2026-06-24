@@ -147,7 +147,7 @@ const PackageDetail = () => {
   const title = "Luxury Everest Base Camp Trek with Helicopter Return – 9 Days";
 
   return (
-    <main className="min-h-screen bg-white">
+    <main className="min-h-screen bg-background">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <PackageHero title={title} rating={5.0} reviewCount={61} />
 

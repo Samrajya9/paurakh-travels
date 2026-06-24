@@ -101,7 +101,8 @@ const SOCIAL_LINKS = [
 
 export function Footer() {
   return (
-    <Section asChild width={"constrained"} className="space-y-6">
+    <Section asChild width={"constrained"} className="space-y-6 
+    ">
       <footer>
         <div className="grid grid-cols-1 gap-10 md:grid-cols-2 lg:grid-cols-5">
           {/* brand column — spans 2 cols on large screens */}

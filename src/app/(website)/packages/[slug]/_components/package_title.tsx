@@ -17,7 +17,7 @@ const PackageTitle: React.FC<PackageTitleProps> = ({
     <h1
       // className={`max-w-2xl text-2xl leading-tight font-bold text-gray-900 sm:text-3xl ${className || ""}`}
       className={cn(
-        "max-w-2xl text-2xl leading-tight font-bold text-gray-900 sm:text-3xl",
+        "max-w-2xl text-2xl leading-tight font-background sm:text-3xl font-medium font-poppins",
         className
       )}
       {...props}
