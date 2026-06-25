@@ -1,0 +1,13 @@
+model PackageFaq {
+    id        String @id @default(cuid())
+    packageId String @map("package_id")
+    faqId     String @map("faq_id")
+    order     Int    @default(0)
+
+    package Package @relation(fields: [packageId], references: [id], onDelete: Cascade)
+    faq     Faq     @relation(fields: [faqId], references: [id], onDelete: Cascade)
+
+    @@unique([packageId, faqId])
+    @@index([faqId])
+    @@map("package_faqs")
+}
