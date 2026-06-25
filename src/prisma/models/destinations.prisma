@@ -5,10 +5,14 @@ model Destination {
     latitude    Float
     longitude   Float
 
-    itineraries ItineraryDestination[]
+    regionId String @map("region_id")
+    region   Region @relation(fields: [regionId], references: [id], onDelete: Restrict) // ← 1
+
+    itineraryDestinations ItineraryDestination[] // ← 2
 
     createdAt DateTime @default(now()) @map("created_at")
     updatedAt DateTime @updatedAt @map("updated_at")
 
+    @@unique([regionId, name]) // ← "Kathmandu" twice in same region is a data bug
     @@map("destinations")
 }

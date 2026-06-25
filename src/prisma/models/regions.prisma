@@ -1,7 +1,8 @@
 model Region {
-    id String @id @default(cuid())
+    id   String @id @default(cuid())
+    name String @unique // ← "Everest Region" twice is a data bug
 
-    name String
+    destinations Destination[]
 
     createdAt DateTime @default(now()) @map("created_at")
     updatedAt DateTime @updatedAt @map("updated_at")

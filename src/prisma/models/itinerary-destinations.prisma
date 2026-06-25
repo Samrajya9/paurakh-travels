@@ -7,5 +7,6 @@ model ItineraryDestination {
   destination Destination @relation(fields: [destinationId], references: [id], onDelete: Cascade)
 
   @@unique([itineraryId, destinationId]) // prevent duplicate pairs
+  @@index([destinationId]) // ← 3
   @@map("itinerary_destinations")
 }
