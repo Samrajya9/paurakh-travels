@@ -6,6 +6,7 @@ import { AuthProvider } from "@/context/auth.context"
 import { getCurrentUser } from "@/lib/auth-server"
 import { getCompanyProfile } from "@/services/company-profile.service"
 import { CompanyProfileProvider } from "@/context/company-profile-context"
+import { TooltipProvider } from "@/components/ui/tooltip"
 
 const spaceGrotesk = Space_Grotesk({
   subsets: ["latin"],
@@ -44,7 +45,9 @@ export default async function RootLayout({
       <body cz-shortcut-listen="true">
         <ThemeProvider>
           <CompanyProfileProvider initialData={profile ?? undefined}>
-            <AuthProvider initialUser={user}>{children}</AuthProvider>
+            <AuthProvider initialUser={user}>
+              <TooltipProvider>{children}</TooltipProvider>
+            </AuthProvider>
           </CompanyProfileProvider>
         </ThemeProvider>
       </body>
