@@ -1,5 +1,5 @@
-import { Button } from "@/components/ui/button"
 import AddRegionButton from "./components/add-region-btn"
+import RegionForm from "./components/create-region-form"
 
 const page = () => {
   return (
@@ -9,7 +9,7 @@ const page = () => {
         <AddRegionButton />
       </div>
 
-      {/* Regions Table */}
+      <RegionForm />
     </>
   )
 }
