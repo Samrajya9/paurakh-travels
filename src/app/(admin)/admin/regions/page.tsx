@@ -1,5 +1,4 @@
 import AddRegionButton from "./components/add-region-btn"
-import RegionForm from "./components/create-region-form"
 
 const page = () => {
   return (
@@ -8,8 +7,6 @@ const page = () => {
         <div></div>
         <AddRegionButton />
       </div>
-
-      <RegionForm />
     </>
   )
 }

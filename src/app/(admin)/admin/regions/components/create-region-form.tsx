@@ -5,6 +5,8 @@ import { FormProvider } from "react-hook-form"
 import RegionFormFields from "./region-form-fields"
 import { Button } from "@/components/ui/button"
 import { CreateRegionInput } from "@/schemas/create-region.schema"
+import { useDialogContext } from "@/hooks/use-dailog"
+import { MODAL_REGISTRY } from "@/constants/modal/modal-component-registry"
 
 import { toast } from "sonner"
 
@@ -15,6 +17,7 @@ type CreateRegionErrorResponse = {
 
 const RegionForm = () => {
   const form = useRegionForm()
+  const { closeModal } = useDialogContext()
 
   const handleSubmit = form.handleSubmit(async (data) => {
     try {
@@ -43,6 +46,7 @@ const RegionForm = () => {
 
       form.reset()
       toast.success("Region created.")
+      closeModal(MODAL_REGISTRY.CREATE_REGION_MODAL_ID)
     } catch {
       toast.error("Could not reach the server. Please try again.")
     }
@@ -56,8 +60,12 @@ const RegionForm = () => {
         className="space-y-4"
       >
         <RegionFormFields />
-        <Button type="submit" form="form-create-region">
-          Create
+        <Button
+          type="submit"
+          form="form-create-region"
+          disabled={form.formState.isSubmitting}
+        >
+          {form.formState.isSubmitting ? "Creating..." : "Create"}
         </Button>
       </form>
     </FormProvider>

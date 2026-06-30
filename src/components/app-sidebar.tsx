@@ -126,6 +126,11 @@ const data = {
       url: "/admin/destinations",
       icon: MapPinHouse,
     },
+    {
+      name: "Packages",
+      url: "/admin/packages",
+      icon: MapPinHouse,
+    },
     // {
     //   name: "Design Engineering",
     //   url: "",
