@@ -1,6 +1,6 @@
 import { z } from "zod"
-import { createPackageSchema } from "./create-package.schema"
+import { CreatePackageSchema } from "./create-package.schema"
 
-export const updatePackageSchema = createPackageSchema.partial()
+export const UpdatePackageSchema = CreatePackageSchema.partial()
 
-export type UpdatePackageInput = z.infer<typeof updatePackageSchema>
+export type UpdatePackageInput = z.infer<typeof UpdatePackageSchema>

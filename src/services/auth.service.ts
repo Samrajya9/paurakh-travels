@@ -7,7 +7,7 @@ import {
 } from "@/services/user.service"
 import * as argon2 from "argon2"
 import { AppError } from "@/lib/errors"
-import { LoginSchema } from "@/types/login.type"
+import type { LoginInput } from "@/types/login.type"
 import * as jose from "jose"
 import { signAccessToken, signRefreshToken } from "@/lib/jwt"
 
@@ -75,7 +75,7 @@ export async function register(dto: UserSchema) {
   })
 }
 
-export async function login({ email, password }: LoginSchema) {
+export async function login({ email, password }: LoginInput) {
   const user = await getUserByEmail(email)
 
   if (!user) {

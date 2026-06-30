@@ -1,6 +1,6 @@
 import { z } from "zod"
-import { createDestinationSchema } from "./create-destination.schema"
+import { CreateDestinationSchema } from "./create-destination.schema"
 
-export const updateDestinationSchema = createDestinationSchema.partial()
+export const UpdateDestinationSchema = CreateDestinationSchema.partial()
 
-export type UpdateDestinationInput = z.infer<typeof updateDestinationSchema>
+export type UpdateDestinationInput = z.infer<typeof UpdateDestinationSchema>

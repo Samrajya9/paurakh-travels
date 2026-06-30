@@ -1,6 +1,6 @@
 import { z } from "zod"
 
-export const createPackageSchema = z.object({
+export const CreatePackageSchema = z.object({
   slug: z
     .string()
     .trim()
@@ -25,4 +25,4 @@ export const createPackageSchema = z.object({
     .nullable(),
 })
 
-export type CreatePackageInput = z.infer<typeof createPackageSchema>
+export type CreatePackageInput = z.infer<typeof CreatePackageSchema>

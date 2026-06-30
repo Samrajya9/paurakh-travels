@@ -1,6 +1,6 @@
 import { z } from "zod"
 
-export const createDestinationSchema = z.object({
+export const CreateDestinationSchema = z.object({
   name: z
     .string()
     .trim()
@@ -25,4 +25,4 @@ export const createDestinationSchema = z.object({
   regionId: z.string().cuid("Invalid region id"),
 })
 
-export type CreateDestinationInput = z.infer<typeof createDestinationSchema>
+export type CreateDestinationInput = z.infer<typeof CreateDestinationSchema>

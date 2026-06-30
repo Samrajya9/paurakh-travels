@@ -2,8 +2,8 @@ import { Prisma as PrismaClient } from "@prisma/client"
 
 import prisma from "@/lib/prisma"
 import { AppError } from "@/lib/errors"
-import type { CreateRegionDto } from "@/schemas/create-region.schema"
-import type { UpdateRegionDto } from "@/schemas/update-region.schema"
+import type { CreateRegionInput } from "@/schemas/create-region.schema"
+import type { UpdateRegionInput } from "@/schemas/update-region.schema"
 
 const regionSelect = {
   id: true,
@@ -44,7 +44,7 @@ function throwIfDuplicateRegionName(name: string, error: unknown): never {
 
 // ------------------------------------------------------------------ create
 
-export async function createRegion(dto: CreateRegionDto) {
+export async function createRegion(dto: CreateRegionInput) {
   try {
     return await prisma.region.create({
       data: { name: dto.name },
@@ -72,7 +72,7 @@ export async function getRegionById(id: string) {
 
 // ------------------------------------------------------------------ update
 
-export async function updateRegionById(id: string, dto: UpdateRegionDto) {
+export async function updateRegionById(id: string, dto: UpdateRegionInput) {
   await findRegionByIdOrThrow(id)
 
   try {

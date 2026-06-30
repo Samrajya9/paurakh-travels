@@ -9,6 +9,7 @@ import {
   Frame,
   GalleryVerticalEnd,
   Map,
+  MapPinHouse,
   PieChart,
   Settings2,
   SquareTerminal,
@@ -116,20 +117,30 @@ const data = {
   ],
   projects: [
     {
-      name: "Design Engineering",
-      url: "",
+      name: "Region",
+      url: "/admin/regions",
       icon: Frame,
     },
     {
-      name: "Sales & Marketing",
-      url: "#",
-      icon: PieChart,
+      name: "Destinations",
+      url: "/admin/destinations",
+      icon: MapPinHouse,
     },
-    {
-      name: "Travel",
-      url: "#",
-      icon: Map,
-    },
+    // {
+    //   name: "Design Engineering",
+    //   url: "",
+    //   icon: Frame,
+    // },
+    // {
+    //   name: "Sales & Marketing",
+    //   url: "#",
+    //   icon: PieChart,
+    // },
+    // {
+    //   name: "Travel",
+    //   url: "#",
+    //   icon: Map,
+    // },
   ],
 }
 

@@ -7,8 +7,8 @@ import { useState } from "react"
 import { useForm } from "react-hook-form"
 import { Button } from "@/components/ui/button"
 import { useAuth } from "@/context/auth.context"
-import { loginSchema } from "@/schemas/login.schema"
-import type { LoginSchema } from "@/types/login.type"
+import { LoginSchema } from "@/schemas/login.schema"
+import type { LoginInput } from "@/types/login.type"
 import { EmailInput } from "@/components/inputs/email-input"
 import { PasswordInput } from "@/components/inputs/password-input"
 
@@ -22,12 +22,12 @@ export function LoginForm() {
     handleSubmit,
     formState: { errors, isSubmitting },
     reset,
-  } = useForm<LoginSchema>({
+  } = useForm<LoginInput>({
     defaultValues: { email: "", password: "" },
-    resolver: zodResolver(loginSchema),
+    resolver: zodResolver(LoginSchema),
   })
 
-  async function onSubmit(values: LoginSchema) {
+  async function onSubmit(values: LoginInput) {
     setErrorMessage("")
 
     try {

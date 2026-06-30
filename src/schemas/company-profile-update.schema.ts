@@ -3,4 +3,4 @@ import { CompanyProfileCreateSchema } from "./company-profile-create.schema"
 
 export const CompanyProfileUpdateSchema = CompanyProfileCreateSchema.partial()
 
-export type CompanyProfileUpdateDto = z.infer<typeof CompanyProfileUpdateSchema>
+export type CompanyProfileUpdateInput = z.infer<typeof CompanyProfileUpdateSchema>

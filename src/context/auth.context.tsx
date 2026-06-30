@@ -7,7 +7,7 @@ import {
   useEffect,
   useState,
 } from "react"
-import type { LoginSchema } from "@/types/login.type"
+import type { LoginInput } from "@/types/login.type"
 import { UserType } from "@/types/users-type.enum"
 
 export interface User {
@@ -20,7 +20,7 @@ export interface AuthContextType {
   user: User | null
   isAuthenticated: boolean
   isLoading: boolean
-  login: (credentials: LoginSchema) => Promise<void>
+  login: (credentials: LoginInput) => Promise<void>
   logout: () => Promise<void>
 }
 
@@ -35,7 +35,7 @@ export function AuthProvider({ children, initialUser }: AuthProviderProps) {
   const [user, setUser] = useState<User | null>(initialUser)
   const [isLoading] = useState(false)
 
-  const login = useCallback(async (credentials: LoginSchema) => {
+  const login = useCallback(async (credentials: LoginInput) => {
     const response = await fetch("/api/auth/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },

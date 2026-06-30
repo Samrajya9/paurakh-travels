@@ -1,6 +1,6 @@
 import { z } from "zod"
 
-export const createFaqSchema = z.object({
+export const CreateFaqSchema = z.object({
   question: z
     .string()
     .trim()
@@ -14,4 +14,4 @@ export const createFaqSchema = z.object({
     .max(10000, "Answer is too long"),
 })
 
-export type CreateFaqInput = z.infer<typeof createFaqSchema>
+export type CreateFaqInput = z.infer<typeof CreateFaqSchema>

@@ -1,6 +1,6 @@
 import { z } from "zod"
 
-export const createItinerarySchema = z.object({
+export const CreateItinerarySchema = z.object({
   packageId: z.cuid2("Invalid package id"),
 
   dayNumber: z.coerce
@@ -21,4 +21,4 @@ export const createItinerarySchema = z.object({
     .max(10000, "Description is too long"),
 })
 
-export type CreateItineraryInput = z.infer<typeof createItinerarySchema>
+export type CreateItineraryInput = z.infer<typeof CreateItinerarySchema>
