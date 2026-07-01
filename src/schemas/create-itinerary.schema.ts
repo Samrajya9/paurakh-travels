@@ -14,11 +14,22 @@ export const CreateItinerarySchema = z.object({
     .min(1, "Title is required")
     .max(200, "Title cannot exceed 200 characters"),
 
-  description: z
+  htmlDescription: z
     .string()
     .trim()
     .min(1, "Description is required")
-    .max(10000, "Description is too long"),
+    .max(50000, "Description is too long"),
+
+  distanceKm: z.coerce
+    .number()
+    .positive("Distance must be a positive number")
+    .optional(),
+
+  durationHours: z.coerce
+    .number()
+    .int("Duration must be a whole number of hours")
+    .positive("Duration must be a positive number")
+    .optional(),
 })
 
 export type CreateItineraryInput = z.infer<typeof CreateItinerarySchema>

@@ -3,6 +3,8 @@ model ItineraryDestination {
   itineraryId   String @map("itinerary_id") // camelCase field, snake_case column
   destinationId String @map("destination_id")
 
+  order Int
+
   itinerary   Itinerary   @relation(fields: [itineraryId], references: [id], onDelete: Cascade)
   destination Destination @relation(fields: [destinationId], references: [id], onDelete: Cascade)
 

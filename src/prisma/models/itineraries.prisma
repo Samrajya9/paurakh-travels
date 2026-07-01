@@ -3,11 +3,14 @@ model Itinerary {
     packageId String  @map("package_id")
     package   Package @relation(fields: [packageId], references: [id], onDelete: Cascade)
 
-    dayNumber   Int    @map("day_number")
-    title       String
-    description String @db.Text
+    dayNumber       Int    @map("day_number")
+    title           String
+    htmlDescription String @map("html_description") @db.Text
 
-    destinations ItineraryDestination[] // ← back-relation
+    distanceKm    Float? @map("distance_km")
+    durationHours Int?   @map("duration_hours")
+
+    destinations ItineraryDestination[]
 
     createdAt DateTime @default(now()) @map("created_at")
     updatedAt DateTime @updatedAt @map("updated_at")
