@@ -1,4 +1,3 @@
-import DestinationSelect from "../destinations/components/destination-select"
 import CreatePackageButton from "./components/create-package-button"
 
 const page = () => {

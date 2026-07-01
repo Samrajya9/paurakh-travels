@@ -5,6 +5,10 @@ import StarterKit from "@tiptap/starter-kit"
 import { cn } from "@/lib/utils"
 import ToolBar from "./tool-bar"
 import Heading from "@tiptap/extension-heading"
+import Underline from "@tiptap/extension-underline"
+
+import { BulletList, OrderedList, ListItem } from "@tiptap/extension-list"
+import Blockquote from "@tiptap/extension-blockquote"
 
 const headingClasses: Record<number, string> = {
   1: "text-4xl font-bold text-red-600",
@@ -51,9 +55,41 @@ export default function RichTextEditor({
             class: "font-bold",
           },
         },
+        underline: false,
+        orderedList: false,
+        bulletList: false,
+        listItem: false,
+        blockquote: false,
       }),
       CustomHeading.configure({
         levels: [1, 2, 3, 4, 5, 6],
+      }),
+      Underline.configure({
+        HTMLAttributes: {
+          class: "underline",
+        },
+      }),
+
+      BulletList.configure({
+        HTMLAttributes: {
+          class: "list-disc pl-6",
+        },
+      }),
+      OrderedList.configure({
+        HTMLAttributes: {
+          class: "list-decimal pl-6",
+        },
+      }),
+      ListItem.configure({
+        HTMLAttributes: {
+          class: "my-0.5",
+        },
+      }),
+      Blockquote.configure({
+        HTMLAttributes: {
+          class:
+            "border-l-2 pl-2 [&>p]:before:content-['“'] [&>p]:after:content-['”']",
+        },
       }),
     ],
     content: value,
@@ -71,19 +107,21 @@ export default function RichTextEditor({
   if (!editor) return null
 
   return (
-    <div
-      aria-invalid={ariaInvalid}
-      className={cn(
-        "w-full min-w-0 rounded-md border border-input bg-input/20 transition-colors",
-        "h-64",
-        "focus-within:border-ring focus-within:ring-2 focus-within:ring-ring/30",
-        "aria-invalid:border-destructive aria-invalid:ring-2 aria-invalid:ring-destructive/20",
-        "dark:bg-input/30 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40",
-        className
-      )}
-    >
-      <ToolBar editor={editor} />
-      <EditorContent editor={editor} className="h-full" />
-    </div>
+    <>
+      <div
+        aria-invalid={ariaInvalid}
+        className={cn(
+          "w-full min-w-0 rounded-md border border-input bg-input/20 transition-colors",
+          "h-64",
+          "focus-within:border-ring focus-within:ring-2 focus-within:ring-ring/30",
+          "aria-invalid:border-destructive aria-invalid:ring-2 aria-invalid:ring-destructive/20",
+          "dark:bg-input/30 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40",
+          className
+        )}
+      >
+        <ToolBar editor={editor} />
+        <EditorContent editor={editor} className="h-full" />
+      </div>
+    </>
   )
 }
