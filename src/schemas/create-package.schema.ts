@@ -1,4 +1,5 @@
 import { z } from "zod"
+import { CreateItinerarySchema } from "./create-itinerary.schema"
 
 export const CreatePackageSchema = z.object({
   slug: z
@@ -23,6 +24,8 @@ export const CreatePackageSchema = z.object({
     .max(50000, "Overview is too long")
     .optional()
     .nullable(),
+
+  itineraries: z.array(CreateItinerarySchema.omit({ packageId: true })),
 })
 
 export type CreatePackageInput = z.infer<typeof CreatePackageSchema>

@@ -1,5 +1,11 @@
+import DestinationCreateForm from "./components/destination-create-form"
+
 const page = () => {
-  return <div>page for destinations</div>
+  return (
+    <div>
+      <DestinationCreateForm />
+    </div>
+  )
 }
 
 export default page

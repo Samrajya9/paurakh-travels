@@ -26,7 +26,7 @@ const AddRegionButton = () => {
   }
 
   return (
-    <Button className="w-max" size={"lg"} onClick={handleClick}>
+    <Button type="button" className="w-max" onClick={handleClick}>
       Add Regions
     </Button>
   )

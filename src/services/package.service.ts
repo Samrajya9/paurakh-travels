@@ -2,6 +2,7 @@ import { Prisma as PrismaClient } from "@prisma/client"
 
 import prisma from "@/lib/prisma"
 import { AppError } from "@/lib/errors"
+import { createItinerary } from "@/services/itinerary.service"
 import type { CreatePackageInput } from "@/schemas/create-package.schema"
 import type { UpdatePackageInput } from "@/schemas/update-package.schema"
 
@@ -9,7 +10,18 @@ const packageSelect = {
   id: true,
   slug: true,
   name: true,
-  html_overview: true,
+  htmlOverview: true,
+  itineraries: {
+    select: {
+      id: true,
+      dayNumber: true,
+      title: true,
+      htmlDescription: true,
+      distanceKm: true,
+      durationHours: true,
+    },
+    orderBy: { dayNumber: "asc" },
+  },
   createdAt: true,
   updatedAt: true,
 } satisfies PrismaClient.PackageSelect
@@ -47,17 +59,33 @@ function throwIfDuplicatePackageSlug(slug: string, error: unknown): never {
 // ------------------------------------------------------------------ create
 
 export async function createPackage(dto: CreatePackageInput) {
+  const { itineraries, ...packageData } = dto
+
   try {
-    return await prisma.package.create({
+    // 1. Create the package
+    const pkg = await prisma.package.create({
       data: {
-        slug: dto.slug,
-        name: dto.name,
-        html_overview: dto.html_overview,
+        slug: packageData.slug,
+        name: packageData.name,
+        htmlOverview: packageData.htmlOverview,
       },
-      select: packageSelect,
+      select: { id: true },
     })
+
+    // 2. Delegate itinerary creation to itinerary.service,
+    //    injecting the newly created packageId into each entry
+    if (itineraries.length > 0) {
+      await Promise.all(
+        itineraries.map((itinerary) =>
+          createItinerary({ ...itinerary, packageId: pkg.id })
+        )
+      )
+    }
+
+    // 3. Return the full package with itineraries attached
+    return findPackageByIdOrThrow(pkg.id)
   } catch (error) {
-    throwIfDuplicatePackageSlug(dto.slug, error)
+    throwIfDuplicatePackageSlug(packageData.slug, error)
   }
 }
 
@@ -94,12 +122,24 @@ export async function getPackageBySlug(slug: string) {
 export async function updatePackageById(id: string, dto: UpdatePackageInput) {
   await findPackageByIdOrThrow(id)
 
+  const { itineraries, ...packageData } = dto
+
   try {
-    return await prisma.package.update({
+    await prisma.package.update({
       where: { id },
-      data: dto,
-      select: packageSelect,
+      data: packageData,
+      select: { id: true },
     })
+
+    if (itineraries && itineraries.length > 0) {
+      await Promise.all(
+        itineraries.map((itinerary) =>
+          createItinerary({ ...itinerary, packageId: id })
+        )
+      )
+    }
+
+    return findPackageByIdOrThrow(id)
   } catch (error) {
     throwIfDuplicatePackageSlug(dto.slug ?? "", error)
   }

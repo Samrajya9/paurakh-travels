@@ -1,21 +1,27 @@
+"use client"
+
 import {
-  CreateRegionInput,
-  CreateRegionSchema,
-} from "@/schemas/create-region.schema"
+  CreateDestinationInput,
+  CreateDestinationSchema,
+} from "@/schemas/create-destination.schema"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useEffect } from "react"
 import { useForm } from "react-hook-form"
 
-const defaultValues: CreateRegionInput = {
+const defaultValues: CreateDestinationInput = {
   name: "",
+  elevation: 0,
+  latitude: undefined,
+  longitude: undefined,
+  regionId: "",
 }
 
-export const useRegionForm = (
-  initialValues: Partial<CreateRegionInput> = {}
+export const useDestinationForm = (
+  initialValues: Partial<CreateDestinationInput> = {}
 ) => {
-  const form = useForm<CreateRegionInput>({
+  const form = useForm({
     defaultValues: { ...defaultValues, ...initialValues },
-    resolver: zodResolver(CreateRegionSchema),
+    resolver: zodResolver(CreateDestinationSchema),
   })
 
   useEffect(() => {
