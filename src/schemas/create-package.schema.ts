@@ -17,7 +17,7 @@ export const CreatePackageSchema = z.object({
     .min(1, "Package name is required")
     .max(200, "Package name is too long"),
 
-  overview: z
+  html_overview: z
     .string()
     .trim()
     .max(50000, "Overview is too long")

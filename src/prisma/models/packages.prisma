@@ -3,7 +3,7 @@ model Package {
     slug String @unique
     name String
 
-    overview String? @db.Text // HTML description
+    html_overview String? @db.Text // HTML description
 
     itineraries Itinerary[]
     faqs        PackageFaq[]
