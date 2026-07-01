@@ -19,6 +19,12 @@ const defaultValues: CreatePackageInput = {
       htmlDescription: "",
       distanceKm: undefined,
       durationHours: undefined,
+      destinations: [
+        {
+          destinationId: "",
+          order: 1,
+        },
+      ],
     },
   ],
 }

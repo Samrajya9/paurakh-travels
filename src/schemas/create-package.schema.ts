@@ -25,7 +25,21 @@ export const CreatePackageSchema = z.object({
     .optional()
     .nullable(),
 
-  itineraries: z.array(CreateItinerarySchema.omit({ packageId: true })),
+  itineraries: z.array(
+    CreateItinerarySchema.omit({
+      packageId: true,
+    }).extend({
+      destinations: z.array(
+        z.object({
+          destinationId: z.cuid2("Invalid destination id"),
+          order: z.coerce
+            .number()
+            .int("Order must be a whole number")
+            .min(1, "Order must start at 1"),
+        })
+      ),
+    })
+  ),
 })
 
 export type CreatePackageInput = z.infer<typeof CreatePackageSchema>

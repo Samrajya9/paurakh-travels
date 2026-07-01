@@ -13,13 +13,13 @@ export const CreateDestinationSchema = z
       .int("Elevation must be a whole number")
       .gt(0, "Elevation should be greater than 0"),
 
-    latitude: z
+    latitude: z.coerce
       .number()
       .min(-90, "Latitude must be between -90 and 90")
       .max(90, "Latitude must be between -90 and 90")
       .optional(),
 
-    longitude: z
+    longitude: z.coerce
       .number()
       .min(-180, "Longitude must be between -180 and 180")
       .max(180, "Longitude must be between -180 and 180")

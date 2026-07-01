@@ -21,12 +21,108 @@ import {
 } from "react-hook-form"
 import RichTextEditor from "@/components/tiptap/rich-text-editor"
 import { PlusIcon, TrashIcon } from "lucide-react"
+import DestinationSelect from "../../destinations/components/destination-select"
 
 function slugify(value: string) {
   return value
     .toLowerCase()
     .replace(/[^a-z0-9\s-]/g, "")
     .replace(/\s+/g, "-")
+}
+
+// Owns the nested `itineraries.${itineraryIndex}.destinations` field array.
+function ItineraryDestinationsField({
+  itineraryIndex,
+}: {
+  itineraryIndex: number
+}) {
+  const form = useFormContext<CreatePackageInput>()
+
+  const { fields, append, remove } = useFieldArray({
+    control: form.control,
+    name: `itineraries.${itineraryIndex}.destinations`,
+  })
+
+  return (
+    <Field>
+      <FieldLegend className="flex w-full items-center justify-between">
+        <span>Destinations</span>
+        <Button
+          type="button"
+          size="sm"
+          onClick={() =>
+            append({
+              destinationId: "",
+              order: fields.length + 1,
+            })
+          }
+          className="flex items-center gap-1.5"
+        >
+          <PlusIcon className="h-4 w-4" />
+          Add Destination
+        </Button>
+      </FieldLegend>
+      <FieldDescription>
+        Add destinations in the order you want them to appear in the package
+      </FieldDescription>
+
+      <FieldGroup>
+        {fields.map((field, destIndex) => (
+          <div key={field.id} className="flex items-end gap-3">
+            <Controller
+              control={form.control}
+              name={`itineraries.${itineraryIndex}.destinations.${destIndex}.destinationId`}
+              render={({ field, fieldState }) => (
+                <Field className="flex-1" data-invalid={fieldState.invalid}>
+                  <FieldLabel htmlFor={field.name}>Destination</FieldLabel>
+                  <DestinationSelect
+                    value={field.value}
+                    onChange={field.onChange}
+                    onBlur={field.onBlur}
+                    aria-invalid={fieldState.invalid}
+                  />
+                  {fieldState.invalid && (
+                    <FieldError errors={[fieldState.error]} />
+                  )}
+                </Field>
+              )}
+            />
+
+            <Controller
+              control={form.control}
+              name={`itineraries.${itineraryIndex}.destinations.${destIndex}.order`}
+              render={({ field, fieldState }) => (
+                <Field className="w-24" data-invalid={fieldState.invalid}>
+                  <FieldLabel htmlFor={field.name}>Order</FieldLabel>
+                  <Input
+                    {...field}
+                    id={field.name}
+                    type="number"
+                    min={1}
+                    aria-invalid={fieldState.invalid}
+                    autoComplete="off"
+                  />
+                  {fieldState.invalid && (
+                    <FieldError errors={[fieldState.error]} />
+                  )}
+                </Field>
+              )}
+            />
+
+            <Button
+              type="button"
+              variant="destructive"
+              size="icon"
+              onClick={() => remove(destIndex)}
+              disabled={fields.length <= 1}
+            >
+              <TrashIcon className="size-4" />
+            </Button>
+          </div>
+        ))}
+      </FieldGroup>
+    </Field>
+  )
 }
 
 const PackageFormFields = () => {
@@ -79,7 +175,6 @@ const PackageFormFields = () => {
                     placeholder="Name of the Package"
                     autoComplete="off"
                   />
-
                   {fieldState.invalid && (
                     <FieldError errors={[fieldState.error]} />
                   )}
@@ -104,7 +199,6 @@ const PackageFormFields = () => {
                     placeholder="everest-base-camp-trek"
                     autoComplete="off"
                   />
-
                   {fieldState.invalid && (
                     <FieldError errors={[fieldState.error]} />
                   )}
@@ -144,6 +238,12 @@ const PackageFormFields = () => {
                 htmlDescription: "",
                 distanceKm: undefined,
                 durationHours: undefined,
+                destinations: [
+                  {
+                    destinationId: "",
+                    order: fields.length + 1,
+                  },
+                ],
               })
             }
             className="flex items-center gap-1.5"
@@ -178,7 +278,6 @@ const PackageFormFields = () => {
 
               <FieldGroup>
                 <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-                  {/* Day Number */}
                   <Controller
                     control={form.control}
                     name={`itineraries.${index}.dayNumber`}
@@ -201,7 +300,6 @@ const PackageFormFields = () => {
                     )}
                   />
 
-                  {/* Title */}
                   <Controller
                     control={form.control}
                     name={`itineraries.${index}.title`}
@@ -224,7 +322,6 @@ const PackageFormFields = () => {
                 </div>
 
                 <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-                  {/* Distance (km) */}
                   <Controller
                     control={form.control}
                     name={`itineraries.${index}.distanceKm`}
@@ -251,7 +348,6 @@ const PackageFormFields = () => {
                     )}
                   />
 
-                  {/* Duration (hours) */}
                   <Controller
                     control={form.control}
                     name={`itineraries.${index}.durationHours`}
@@ -278,7 +374,6 @@ const PackageFormFields = () => {
                   />
                 </div>
 
-                {/* HTML Description */}
                 <Controller
                   control={form.control}
                   name={`itineraries.${index}.htmlDescription`}
@@ -295,6 +390,8 @@ const PackageFormFields = () => {
                     </Field>
                   )}
                 />
+
+                <ItineraryDestinationsField itineraryIndex={index} />
               </FieldGroup>
             </div>
           ))}
