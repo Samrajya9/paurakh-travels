@@ -95,6 +95,17 @@ export async function createItinerary(dto: CreateItineraryInput) {
         htmlDescription: dto.htmlDescription,
         distanceKm: dto.distanceKm,
         durationHours: dto.durationHours,
+        // Nested write: creates the ItineraryDestination rows in the
+        // same operation as the itinerary itself.
+        destinations:
+          dto.destinations && dto.destinations.length > 0
+            ? {
+                create: dto.destinations.map((d) => ({
+                  destinationId: d.destinationId,
+                  order: d.order,
+                })),
+              }
+            : undefined,
       },
       select: itinerarySelect,
     })
@@ -108,10 +119,7 @@ export async function createItinerary(dto: CreateItineraryInput) {
 export async function getAllItineraries() {
   return prisma.itinerary.findMany({
     select: itinerarySelect,
-    orderBy: [
-      { packageId: "asc" },
-      { dayNumber: "asc" },
-    ],
+    orderBy: [{ packageId: "asc" }, { dayNumber: "asc" }],
   })
 }
 
@@ -153,6 +161,18 @@ export async function updateItineraryById(
         htmlDescription: dto.htmlDescription,
         distanceKm: dto.distanceKm,
         durationHours: dto.durationHours,
+        // Only touch destinations if the caller actually sent a new set.
+        // Replaces the full list: wipe existing links, then recreate —
+        // both happen inside Prisma's implicit nested-write transaction.
+        destinations: dto.destinations
+          ? {
+              deleteMany: {},
+              create: dto.destinations.map((d) => ({
+                destinationId: d.destinationId,
+                order: d.order,
+              })),
+            }
+          : undefined,
       },
       select: itinerarySelect,
     })

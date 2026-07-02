@@ -1,5 +1,9 @@
 import { z } from "zod"
-import { CreateItinerarySchema } from "./create-itinerary.schema"
+import {
+  CreateItinerarySchema,
+  ItineraryDestinationSchema,
+} from "./create-itinerary.schema"
+import { CreateFaqSchema } from "./create-faq.schema"
 
 export const CreatePackageSchema = z.object({
   slug: z
@@ -29,17 +33,14 @@ export const CreatePackageSchema = z.object({
     CreateItinerarySchema.omit({
       packageId: true,
     }).extend({
-      destinations: z.array(
-        z.object({
-          destinationId: z.cuid2("Invalid destination id"),
-          order: z.coerce
-            .number()
-            .int("Order must be a whole number")
-            .min(1, "Order must start at 1"),
-        })
-      ),
+      destinations: z.array(ItineraryDestinationSchema),
     })
   ),
+
+  faqs: z
+    .array(CreateFaqSchema)
+    .min(1, "At least one FAQ is required")
+    .optional(),
 })
 
 export type CreatePackageInput = z.infer<typeof CreatePackageSchema>

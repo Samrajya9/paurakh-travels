@@ -1,39 +1,38 @@
 "use client"
 
-import { useRegionForm } from "../hooks/region-form.hook"
 import { FormProvider } from "react-hook-form"
-import RegionFormFields from "./region-form-fields"
-import { Button } from "@/components/ui/button"
-import { CreateRegionInput } from "@/schemas/create-region.schema"
-import { useDialogContext } from "@/hooks/use-dailog"
-import { MODAL_REGISTRY } from "@/constants/modal/modal-component-registry"
-import type { Region } from "@/services/region.service"
-
 import { toast } from "sonner"
 
-type CreateRegionErrorResponse = {
+import { useRegionForm } from "../hooks/region-form.hook"
+import RegionFormFields from "./region-form-fields"
+import { Button } from "@/components/ui/button"
+import type { CreateRegionInput } from "@/schemas/create-region.schema"
+import type { Region } from "@/services/region.service"
+
+type UpdateRegionErrorResponse = {
   message: string
   errors?: Partial<Record<keyof CreateRegionInput, string[]>>
 }
 
-const RegionForm = ({
-  onCreated,
+export default function EditRegionForm({
+  region,
+  onSuccess,
 }: {
-  onCreated?: (region: Region) => void
-}) => {
-  const form = useRegionForm()
-  const { closeModal } = useDialogContext()
+  region: Region
+  onSuccess: (region: Region) => void
+}) {
+  const form = useRegionForm({ name: region.name })
 
   const handleSubmit = form.handleSubmit(async (data) => {
     try {
-      const res = await fetch("/api/regions", {
-        method: "POST",
+      const res = await fetch(`/api/regions/${region.id}`, {
+        method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
       })
 
       if (!res.ok) {
-        const body: CreateRegionErrorResponse = await res.json()
+        const body: UpdateRegionErrorResponse = await res.json()
 
         if (res.status === 422 && body.errors) {
           for (const [field, messages] of Object.entries(body.errors)) {
@@ -49,11 +48,9 @@ const RegionForm = ({
         return
       }
 
-      const created: Region = await res.json()
-      form.reset()
-      toast.success("Region created.")
-      onCreated?.(created)
-      closeModal(MODAL_REGISTRY.CREATE_REGION_MODAL_ID)
+      const updated: Region = await res.json()
+      toast.success("Region updated.")
+      onSuccess(updated)
     } catch {
       toast.error("Could not reach the server. Please try again.")
     }
@@ -61,22 +58,16 @@ const RegionForm = ({
 
   return (
     <FormProvider {...form}>
-      <form
-        id="form-create-region"
-        onSubmit={handleSubmit}
-        className="space-y-4"
-      >
+      <form id="form-edit-region" onSubmit={handleSubmit} className="space-y-4">
         <RegionFormFields />
         <Button
           type="submit"
-          form="form-create-region"
+          form="form-edit-region"
           disabled={form.formState.isSubmitting}
         >
-          {form.formState.isSubmitting ? "Creating..." : "Create"}
+          {form.formState.isSubmitting ? "Saving..." : "Save Changes"}
         </Button>
       </form>
     </FormProvider>
   )
 }
-
-export default RegionForm

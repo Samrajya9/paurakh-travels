@@ -1,5 +1,13 @@
 import { z } from "zod"
 
+export const ItineraryDestinationSchema = z.object({
+  destinationId: z.cuid2("Invalid destination id"),
+  order: z.coerce
+    .number()
+    .int("Order must be a whole number")
+    .min(1, "Order must start at 1"),
+})
+
 export const CreateItinerarySchema = z.object({
   packageId: z.cuid2("Invalid package id"),
 
@@ -30,6 +38,11 @@ export const CreateItinerarySchema = z.object({
     .int("Duration must be a whole number of hours")
     .positive("Duration must be a positive number")
     .optional(),
+
+  // Optional at the itinerary level (e.g. a standalone itinerary form
+  // that doesn't collect destinations). Package creation requires it —
+  // see CreatePackageSchema, which overrides this to be required.
+  destinations: z.array(ItineraryDestinationSchema).optional(),
 })
 
 export type CreateItineraryInput = z.infer<typeof CreateItinerarySchema>

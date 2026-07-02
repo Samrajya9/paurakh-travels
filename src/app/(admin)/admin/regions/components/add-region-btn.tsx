@@ -9,8 +9,13 @@ import {
 import { MODAL_REGISTRY } from "@/constants/modal/modal-component-registry"
 import { useDialogContext } from "@/hooks/use-dailog"
 import RegionForm from "./create-region-form"
+import type { Region } from "@/services/region.service"
 
-const AddRegionButton = () => {
+const AddRegionButton = ({
+  onCreated,
+}: {
+  onCreated?: (region: Region) => void
+}) => {
   const { openModal } = useDialogContext()
 
   const handleClick = () => {
@@ -20,7 +25,7 @@ const AddRegionButton = () => {
         <DialogHeader>
           <DialogTitle>Add Region</DialogTitle>
         </DialogHeader>
-        <RegionForm />
+        <RegionForm onCreated={onCreated} />
       </DialogContent>
     )
   }

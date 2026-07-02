@@ -3,6 +3,7 @@ import { Prisma as PrismaClient } from "@prisma/client"
 import prisma from "@/lib/prisma"
 import { AppError } from "@/lib/errors"
 import { createItinerary } from "@/services/itinerary.service"
+import { createFaq } from "@/services/faq.service"
 import type { CreatePackageInput } from "@/schemas/create-package.schema"
 import type { UpdatePackageInput } from "@/schemas/update-package.schema"
 
@@ -19,8 +20,30 @@ const packageSelect = {
       htmlDescription: true,
       distanceKm: true,
       durationHours: true,
+      destinations: {
+        select: {
+          id: true,
+          destinationId: true,
+          order: true,
+        },
+        orderBy: { order: "asc" },
+      },
     },
     orderBy: { dayNumber: "asc" },
+  },
+  faqs: {
+    select: {
+      id: true,
+      order: true,
+      faq: {
+        select: {
+          id: true,
+          question: true,
+          answer: true,
+        },
+      },
+    },
+    orderBy: { order: "asc" },
   },
   createdAt: true,
   updatedAt: true,
@@ -56,10 +79,30 @@ function throwIfDuplicatePackageSlug(slug: string, error: unknown): never {
   throw error
 }
 
+// Creates each FAQ, then links it to the package via PackageFaq,
+// preserving array order.
+async function attachFaqsToPackage(
+  packageId: string,
+  faqs: NonNullable<CreatePackageInput["faqs"]>
+) {
+  await Promise.all(
+    faqs.map(async (faq, index) => {
+      const createdFaq = await createFaq(faq)
+      return prisma.packageFaq.create({
+        data: {
+          packageId,
+          faqId: createdFaq.id,
+          order: index,
+        },
+      })
+    })
+  )
+}
+
 // ------------------------------------------------------------------ create
 
 export async function createPackage(dto: CreatePackageInput) {
-  const { itineraries, ...packageData } = dto
+  const { itineraries, faqs, ...packageData } = dto
 
   try {
     // 1. Create the package
@@ -82,7 +125,12 @@ export async function createPackage(dto: CreatePackageInput) {
       )
     }
 
-    // 3. Return the full package with itineraries attached
+    // 3. If faqs are provided, create them and link via PackageFaq
+    if (faqs && faqs.length > 0) {
+      await attachFaqsToPackage(pkg.id, faqs)
+    }
+
+    // 4. Return the full package with itineraries + faqs attached
     return findPackageByIdOrThrow(pkg.id)
   } catch (error) {
     throwIfDuplicatePackageSlug(packageData.slug, error)
@@ -122,7 +170,7 @@ export async function getPackageBySlug(slug: string) {
 export async function updatePackageById(id: string, dto: UpdatePackageInput) {
   await findPackageByIdOrThrow(id)
 
-  const { itineraries, ...packageData } = dto
+  const { itineraries, faqs, ...packageData } = dto
 
   try {
     await prisma.package.update({
@@ -137,6 +185,10 @@ export async function updatePackageById(id: string, dto: UpdatePackageInput) {
           createItinerary({ ...itinerary, packageId: id })
         )
       )
+    }
+
+    if (faqs && faqs.length > 0) {
+      await attachFaqsToPackage(id, faqs)
     }
 
     return findPackageByIdOrThrow(id)

@@ -22,6 +22,7 @@ import {
 import RichTextEditor from "@/components/tiptap/rich-text-editor"
 import { PlusIcon, TrashIcon } from "lucide-react"
 import DestinationSelect from "../../destinations/components/destination-select"
+import { Textarea } from "@/components/ui/textarea"
 
 function slugify(value: string) {
   return value
@@ -122,6 +123,95 @@ function ItineraryDestinationsField({
         ))}
       </FieldGroup>
     </Field>
+  )
+}
+
+// Owns the top-level, optional `faqs` field array.
+function PackageFaqsField() {
+  const form = useFormContext<CreatePackageInput>()
+
+  const { fields, append, remove } = useFieldArray({
+    control: form.control,
+    name: "faqs",
+  })
+
+  return (
+    <FieldSet>
+      <FieldLegend className="flex w-full items-center justify-between">
+        <span>FAQs</span>
+        <Button
+          type="button"
+          onClick={() => append({ question: "", answer: "" })}
+          className="flex items-center gap-1.5"
+        >
+          <PlusIcon className="h-4 w-4" />
+          Add FAQ
+        </Button>
+      </FieldLegend>
+      <FieldDescription>
+        Optional. Add frequently asked questions for this package.
+      </FieldDescription>
+
+      {fields.length > 0 && (
+        <div className="mt-4 space-y-4 rounded-lg border border-border p-4">
+          {fields.map((field, index) => (
+            <div
+              key={field.id}
+              className="relative space-y-4 rounded-lg border border-border bg-muted/20 p-4"
+            >
+              <div className="flex items-center border-b border-border pb-2">
+                <span className="text-sm font-medium">FAQ {index + 1}</span>
+                <Button
+                  type="button"
+                  variant="destructive"
+                  size="icon"
+                  onClick={() => remove(index)}
+                  className="ml-auto"
+                >
+                  <TrashIcon className="size-4" />
+                </Button>
+              </div>
+
+              <FieldGroup>
+                <Controller
+                  control={form.control}
+                  name={`faqs.${index}.question`}
+                  render={({ field, fieldState }) => (
+                    <Field data-invalid={fieldState.invalid}>
+                      <FieldLabel htmlFor={field.name}>Question</FieldLabel>
+                      <Input
+                        {...field}
+                        id={field.name}
+                        aria-invalid={fieldState.invalid}
+                        placeholder="e.g. What is the best season to trek?"
+                        autoComplete="off"
+                      />
+                      {fieldState.invalid && (
+                        <FieldError errors={[fieldState.error]} />
+                      )}
+                    </Field>
+                  )}
+                />
+
+                <Controller
+                  control={form.control}
+                  name={`faqs.${index}.answer`}
+                  render={({ field, fieldState }) => (
+                    <Field data-invalid={fieldState.invalid}>
+                      <FieldLabel htmlFor={field.name}>Answer</FieldLabel>
+                      <Textarea {...field} />
+                      {fieldState.invalid && (
+                        <FieldError errors={[fieldState.error]} />
+                      )}
+                    </Field>
+                  )}
+                />
+              </FieldGroup>
+            </div>
+          ))}
+        </div>
+      )}
+    </FieldSet>
   )
 }
 
@@ -397,6 +487,8 @@ const PackageFormFields = () => {
           ))}
         </div>
       </FieldSet>
+
+      <PackageFaqsField />
     </>
   )
 }
