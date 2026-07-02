@@ -1,0 +1,13 @@
+model Image {
+  id String @id @default(cuid())
+
+  url     String
+  altText String? @map("alt_text")
+
+  attachments ImageAttachment[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("images")
+}
