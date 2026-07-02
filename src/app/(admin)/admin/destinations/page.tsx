@@ -1,10 +1,15 @@
-import DestinationCreateForm from "./components/destination-create-form"
+import CreateDestinationButton from "./components/create-destination-button"
+import DestinationTable from "./components/destination-table"
 
 const page = () => {
   return (
-    <div>
-      <DestinationCreateForm />
-    </div>
+    <>
+      <div className="flex items-center justify-between">
+        <div></div>
+        <CreateDestinationButton />
+      </div>
+      <DestinationTable />
+    </>
   )
 }
 

@@ -1,18 +1,28 @@
 "use client"
+
 import { FormProvider } from "react-hook-form"
+import { useRouter } from "next/navigation"
+import { toast } from "sonner"
+
 import { useDestinationForm } from "../hooks/use-destination-form"
 import DestinationFormFields from "./destination-form-fields"
 import { Button } from "@/components/ui/button"
-import { toast } from "sonner"
-import { CreateDestinationInput } from "@/schemas/create-destination.schema"
+import type { CreateDestinationInput } from "@/schemas/create-destination.schema"
 
-export default function DestinationCreateForm() {
-  const form = useDestinationForm()
+export default function DestinationEditForm({
+  destinationId,
+  initialValues,
+}: {
+  destinationId: string
+  initialValues: CreateDestinationInput
+}) {
+  const router = useRouter()
+  const form = useDestinationForm(initialValues)
 
   const handleSubmit = form.handleSubmit(async (data) => {
     try {
-      const res = await fetch("/api/destinations", {
-        method: "POST",
+      const res = await fetch(`/api/destinations/${destinationId}`, {
+        method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
       })
@@ -37,26 +47,25 @@ export default function DestinationCreateForm() {
         return
       }
 
-      form.reset()
-      toast.success("Destination created successfully.")
+      toast.success("Destination updated successfully.")
+      router.push("/admin/destinations")
     } catch {
       toast.error("Could not reach the server. Please try again.")
     }
   })
+
   return (
-    <>
-      <FormProvider {...form}>
-        <form className="space-y-4" onSubmit={handleSubmit}>
-          <DestinationFormFields />
-          <Button
-            type="submit"
-            className="self-end"
-            disabled={form.formState.isSubmitting}
-          >
-            {form.formState.isSubmitting ? "Creating..." : "Create Destination"}
-          </Button>
-        </form>
-      </FormProvider>
-    </>
+    <FormProvider {...form}>
+      <form className="space-y-4" onSubmit={handleSubmit}>
+        <DestinationFormFields />
+        <Button
+          type="submit"
+          className="self-end"
+          disabled={form.formState.isSubmitting}
+        >
+          {form.formState.isSubmitting ? "Saving..." : "Save Changes"}
+        </Button>
+      </form>
+    </FormProvider>
   )
 }
