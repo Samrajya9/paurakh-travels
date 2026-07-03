@@ -22,26 +22,31 @@ const BookingSidebar: React.FC<BookingSidebarProps> = ({ className }) => {
   return (
     <>
       {/* Desktop sticky sidebar container */}
-      <aside className={`hidden w-80 shrink-0 lg:block xl:w-85 ${className}`}>
-        <div className="sticky top-6 overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-lg">
-          <div className="border-b border-gray-100 px-6 pt-6 pb-4">
-            <div className="mb-1 flex items-center justify-between">
+      <aside
+        className={`hidden w-80 shrink-0 lg:block shadow-foreground xl:w-85 ${className}`}
+      >
+        <div className="sticky top-6 overflow-hidden rounded-2xl border bg-background shadow-lg">
+          <div className="relative border-b border-muted-foreground px-6 pt-6 pb-4">
+            {/* <div className="mb-1 flex items-center justify-between">
               <span className="text-sm text-gray-400 line-through">
-                US $2799
+                {" "}
               </span>
-              <span className="rounded-full border border-[#E63946]/20 bg-[#E63946]/10 px-2 py-0.5 text-xs font-bold text-[#E63946]">
+              <span className="rounded-full border border-[#E63946]/20 bg-[#E63946]/10 px-2 py-0.5 text-xs font-bold text-primary">
                 500 OFF
               </span>
-            </div>
+              </div> */}
+            <span className="absolute right-5 top-5 rounded-full border border-[#E63946]/20 bg-[#E63946]/10 px-2 py-0.5 text-xs font-bold text-primary">
+              500 OFF
+            </span>
             <div className="flex items-baseline gap-1.5">
-              <span className="text-3xl font-extrabold text-[#E63946]">
-                US $2299
+              <span className="text-4xl font-bold text-primary">
+                $2299
               </span>
-              <span className="text-sm text-gray-500">per person</span>
+              <span className="text-sm text-gray-500">/ per person</span>
             </div>
           </div>
 
-          <ul className="space-y-2.5 border-b border-gray-100 px-6 py-4">
+          <ul className="space-y-2.5 border px-6 py-4">
             {[
               "Book Instantly Directly with Provider",
               "Best Price guarantee",
@@ -50,9 +55,9 @@ const BookingSidebar: React.FC<BookingSidebarProps> = ({ className }) => {
             ].map((item) => (
               <li
                 key={item}
-                className="flex items-start gap-2 text-sm text-gray-700"
+                className="flex items-start gap-2 text-sm  text-muted-foreground "
               >
-                <span className="mt-0.5 shrink-0 text-[#E63946]">
+                <span className="mt-0.5 shrink-0 text-primary">
                   <Icon.Check />
                 </span>
                 {item}
@@ -61,48 +66,39 @@ const BookingSidebar: React.FC<BookingSidebarProps> = ({ className }) => {
           </ul>
 
           <div className="space-y-3 px-6 py-5">
-            {/* <button className="w-full bg-primary hover:bg-[#c8303c] active:scale-[0.98] text-white font-semibold py-3 rounded-xl transition-all focus:outline-none focus:ring-2 focus:ring-[#E63946] focus:ring-offset-2 text-sm">
-                  Check Availability
-                </button> */}
-            <Button className="w-full py-3">Check Availability </Button>
-            <button
+            <Button className="w-full bg-primary hover:bg-secondary active:scale-[0.98] text-foreground font-medium py-6 rounded-xl transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-secondary focus:ring-offset-2 text-sm">Check Availability </Button>
+            <Button
               onClick={() => setEnquiryOpen(true)}
-              className="w-full rounded-xl border border-gray-300 py-3 text-sm font-semibold text-gray-800 transition-colors hover:border-[#E63946] hover:text-[#E63946] focus:ring-2 focus:ring-[#E63946] focus:outline-none"
+              variant="outline"
+              className="w-full rounded-xl border py-6 text-sm font-semibold transition-all duration-300  border-primary text-primary hover:border-primary hover:text-primary focus:ring-2 focus:ring-primary focus:outline-none bg-background"
             >
               Make An Enquiry
-            </button>
+            </Button>
           </div>
 
           <div className="px-6 pb-6">
-            <div className="space-y-2.5 rounded-xl bg-gray-50 p-4">
-              <p className="text-sm font-semibold text-gray-900">
+            <div className="space-y-2.5 rounded-xl bg-background p-4">
+              <p className="text-sm font-semibold">
                 Need Help?{" "}
-                <em className="font-normal text-gray-500 not-italic">
+                <em className="font-normal text-muted-foreground not-italic">
                   Ask the trip expert
                 </em>
               </p>
-
-              {whatsApp?.value && (
-                <Link
-                  href={`tel:${whatsApp?.value}`}
-                  className="flex items-center gap-2 text-sm font-medium text-[#E63946] hover:underline"
-                >
-                  <Icon.Phone /> {whatsApp?.value}
-                </Link>
-              )}
-
-              {email && (
-                <Link
-                  href={`mailto:${email.value}`}
-                  className="flex items-center gap-2 text-sm font-medium text-[#E63946] hover:underline"
-                >
-                  <Icon.Mail /> {email.value}
-                </Link>
-              )}
-
-              <p className="text-xs leading-relaxed text-gray-500">
+              <a
+                href="tel:+9779851005129"
+                className="flex items-center gap-2 text-sm font-medium text-primary hover:underline"
+              >
+                <Icon.Phone /> +977 9851005129
+              </a>
+              <a
+                href="mailto:info@luxuryholidaynepal.com"
+                className="flex items-center gap-2 text-sm font-medium text-primary hover:underline"
+              >
+                <Icon.Mail /> info@luxuryholidaynepal.com
+              </a>
+              <p className="text-xs leading-relaxed text-muted-foreground">
                 *Travel pros with{" "}
-                <strong className="text-gray-700">
+                <strong className="text-muted-foreground/40">
                   13+ years of experience
                 </strong>{" "}
                 — let&apos;s plan your trip!
@@ -115,11 +111,8 @@ const BookingSidebar: React.FC<BookingSidebarProps> = ({ className }) => {
       {/* Mobile sticky bottom bar */}
       <div className="fixed inset-x-0 bottom-0 z-40 flex items-center gap-3 border-t border-gray-200 bg-white px-4 py-3 shadow-2xl lg:hidden">
         <div className="min-w-0 flex-1">
-          <p className="mb-0.5 text-xs leading-none text-gray-400 line-through">
-            US $2799
-          </p>
-          <p className="text-lg leading-none font-extrabold text-[#E63946]">
-            US $2299{" "}
+          <p className="text-xl leading-none font-bold text-primary">
+            $2299{" "}
             <span className="text-xs font-normal text-gray-500">/ person</span>
           </p>
         </div>
@@ -128,7 +121,7 @@ const BookingSidebar: React.FC<BookingSidebarProps> = ({ className }) => {
         </button>
         <button
           onClick={() => setEnquiryOpen(true)}
-          className="rounded-xl border border-gray-300 px-4 py-2.5 text-sm font-semibold whitespace-nowrap text-gray-700 transition-colors hover:border-[#E63946] hover:text-[#E63946]"
+          className="rounded-xl border border-muted-foreground px-4 py-2.5 text-sm font-semibold whitespace-nowrap text-gray-700 transition-colors hover:border-primary hover:text-primary"
         >
           Enquire
         </button>
@@ -153,7 +146,7 @@ const BookingSidebar: React.FC<BookingSidebarProps> = ({ className }) => {
               </h3>
               <button
                 onClick={() => setEnquiryOpen(false)}
-                className="text-gray-400 hover:text-gray-600 focus:outline-none"
+                className="text-gray-400 hover:none focus:outline-none"
               >
                 <Icon.Close />
               </button>

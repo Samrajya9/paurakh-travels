@@ -30,7 +30,7 @@ function PhotoGallery({ images, onViewAll }: PhotoGalleryProps) {
   return (
     <div className="grid w-full grid-cols-1 items-stretch gap-3 md:grid-cols-5">
       {/* Main image */}
-      <div className="relative aspect-[4/3] overflow-hidden rounded-xl bg-gray-100 sm:aspect-[3/2] md:col-span-3">
+      <div className="relative md:col-span-3 rounded-xl overflow-hidden bg-gray-100 aspect-4/3 sm:aspect-3/2">
         <Image
           src={images[active]?.src}
           alt={images[active]?.alt}
@@ -43,21 +43,21 @@ function PhotoGallery({ images, onViewAll }: PhotoGalleryProps) {
         <button
           onClick={prev}
           aria-label="Previous image"
-          className="absolute top-1/2 left-3 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-gray-800 shadow-md transition hover:scale-105 hover:bg-white focus:ring-2 focus:ring-[#E63946] focus:outline-none"
+          className="absolute left-3 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white text-gray-800 rounded-full w-10 h-10 flex items-center justify-center shadow-md transition hover:scale-105 focus:outline-none focus:ring-1 focus:ring-primary"
         >
           <Icon.ChevLeft />
         </button>
         <button
           onClick={next}
           aria-label="Next image"
-          className="absolute top-1/2 right-3 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-gray-800 shadow-md transition hover:scale-105 hover:bg-white focus:ring-2 focus:ring-[#E63946] focus:outline-none"
+          className="absolute right-3 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white text-gray-800 rounded-full w-10 h-10 flex items-center justify-center shadow-md transition hover:scale-105 focus:outline-none focus:ring-1 focus:ring-primary"
         >
           <Icon.ChevRight />
         </button>
 
         <button
           onClick={onViewAll}
-          className="absolute right-3 bottom-3 flex items-center gap-1.5 rounded-lg bg-black/70 px-3 py-1.5 text-xs font-semibold text-white shadow-sm transition-colors hover:bg-black/85"
+          className="absolute bottom-3 right-3 bg-black/75 hover:bg-black/85 text-white text-xs font-semibold px-3 py-1.5 rounded-lg flex items-center gap-1.5 transition-colors shadow-sm"
         >
           <Icon.ImageIcon /> {images.length} Photos
         </button>
@@ -72,15 +72,11 @@ function PhotoGallery({ images, onViewAll }: PhotoGalleryProps) {
           return (
             <button
               key={idx}
-              onClick={
-                isLastSlot && remainingCount > 0
-                  ? onViewAll
-                  : () => setActive(idx)
-              }
-              className={`relative aspect-square w-full overflow-hidden rounded-lg transition-all focus:ring-2 focus:ring-[#E63946] focus:outline-none ${
+              onClick={isLastSlot && remainingCount > 0 ? onViewAll : () => setActive(idx)}
+              className={`relative w-full aspect-square rounded-lg overflow-hidden transition-all focus:outline-none focus:ring-2 focus:ring-primary ${
                 active === idx && !(isLastSlot && remainingCount > 0)
-                  ? "opacity-100 ring-2 ring-[#E63946]"
-                  : "opacity-75 hover:opacity-100"
+                  ? "ring-1 ring-primary opacity-100  transition-all duration-300"
+                  : "opacity-75 hover:opacity-100 transition-all duration-300"
               }`}
             >
               <Image

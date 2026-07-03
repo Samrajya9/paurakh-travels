@@ -5,6 +5,8 @@ import BookingSidebar from "./_components/booking_sidebar";
 import RouteMap from "./_components/package_route_map";
 import PackageSummaryCard from "./_components/package_summary_card";
 import PackageHero from "./_components/package_hero";
+import Itinerary from "./_components/Itinerary";
+import Overview from "./_components/overview";
 
 interface GlanceStat {
   icon: React.ReactNode;
@@ -147,19 +149,18 @@ const PackageDetail = () => {
   const title = "Luxury Everest Base Camp Trek with Helicopter Return – 9 Days";
 
   return (
-    <main className="min-h-screen bg-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <main className="min-h-screen bg-background">
+      <div className="max-w-9xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <PackageHero title={title} rating={5.0} reviewCount={61} />
 
         {/* Two-column Flex layout setup allows the dynamic sticky component behavior */}
         <div className="relative flex flex-col lg:flex-row gap-10 items-start mt-6">
           {/* Left content column */}
           <div className="flex-1 min-w-0 pb-24 lg:pb-8">
-            <PackageSummaryCard data={GLANCE_STATS}/>
+            <PackageSummaryCard data={GLANCE_STATS} />
             <RouteMap data={ROUTE_STOPS} />
-            <PackageDetailSection title="Itinerary" >
-              <h1>Itinerary</h1>
-            </PackageDetailSection>
+            <Overview />
+            <Itinerary />
           </div>
 
           {/* Right sticky sidebar */}
