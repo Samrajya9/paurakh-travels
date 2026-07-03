@@ -1,7 +1,7 @@
-import { Prisma, UserType } from "@prisma/client"
+import { Prisma as PrismaClient, UserType } from "@prisma/client"
 
-import { UserSchema } from "@/types/users.type"
 import prisma from "@/lib/prisma"
+import { UserSchema } from "@/types/users.type"
 
 export type CreateUserInput = Omit<UserSchema, "user_type"> & {
   user_type?: UserType
@@ -15,10 +15,10 @@ const userSelect = {
   user_type: true,
   createdAt: true,
   updatedAt: true,
-} satisfies Prisma.UsersSelect
+} satisfies PrismaClient.UserSelect
 
 export async function listUsers() {
-  return prisma.users.findMany({
+  return prisma.user.findMany({
     orderBy: {
       createdAt: "desc",
     },
@@ -27,7 +27,7 @@ export async function listUsers() {
 }
 
 export async function getUserById(id: string) {
-  return prisma.users.findUnique({
+  return prisma.user.findUnique({
     where: {
       id,
     },
@@ -36,7 +36,7 @@ export async function getUserById(id: string) {
 }
 
 export async function getUserByEmail(email: string) {
-  return prisma.users.findUnique({
+  return prisma.user.findUnique({
     where: {
       email,
     },
@@ -44,7 +44,7 @@ export async function getUserByEmail(email: string) {
   })
 }
 export async function getUserPasswordByEmail(email: string) {
-  return prisma.users.findUnique({
+  return prisma.user.findUnique({
     where: { email },
     select: { password: true },
   })
@@ -55,7 +55,7 @@ export async function createUser({
   password,
   user_type = UserType.CUSTOMER,
 }: CreateUserInput) {
-  return prisma.users.create({
+  return prisma.user.create({
     data: {
       email,
       password,
@@ -66,7 +66,7 @@ export async function createUser({
 }
 
 export async function updateUser(id: string, input: UpdateUserInput) {
-  const data: Prisma.UsersUpdateInput = {}
+  const data: PrismaClient.UserUpdateInput = {}
 
   if (input.email !== undefined) {
     data.email = input.email
@@ -80,7 +80,7 @@ export async function updateUser(id: string, input: UpdateUserInput) {
     data.user_type = input.user_type
   }
 
-  return prisma.users.update({
+  return prisma.user.update({
     where: {
       id,
     },
@@ -90,7 +90,7 @@ export async function updateUser(id: string, input: UpdateUserInput) {
 }
 
 export async function deleteUser(id: string) {
-  return prisma.users.delete({
+  return prisma.user.delete({
     where: {
       id,
     },

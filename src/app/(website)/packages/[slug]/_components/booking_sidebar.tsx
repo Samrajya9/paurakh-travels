@@ -2,13 +2,22 @@
 import React, { useState } from "react"
 import { Icon } from "../page"
 import { Button } from "@/components/ui/button"
+import Link from "next/link"
+import { useCompanyProfile } from "@/context/company-profile-context"
 
 interface BookingSidebarProps {
   className?: string
 }
 
 const BookingSidebar: React.FC<BookingSidebarProps> = ({ className }) => {
+  const { profile } = useCompanyProfile()
   const [enquiryOpen, setEnquiryOpen] = useState(false)
+
+  const whatsApp = profile?.contacts.find(
+    (contact) => contact.type === "WHATSAPP"
+  )
+
+  const email = profile?.contacts.find((contact) => contact.type === "EMAIL")
 
   return (
     <>
@@ -102,11 +111,8 @@ const BookingSidebar: React.FC<BookingSidebarProps> = ({ className }) => {
       {/* Mobile sticky bottom bar */}
       <div className="fixed inset-x-0 bottom-0 z-40 flex items-center gap-3 border-t border-gray-200 bg-white px-4 py-3 shadow-2xl lg:hidden">
         <div className="min-w-0 flex-1">
-          <p className="mb-0.5 text-xs leading-none text-gray-400 line-through">
-            US $2799
-          </p>
-          <p className="text-lg leading-none font-extrabold text-primary">
-            US $2299{" "}
+          <p className="text-xl leading-none font-bold text-primary">
+            $2299{" "}
             <span className="text-xs font-normal text-gray-500">/ person</span>
           </p>
         </div>

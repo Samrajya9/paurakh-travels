@@ -8,4 +8,4 @@ export const CompanyContactCreateSchema = z.object({
   value: z.string().min(1, "Contact value is required"),
 })
 
-export type CompanyContactCreateDto = z.infer<typeof CompanyContactCreateSchema>
+export type CompanyContactCreateInput = z.infer<typeof CompanyContactCreateSchema>

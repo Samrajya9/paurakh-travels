@@ -1,0 +1,17 @@
+model Itinerary {
+    id        String  @id @default(cuid())
+    packageId String  @map("package_id")
+    package   Package @relation(fields: [packageId], references: [id], onDelete: Cascade)
+
+    dayNumber   Int    @map("day_number")
+    title       String
+    description String @db.Text
+
+    destinations ItineraryDestination[] // ← back-relation
+
+    createdAt DateTime @default(now()) @map("created_at")
+    updatedAt DateTime @updatedAt @map("updated_at")
+
+    @@unique([packageId, dayNumber])
+    @@map("itineraries")
+}

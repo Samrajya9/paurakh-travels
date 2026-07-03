@@ -4,6 +4,9 @@ import { ThemeProvider } from "@/components/theme-provider"
 import { cn } from "@/lib/utils"
 import { AuthProvider } from "@/context/auth.context"
 import { getCurrentUser } from "@/lib/auth-server"
+import { getCompanyProfile } from "@/services/company-profile.service"
+import { CompanyProfileProvider } from "@/context/company-profile-context"
+import { TooltipProvider } from "@/components/ui/tooltip"
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -22,6 +25,12 @@ export default async function RootLayout({
   children: React.ReactNode
 }>) {
   const user = await getCurrentUser()
+  let profile
+  try {
+    profile = await getCompanyProfile()
+  } catch (error) {
+    profile = null
+  }
 
   return (
     <html
@@ -36,7 +45,11 @@ export default async function RootLayout({
     >
       <body cz-shortcut-listen="true">
         <ThemeProvider>
-          <AuthProvider initialUser={user}>{children}</AuthProvider>
+          <CompanyProfileProvider initialData={profile ?? undefined}>
+            <AuthProvider initialUser={user}>
+              <TooltipProvider>{children}</TooltipProvider>
+            </AuthProvider>
+          </CompanyProfileProvider>
         </ThemeProvider>
       </body>
     </html>

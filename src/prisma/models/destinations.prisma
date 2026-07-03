@@ -1,0 +1,18 @@
+model Destination {
+    id          String @id @default(cuid())
+    name        String
+    maxAltitude Int    @map("max_altitude")
+    latitude    Float
+    longitude   Float
+
+    regionId String @map("region_id")
+    region   Region @relation(fields: [regionId], references: [id], onDelete: Restrict)
+
+    itineraryDestinations ItineraryDestination[] // ← 2
+
+    createdAt DateTime @default(now()) @map("created_at")
+    updatedAt DateTime @updatedAt @map("updated_at")
+
+    @@unique([regionId, name])
+    @@map("destinations")
+}

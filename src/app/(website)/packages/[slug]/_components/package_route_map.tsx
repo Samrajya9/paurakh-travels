@@ -46,8 +46,6 @@ const DUMMY_ALTITUDE: RouteStop[] = [
   { name: "EBC", day: 12, altitude: 5364, lat: 27.9881, lng: 86.9250 },
 ]
 
-// ─── Custom Tooltip for Altitude Chart ───────────────────────────────────────
-
 const AltTooltip = ({ active, payload, label }: any) => {
   if (!active || !payload?.length) return null
   return (
@@ -60,7 +58,6 @@ const AltTooltip = ({ active, payload, label }: any) => {
   )
 }
 
-// ─── Altitude Area Chart (Recharts via shadcn chart primitives) ───────────────
 
 const AltitudeChart: React.FC<{ stops: RouteStop[] }> = ({ stops }) => {
   // Merge passed stops with dummy data — use dummy if stop has no altitude
@@ -171,33 +168,25 @@ const RouteMap: React.FC<RouteMapProps> = ({ data = [] }) => {
       {/* ── Map Card ─────────────────────────────────────── */}
       <div className="mb-5 overflow-hidden rounded-xl border border-gray-100 bg-gray-50">
         {/* Toggle */}
-        <div className="flex items-center gap-1 border-b border-gray-100 bg-white px-2 py-2">
-          {(["route", "altitude"] as const).map((mode) => (
-            <button
-              key={mode}
-              onClick={() => setMapMode(mode)}
-              className={`flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-semibold transition-all ${mapMode === mode
-                  ? "bg-red-50 text-red-500 shadow-sm"
-                  : "text-gray-500 hover:bg-gray-50 hover:text-gray-700"
-                }`}
-            >
-              {mode === "route" ? (
-                <>
-                  <svg className="h-3.5 w-3.5" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M20.5 3l-.16.03L15 5.1 9 3 3.36 4.9c-.21.07-.36.25-.36.48V20.5c0 .28.22.5.5.5l.16-.03L9 18.9l6 2.1 5.64-1.9c.21-.07.36-.25.36-.48V3.5c0-.28-.22-.5-.5-.5zM15 19l-6-2.11V5l6 2.11V19z" />
-                  </svg>
-                  Route Map
-                </>
-              ) : (
-                <>
-                  <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-                    <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
-                  </svg>
-                  Altitude Profile
-                </>
-              )}
-            </button>
-          ))}
+        <div className="flex items-center gap-1 border-b border-border bg-card px-2 py-2">
+          <div className="inline-flex items-center gap-0.5 rounded-lg bg-muted p-0.5">
+            {(["route", "altitude"] as const).map((mode) => (
+              <Button
+                key={mode}
+                type="button"
+                onClick={() => setMapMode(mode)}
+                variant={mapMode === mode ? "default" : "ghost"}
+                size="default"
+                className={
+                  mapMode === mode
+                    ? "rounded-md hover:bg-primary/90 shadow-none"
+                    : "rounded-md text-muted-foreground hover:bg-transparent hover:text-foreground"
+                }
+              >
+                {mode === "route" ? "Route Map" : "Altitude Profile"}
+              </Button>
+            ))}
+          </div>
         </div>
 
         {/* Panel */}

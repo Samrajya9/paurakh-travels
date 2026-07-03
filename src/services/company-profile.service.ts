@@ -2,8 +2,8 @@ import { Prisma as PrismaClient } from "@prisma/client"
 
 import prisma from "@/lib/prisma"
 import { AppError } from "@/lib/errors"
-import { CompanyProfileCreateDto } from "@/schemas/company-profile-create.schema"
-import { CompanyProfileUpdateDto } from "@/schemas/company-profile-update.schema"
+import type { CompanyProfileCreateInput } from "@/schemas/company-profile-create.schema"
+import type { CompanyProfileUpdateInput } from "@/schemas/company-profile-update.schema"
 
 const companyProfileSelect = {
   id: true,
@@ -16,7 +16,7 @@ const companyProfileSelect = {
 } satisfies PrismaClient.CompanyProfileSelect
 
 // ------------------------------------------------------------------ create
-export async function createCompanyProfile(dto: CompanyProfileCreateDto) {
+export async function createCompanyProfile(dto: CompanyProfileCreateInput) {
   const existing = await prisma.companyProfile.findUnique({
     where: { singleton: true },
   })
@@ -49,7 +49,7 @@ export async function getCompanyProfile() {
 }
 
 // ------------------------------------------------------------------ update
-export async function updateCompanyProfile(dto: CompanyProfileUpdateDto) {
+export async function updateCompanyProfile(dto: CompanyProfileUpdateInput) {
   await getCompanyProfile()
 
   return prisma.companyProfile.update({

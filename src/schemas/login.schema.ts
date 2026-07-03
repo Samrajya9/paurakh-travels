@@ -1,6 +1,6 @@
 import { userSchema } from "@/schemas/user.shema"
 
-export const loginSchema = userSchema.pick({
+export const LoginSchema = userSchema.pick({
   email: true,
   password: true,
 })

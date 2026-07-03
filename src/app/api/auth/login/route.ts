@@ -1,6 +1,6 @@
 import type { NextRequest } from "next/server"
 import { login } from "@/services/auth.service"
-import { loginSchema } from "@/schemas/login.schema"
+import { LoginSchema } from "@/schemas/login.schema"
 import { AppError } from "@/lib/errors"
 import {
   accessTokenCookieOptions,
@@ -11,7 +11,7 @@ import {
 export async function POST(req: NextRequest) {
   const body: unknown = await req.json().catch(() => null)
 
-  const parsed = loginSchema.safeParse(body)
+  const parsed = LoginSchema.safeParse(body)
 
   if (!parsed.success) {
     return Response.json(

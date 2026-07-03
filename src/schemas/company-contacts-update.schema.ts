@@ -3,4 +3,4 @@ import { CompanyContactCreateSchema } from "./company-contacts-create.schema"
 
 export const CompanyContactUpdateSchema = CompanyContactCreateSchema.partial()
 
-export type CompanyContactUpdateDto = z.infer<typeof CompanyContactUpdateSchema>
+export type CompanyContactUpdateInput = z.infer<typeof CompanyContactUpdateSchema>

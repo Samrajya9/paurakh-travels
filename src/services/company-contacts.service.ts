@@ -2,8 +2,8 @@ import { Prisma as PrismaClient } from "@prisma/client"
 
 import prisma from "@/lib/prisma"
 import { AppError } from "@/lib/errors"
-import { CompanyContactCreateDto } from "@/schemas/company-contacts-create.schema"
-import { CompanyContactUpdateDto } from "@/schemas/company-contacts-update.schema"
+import type { CompanyContactCreateInput } from "@/schemas/company-contacts-create.schema"
+import type { CompanyContactUpdateInput } from "@/schemas/company-contacts-update.schema"
 
 const companyContactSelect = {
   id: true,
@@ -45,7 +45,7 @@ async function findContactOrThrow(id: string) {
 }
 
 // ------------------------------------------------------------------ create
-export async function createCompanyContact(dto: CompanyContactCreateDto) {
+export async function createCompanyContact(dto: CompanyContactCreateInput) {
   const companyId = await resolveProfileId()
 
   return prisma.companyContact.create({
@@ -73,7 +73,7 @@ export async function getCompanyContact(id: string) {
 // ------------------------------------------------------------------ update
 export async function updateCompanyContact(
   id: string,
-  dto: CompanyContactUpdateDto
+  dto: CompanyContactUpdateInput
 ) {
   await findContactOrThrow(id)
 

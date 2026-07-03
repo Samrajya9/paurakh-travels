@@ -6,4 +6,4 @@ export const CompanyProfileCreateSchema = z.object({
   address: z.string().optional(),
 })
 
-export type CompanyProfileCreateDto = z.infer<typeof CompanyProfileCreateSchema>
+export type CompanyProfileCreateInput = z.infer<typeof CompanyProfileCreateSchema>
