@@ -1,15 +1,14 @@
 import { getCurrentUser } from "@/lib/auth-server"
-import { UserType } from "@/types/users-type.enum"
 import { redirect } from "next/navigation"
 
 import { AppSidebar } from "@/components/app-sidebar"
 
-import { Separator } from "@/components/ui/separator"
 import {
   SidebarInset,
   SidebarProvider,
   SidebarTrigger,
 } from "@/components/ui/sidebar"
+import { UserType } from "@/constants/enums/user-type"
 
 export default async function AdminLayout({
   children,

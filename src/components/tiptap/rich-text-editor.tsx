@@ -10,13 +10,21 @@ import Underline from "@tiptap/extension-underline"
 import { BulletList, OrderedList, ListItem } from "@tiptap/extension-list"
 import Blockquote from "@tiptap/extension-blockquote"
 
+import {
+  Table,
+  TableRow,
+  TableHeader,
+  TableCell,
+} from "@tiptap/extension-table"
+import { headingVariants } from "../ui/heading"
+
 const headingClasses: Record<number, string> = {
-  1: "text-4xl font-bold text-red-600",
-  2: "text-3xl font-bold text-blue-500",
-  3: "text-2xl font-semibold",
-  4: "text-xl font-semibold",
-  5: "text-lg font-medium",
-  6: "text-base font-medium",
+  1: headingVariants({ variant: "h1" }),
+  2: headingVariants({ variant: "h2" }),
+  3: headingVariants({ variant: "h3" }),
+  4: headingVariants({ variant: "h4" }),
+  5: headingVariants({ variant: "h5" }),
+  6: headingVariants({ variant: "h6" }),
 }
 
 const CustomHeading = Heading.extend({
@@ -91,6 +99,23 @@ export default function RichTextEditor({
             "border-l-2 pl-2 [&>p]:before:content-['“'] [&>p]:after:content-['”']",
         },
       }),
+      Table.configure({
+        resizable: true,
+        HTMLAttributes: {
+          class: "border-collapse border border-border w-full my-2",
+        },
+      }),
+      TableRow,
+      TableHeader.configure({
+        HTMLAttributes: {
+          class: "border border-border bg-muted font-semibold p-2 text-left",
+        },
+      }),
+      TableCell.configure({
+        HTMLAttributes: {
+          class: "border border-border p-2 align-top",
+        },
+      }),
     ],
     content: value,
     immediatelyRender: false,
@@ -116,6 +141,7 @@ export default function RichTextEditor({
           "focus-within:border-ring focus-within:ring-2 focus-within:ring-ring/30",
           "aria-invalid:border-destructive aria-invalid:ring-2 aria-invalid:ring-destructive/20",
           "dark:bg-input/30 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40",
+          "[&_.ProseMirror]:overflow-x-auto",
           className
         )}
       >

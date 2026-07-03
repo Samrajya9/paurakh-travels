@@ -27,6 +27,10 @@ import {
   Minus,
   Undo,
   Redo,
+  Table as TableIcon,
+  Rows3,
+  Columns3,
+  Trash2,
 } from "lucide-react"
 
 const headingButtons = [
@@ -158,6 +162,40 @@ export default function ToolBar({ editor }: { editor: Editor | null }) {
           disabled={!editor.can().redo()}
           onClick={() => editor.chain().focus().redo().run()}
         />
+        <Separator orientation="vertical" className="mx-1 h-6" />
+
+        <ToolBarButton
+          icon={TableIcon}
+          label="Insert table"
+          active={editor.isActive("table")}
+          onClick={() =>
+            editor
+              .chain()
+              .focus()
+              .insertTable({ rows: 2, cols: 1, withHeaderRow: true })
+              .run()
+          }
+        />
+
+        {editor.isActive("table") && (
+          <>
+            <ToolBarButton
+              icon={Rows3}
+              label="Add row after"
+              onClick={() => editor.chain().focus().addRowAfter().run()}
+            />
+            <ToolBarButton
+              icon={Columns3}
+              label="Add column after"
+              onClick={() => editor.chain().focus().addColumnAfter().run()}
+            />
+            <ToolBarButton
+              icon={Trash2}
+              label="Delete table"
+              onClick={() => editor.chain().focus().deleteTable().run()}
+            />
+          </>
+        )}
       </div>
     </TooltipProvider>
   )

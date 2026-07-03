@@ -1,11 +1,6 @@
 import { cn } from "@/lib/utils"
 import React from "react"
 
-// interface PackageTitleProps {
-//   title: string
-//   className?: string
-// }
-
 interface PackageTitleProps extends React.ComponentPropsWithoutRef<"h1"> {}
 
 const PackageTitle: React.FC<PackageTitleProps> = ({
