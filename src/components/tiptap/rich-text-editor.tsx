@@ -137,7 +137,7 @@ export default function RichTextEditor({
         aria-invalid={ariaInvalid}
         className={cn(
           "w-full min-w-0 rounded-md border border-input bg-input/20 transition-colors",
-          "h-64",
+          "min-h-64",
           "focus-within:border-ring focus-within:ring-2 focus-within:ring-ring/30",
           "aria-invalid:border-destructive aria-invalid:ring-2 aria-invalid:ring-destructive/20",
           "dark:bg-input/30 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40",
