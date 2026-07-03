@@ -25,6 +25,21 @@ const packageSelect = {
           id: true,
           destinationId: true,
           order: true,
+          destination: {
+            select: {
+              id: true,
+              name: true,
+              elevation: true,
+              latitude: true,
+              longitude: true,
+              region: {
+                select: {
+                  id: true,
+                  name: true,
+                },
+              },
+            },
+          },
         },
         orderBy: { order: "asc" },
       },
