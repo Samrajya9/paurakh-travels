@@ -4,6 +4,11 @@ import prisma from "@/lib/prisma"
 import { AppError } from "@/lib/errors"
 import { createItinerary } from "@/services/itinerary.service"
 import { createFaq } from "@/services/faq.service"
+import {
+  getAttachmentsForEntity,
+  type ImageAttachment,
+} from "@/services/image-attachment.service"
+import { EntityType } from "@/constants/enums/entity-type"
 import type { CreatePackageInput } from "@/schemas/create-package.schema"
 import type { UpdatePackageInput } from "@/schemas/update-package.schema"
 
@@ -11,7 +16,15 @@ const packageSelect = {
   id: true,
   slug: true,
   name: true,
+  description: true,
   htmlOverview: true,
+  difficultyId: true,
+  difficulty: {
+    select: {
+      id: true,
+      name: true,
+    },
+  },
   itineraries: {
     select: {
       id: true,
@@ -68,6 +81,11 @@ export type Package = PrismaClient.PackageGetPayload<{
   select: typeof packageSelect
 }>
 
+// Package has no direct Prisma relation to ImageAttachment (the link is
+// polymorphic via entityType/entityId), so "images" can't be part of
+// packageSelect — it's fetched separately and merged on here.
+export type PackageWithImages = Package & { images: ImageAttachment[] }
+
 // ------------------------------------------------------------------ helpers
 
 async function findPackageByIdOrThrow(id: string) {
@@ -79,8 +97,9 @@ async function findPackageByIdOrThrow(id: string) {
   if (!pkg) {
     throw new AppError(`Package "${id}" not found.`, 404)
   }
+  const images = await getAttachmentsForEntity(EntityType.PACKAGE, pkg.id)
 
-  return pkg
+  return { ...pkg, images }
 }
 
 function throwIfDuplicatePackageSlug(slug: string, error: unknown): never {
@@ -125,7 +144,9 @@ export async function createPackage(dto: CreatePackageInput) {
       data: {
         slug: packageData.slug,
         name: packageData.name,
+        description: packageData.description,
         htmlOverview: packageData.htmlOverview,
+        difficultyId: packageData.difficultyId,
       },
       select: { id: true },
     })
@@ -154,11 +175,18 @@ export async function createPackage(dto: CreatePackageInput) {
 
 // ----------------------------------------------------------------- findAll
 
-export async function getAllPackages() {
-  return prisma.package.findMany({
+export async function getAllPackages(): Promise<PackageWithImages[]> {
+  const packages = await prisma.package.findMany({
     select: packageSelect,
     orderBy: { name: "asc" },
   })
+
+  return Promise.all(
+    packages.map(async (pkg) => ({
+      ...pkg,
+      images: await getAttachmentsForEntity(EntityType.PACKAGE, pkg.id),
+    }))
+  )
 }
 
 // ----------------------------------------------------------------- findOne
@@ -167,7 +195,9 @@ export async function getPackageById(id: string) {
   return findPackageByIdOrThrow(id)
 }
 
-export async function getPackageBySlug(slug: string) {
+export async function getPackageBySlug(
+  slug: string
+): Promise<PackageWithImages> {
   const pkg = await prisma.package.findUnique({
     where: { slug },
     select: packageSelect,
@@ -177,7 +207,9 @@ export async function getPackageBySlug(slug: string) {
     throw new AppError(`Package "${slug}" not found.`, 404)
   }
 
-  return pkg
+  const images = await getAttachmentsForEntity(EntityType.PACKAGE, pkg.id)
+
+  return { ...pkg, images }
 }
 
 // ------------------------------------------------------------------ update

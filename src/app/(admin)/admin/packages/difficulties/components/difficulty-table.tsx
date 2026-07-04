@@ -1,7 +1,5 @@
 "use client"
 
-import { useEffect, useState } from "react"
-import { useRouter } from "next/navigation"
 import { MoreHorizontal, Pencil, Trash2 } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
@@ -20,61 +18,75 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Skeleton } from "@/components/ui/skeleton"
-import type { PackageWithImages } from "@/services/package.service"
+import {
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog"
+import { useDialogContext } from "@/hooks/use-dailog"
+import { MODAL_REGISTRY } from "@/constants/modal/modal-component-registry"
+import EditDifficultyForm from "./edit-difficulty-form"
+import type { Difficulty } from "@/services/difficulty.service"
 
-export default function PackageTable() {
-  const router = useRouter()
+type DifficultyTableProps = {
+  difficulties: Difficulty[]
+  loading: boolean
+  error: string | null
+  onRetry: () => void
+  onUpdated: (difficulty: Difficulty) => void
+  onDeleted: (id: string) => void
+}
 
-  const [packages, setPackages] = useState<PackageWithImages[]>([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
+export default function DifficultyTable({
+  difficulties,
+  loading,
+  error,
+  onRetry,
+  onUpdated,
+  onDeleted,
+}: DifficultyTableProps) {
+  const { openModal, closeModal } = useDialogContext()
 
-  useEffect(() => {
-    fetchPackages()
-  }, [])
-
-  async function fetchPackages() {
-    setLoading(true)
-    setError(null)
-
-    try {
-      const res = await fetch("/api/packages")
-      if (!res.ok) throw new Error("Failed to fetch packages")
-
-      const data: PackageWithImages[] = await res.json()
-      setPackages(data)
-    } catch {
-      setError("Something went wrong while loading packages.")
-    } finally {
-      setLoading(false)
-    }
+  function handleEdit(difficulty: Difficulty) {
+    openModal(
+      MODAL_REGISTRY.EDIT_DIFFICULTY_MODAL_ID,
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>Edit Difficulty</DialogTitle>
+        </DialogHeader>
+        <EditDifficultyForm
+          difficulty={difficulty}
+          onSuccess={(updated) => {
+            onUpdated(updated)
+            closeModal(MODAL_REGISTRY.EDIT_DIFFICULTY_MODAL_ID)
+          }}
+        />
+      </DialogContent>
+    )
   }
 
   async function handleDelete(id: string) {
-    const prev = packages
-    setPackages((curr) => curr.filter((p) => p.id !== id))
-
-    const res = await fetch(`/api/packages/${id}`, { method: "DELETE" })
-    if (!res.ok) setPackages(prev)
+    const res = await fetch(`/api/difficulties/${id}`, { method: "DELETE" })
+    if (res.ok) onDeleted(id)
   }
 
-  if (loading) return <PackageTableSkeleton />
+  if (loading) return <DifficultyTableSkeleton />
 
   if (error) {
     return (
       <div className="flex flex-col items-center gap-2 py-10 text-sm text-muted-foreground">
         <p>{error}</p>
-        <Button variant="outline" size="sm" onClick={fetchPackages}>
+        <Button variant="outline" size="sm" onClick={onRetry}>
           Retry
         </Button>
       </div>
     )
   }
 
-  if (packages.length === 0) {
+  if (difficulties.length === 0) {
     return (
       <div className="py-10 text-center text-sm text-muted-foreground">
-        No packages found.
+        No difficulties found.
       </div>
     )
   }
@@ -84,21 +96,13 @@ export default function PackageTable() {
       <TableHeader>
         <TableRow>
           <TableHead>Name</TableHead>
-          <TableHead>Slug</TableHead>
-          <TableHead>Difficulty</TableHead>
-          <TableHead>Itineraries</TableHead>
-          <TableHead>FAQs</TableHead>
           <TableHead className="w-12 text-right">Actions</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
-        {packages.map((pkg) => (
-          <TableRow key={pkg.id}>
-            <TableCell className="font-medium">{pkg.name}</TableCell>
-            <TableCell className="text-muted-foreground">{pkg.slug}</TableCell>
-            <TableCell>{pkg.difficulty.name}</TableCell>
-            <TableCell>{pkg.itineraries.length}</TableCell>
-            <TableCell>{pkg.faqs.length}</TableCell>
+        {difficulties.map((difficulty) => (
+          <TableRow key={difficulty.id}>
+            <TableCell className="font-medium">{difficulty.name}</TableCell>
             <TableCell className="text-right">
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
@@ -107,17 +111,13 @@ export default function PackageTable() {
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
-                  <DropdownMenuItem
-                    onClick={() =>
-                      router.push(`/admin/packages/edit/${pkg.id}`)
-                    }
-                  >
+                  <DropdownMenuItem onClick={() => handleEdit(difficulty)}>
                     <Pencil className="size-4" />
                     Edit
                   </DropdownMenuItem>
                   <DropdownMenuItem
                     variant="destructive"
-                    onClick={() => handleDelete(pkg.id)}
+                    onClick={() => handleDelete(difficulty.id)}
                   >
                     <Trash2 className="size-4" />
                     Delete
@@ -132,7 +132,7 @@ export default function PackageTable() {
   )
 }
 
-function PackageTableSkeleton() {
+function DifficultyTableSkeleton() {
   return (
     <div className="space-y-2">
       {Array.from({ length: 5 }).map((_, i) => (

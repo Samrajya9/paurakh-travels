@@ -24,6 +24,8 @@ import { PlusIcon, TrashIcon } from "lucide-react"
 import DestinationSelect from "../../destinations/components/destination-select"
 import { Textarea } from "@/components/ui/textarea"
 
+import DifficultySelect from "../../packages/difficulties/components/difficulty-select"
+
 function slugify(value: string) {
   return value
     .toLowerCase()
@@ -244,7 +246,7 @@ const PackageFormFields = () => {
 
   return (
     <>
-      <FieldSet>
+      {/* <FieldSet>
         <FieldLegend>Package Information</FieldLegend>
         <FieldDescription>
           Add basic information about the package.
@@ -314,8 +316,124 @@ const PackageFormFields = () => {
             )}
           />
         </FieldGroup>
-      </FieldSet>
+      </FieldSet> */}
 
+      <FieldSet>
+        <FieldLegend>Package Information</FieldLegend>
+        <FieldDescription>
+          Add basic information about the package.
+        </FieldDescription>
+
+        <FieldGroup>
+          <Field orientation="horizontal">
+            <Controller
+              name="name"
+              control={form.control}
+              render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.invalid}>
+                  <FieldLabel htmlFor={field.name}>Package Name</FieldLabel>
+                  <Input
+                    {...field}
+                    id={field.name}
+                    aria-invalid={fieldState.invalid}
+                    placeholder="Name of the Package"
+                    autoComplete="off"
+                  />
+                  {fieldState.invalid && (
+                    <FieldError errors={[fieldState.error]} />
+                  )}
+                </Field>
+              )}
+            />
+
+            <Controller
+              name="slug"
+              control={form.control}
+              render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.invalid}>
+                  <FieldLabel htmlFor={field.name}>Slug</FieldLabel>
+                  <Input
+                    {...field}
+                    id={field.name}
+                    onChange={(e) => {
+                      isSlugManuallyEdited.current = true
+                      field.onChange(slugify(e.target.value))
+                    }}
+                    aria-invalid={fieldState.invalid}
+                    placeholder="everest-base-camp-trek"
+                    autoComplete="off"
+                  />
+                  {fieldState.invalid && (
+                    <FieldError errors={[fieldState.error]} />
+                  )}
+                </Field>
+              )}
+            />
+          </Field>
+
+          <Controller
+            name="difficultyId"
+            control={form.control}
+            render={({ field, fieldState }) => (
+              <Field data-invalid={fieldState.invalid}>
+                <FieldLabel htmlFor={field.name}>Difficulty</FieldLabel>
+                <DifficultySelect
+                  value={field.value}
+                  onChange={field.onChange}
+                  onBlur={field.onBlur}
+                  aria-invalid={fieldState.invalid}
+                />
+                {fieldState.invalid && (
+                  <FieldError errors={[fieldState.error]} />
+                )}
+              </Field>
+            )}
+          />
+
+          <Controller
+            name="description"
+            control={form.control}
+            render={({ field, fieldState }) => (
+              <Field data-invalid={fieldState.invalid}>
+                <FieldLabel htmlFor={field.name}>Description</FieldLabel>
+                <FieldDescription>
+                  A short summary (150–300 characters) shown on package cards
+                  and search results. This is plain text — the full trip
+                  overview below supports rich formatting.
+                </FieldDescription>
+                <Textarea
+                  {...field}
+                  value={field.value ?? ""}
+                  id={field.name}
+                  maxLength={300}
+                  aria-invalid={fieldState.invalid}
+                  placeholder="A short, compelling summary of this trek..."
+                />
+                {fieldState.invalid && (
+                  <FieldError errors={[fieldState.error]} />
+                )}
+              </Field>
+            )}
+          />
+
+          <Controller
+            name="htmlOverview"
+            control={form.control}
+            render={({ field, fieldState }) => (
+              <Field data-invalid={fieldState.invalid}>
+                <FieldLabel htmlFor={field.name}>Overview</FieldLabel>
+                <RichTextEditor
+                  value={field.value || ""}
+                  onChange={(value) => field.onChange(value)}
+                />
+                {fieldState.invalid && (
+                  <FieldError errors={[fieldState.error]} />
+                )}
+              </Field>
+            )}
+          />
+        </FieldGroup>
+      </FieldSet>
       <FieldSet>
         <FieldLegend className="flex w-full items-center justify-between">
           <span>Package Itineraries</span>

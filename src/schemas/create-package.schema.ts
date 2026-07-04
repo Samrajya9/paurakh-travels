@@ -22,12 +22,21 @@ export const CreatePackageSchema = z.object({
     .min(1, "Package name is required")
     .max(200, "Package name is too long"),
 
+  description: z
+    .string()
+    .trim()
+    .max(300, "Description cannot exceed 300 characters")
+    .optional()
+    .nullable(),
+
   htmlOverview: z
     .string()
     .trim()
     .max(50000, "Overview is too long")
     .optional()
     .nullable(),
+
+  difficultyId: z.cuid2("Invalid difficulty id"),
 
   itineraries: z.array(
     CreateItinerarySchema.omit({

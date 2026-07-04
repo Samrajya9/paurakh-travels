@@ -245,6 +245,9 @@ const REGIONS: {
 const PACKAGE = {
   slug: "everest-base-camp-trek",
   name: "Everest Base Camp",
+  description:
+    "Trek through Sherpa villages and dramatic Himalayan scenery to the foot of Mount Everest. A 14-day strenuous adventure featuring Namche Bazaar, Tengboche Monastery, and sweeping views from Kala Patthar at 5,644m.",
+
   htmlOverview: `<h2 class="scroll-m-20 text-xl font-semibold tracking-tight text-foreground">Trip Overview</h2>
 <p>The <strong class="font-bold">Everest Base Camp Trek</strong> is one of the most iconic trekking routes in the world, taking you through Sherpa villages, ancient monasteries, and dramatic mountain scenery to the foot of the world's tallest peak.</p>
 <h3 class="scroll-m-20 text-lg font-semibold tracking-tight text-foreground">Why Trek to Everest Base Camp?</h3>
@@ -380,6 +383,13 @@ const IMAGE_ATTACHMENT_MAP: Record<
 
 // The package's own hero image — reuses one of the same uploaded files.
 const PACKAGE_HERO_IMAGE = "the-destination-everest-base-camp.png"
+
+const DIFFICULTIES: string[] = [
+  "Easy",
+  "Moderate",
+  "Strenuous",
+  "Very Strenuous",
+]
 
 function filenameToAltText(filename: string) {
   const base = filename.replace(path.extname(filename), "")
@@ -543,6 +553,29 @@ async function main() {
     console.log(`✓ Image: /uploads/${filename}`)
   }
 
+  // ── 4.5. Difficulties ────────────────────────────────────────────────────
+
+  console.log("")
+  const difficultiesByName = new Map<string, { id: string }>()
+
+  for (const name of DIFFICULTIES) {
+    const difficulty = await prisma.difficulty.upsert({
+      where: { name },
+      create: { name },
+      update: {},
+      select: { id: true, name: true },
+    })
+    difficultiesByName.set(name, difficulty)
+    console.log(`✓ Difficulty: ${difficulty.name}`)
+  }
+
+  const strenuous = difficultiesByName.get("Strenuous")
+  if (!strenuous) {
+    throw new Error(
+      `Difficulty "Strenuous" not found — did the difficulty seed loop run first?`
+    )
+  }
+
   // ── 5. Package: Everest Base Camp ────────────────────────────────────────────
 
   const pkg = await prisma.package.upsert({
@@ -550,7 +583,9 @@ async function main() {
     create: {
       slug: PACKAGE.slug,
       name: PACKAGE.name,
+      description: PACKAGE.description,
       htmlOverview: PACKAGE.htmlOverview,
+      difficultyId: strenuous.id,
     },
     update: {},
     select: { id: true, name: true },

@@ -20,7 +20,9 @@ export default async function EditPackagePage({ params }: RouteContext) {
   const initialValues: CreatePackageInput = {
     slug: pkg.slug,
     name: pkg.name,
+    description: pkg.description ?? "",
     htmlOverview: pkg.htmlOverview ?? "",
+    difficultyId: pkg.difficultyId,
     itineraries: pkg.itineraries.map((itinerary) => ({
       dayNumber: itinerary.dayNumber,
       title: itinerary.title,

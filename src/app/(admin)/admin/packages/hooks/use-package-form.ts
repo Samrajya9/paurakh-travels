@@ -11,7 +11,9 @@ import { useForm } from "react-hook-form"
 const defaultValues: CreatePackageInput = {
   name: "",
   slug: "",
+  description: "",
   htmlOverview: "",
+  difficultyId: "",
   itineraries: [
     {
       dayNumber: 1,

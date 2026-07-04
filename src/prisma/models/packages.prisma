@@ -3,7 +3,11 @@ model Package {
     slug String @unique
     name String
 
+    description  String? @db.VarChar(300)
     htmlOverview String? @map("html_overview") @db.Text
+
+    difficultyId String     @map("difficulty_id")
+    difficulty   Difficulty @relation(fields: [difficultyId], references: [id], onDelete: Restrict)
 
     itineraries Itinerary[]
     faqs        PackageFaq[]
