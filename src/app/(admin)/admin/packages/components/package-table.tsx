@@ -86,6 +86,8 @@ export default function PackageTable() {
           <TableHead>Name</TableHead>
           <TableHead>Slug</TableHead>
           <TableHead>Difficulty</TableHead>
+          <TableHead>Base Price</TableHead>
+          <TableHead>Discount Tiers</TableHead>
           <TableHead>Itineraries</TableHead>
           <TableHead>FAQs</TableHead>
           <TableHead className="w-12 text-right">Actions</TableHead>
@@ -97,6 +99,8 @@ export default function PackageTable() {
             <TableCell className="font-medium">{pkg.name}</TableCell>
             <TableCell className="text-muted-foreground">{pkg.slug}</TableCell>
             <TableCell>{pkg.difficulty.name}</TableCell>
+            <TableCell>Rs. {Number(pkg.basePrice)}</TableCell>
+            <TableCell>{pkg.groupDiscounts.length}</TableCell>
             <TableCell>{pkg.itineraries.length}</TableCell>
             <TableCell>{pkg.faqs.length}</TableCell>
             <TableCell className="text-right">

@@ -23,9 +23,140 @@ import RichTextEditor from "@/components/tiptap/rich-text-editor"
 import { PlusIcon, TrashIcon } from "lucide-react"
 import DestinationSelect from "../../destinations/components/destination-select"
 import { Textarea } from "@/components/ui/textarea"
+import { PackageGroupDiscountSchema } from "@/schemas/create-package.schema"
 
 import DifficultySelect from "../../packages/difficulties/components/difficulty-select"
 
+// Owns the top-level, optional `groupDiscounts` field array.
+function PackageGroupDiscountsField() {
+  const form = useFormContext<CreatePackageInput>()
+  const basePrice = useWatch({ control: form.control, name: "basePrice" })
+
+  const { fields, append, remove } = useFieldArray({
+    control: form.control,
+    name: "groupDiscounts",
+  })
+
+  return (
+    <FieldSet>
+      <FieldLegend className="flex w-full items-center justify-between">
+        <span>Group Discounts</span>
+        <Button
+          type="button"
+          onClick={() =>
+            append({
+              minPeople: fields.length === 0 ? 4 : 2,
+              price: 0,
+            })
+          }
+          className="flex items-center gap-1.5"
+        >
+          <PlusIcon className="h-4 w-4" />
+          Add Discount Tier
+        </Button>
+      </FieldLegend>
+      <FieldDescription>
+        Optional. Offer a lower per-person price once a booking reaches a
+        minimum group size.
+      </FieldDescription>
+
+      {fields.length > 0 && (
+        <div className="mt-4 space-y-4 rounded-lg border border-border p-4">
+          {fields.map((field, index) => {
+            const discountedPrice =
+              form.watch(`groupDiscounts.${index}.price`) ?? 0
+            const minPeople =
+              form.watch(`groupDiscounts.${index}.minPeople`) ?? 0
+
+            return (
+              <div
+                key={field.id}
+                className="relative space-y-3 rounded-lg border border-border bg-muted/20 p-4"
+              >
+                <div className="flex items-center border-b border-border pb-2">
+                  <span className="text-sm font-medium">Tier {index + 1}</span>
+                  <Button
+                    type="button"
+                    variant="destructive"
+                    size="icon"
+                    onClick={() => remove(index)}
+                    className="ml-auto"
+                  >
+                    <TrashIcon className="size-4" />
+                  </Button>
+                </div>
+
+                <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                  <Controller
+                    control={form.control}
+                    name={`groupDiscounts.${index}.minPeople`}
+                    render={({ field, fieldState }) => (
+                      <Field data-invalid={fieldState.invalid}>
+                        <FieldLabel htmlFor={field.name}>
+                          Minimum People
+                        </FieldLabel>
+                        <Input
+                          {...field}
+                          value={field.value ?? ""}
+                          id={field.name}
+                          type="number"
+                          min={2}
+                          aria-invalid={fieldState.invalid}
+                          placeholder="e.g. 4"
+                          autoComplete="off"
+                        />
+                        {fieldState.invalid && (
+                          <FieldError errors={[fieldState.error]} />
+                        )}
+                      </Field>
+                    )}
+                  />
+
+                  <Controller
+                    control={form.control}
+                    name={`groupDiscounts.${index}.price`}
+                    render={({ field, fieldState }) => (
+                      <Field data-invalid={fieldState.invalid}>
+                        <FieldLabel htmlFor={field.name}>
+                          Price per Person
+                        </FieldLabel>
+                        <Input
+                          {...field}
+                          value={field.value ?? ""}
+                          id={field.name}
+                          type="number"
+                          step="0.01"
+                          min={0}
+                          aria-invalid={fieldState.invalid}
+                          placeholder="e.g. 70.00"
+                          autoComplete="off"
+                        />
+                        {fieldState.invalid && (
+                          <FieldError errors={[fieldState.error]} />
+                        )}
+                      </Field>
+                    )}
+                  />
+                </div>
+
+                {basePrice > 0 && minPeople > 0 && discountedPrice > 0 && (
+                  <p className="text-xs text-muted-foreground">
+                    Shown to guests as:{" "}
+                    <span className="line-through">Rs. {basePrice}</span>{" "}
+                    <span className="font-semibold text-foreground">
+                      Rs. {discountedPrice}
+                    </span>{" "}
+                    for {minPeople}+ people
+                  </p>
+                )}
+              </div>
+            )
+          })}
+        </div>
+      )}
+    </FieldSet>
+  )
+}
 function slugify(value: string) {
   return value
     .toLowerCase()
@@ -371,24 +502,52 @@ const PackageFormFields = () => {
             />
           </Field>
 
-          <Controller
-            name="difficultyId"
-            control={form.control}
-            render={({ field, fieldState }) => (
-              <Field data-invalid={fieldState.invalid}>
-                <FieldLabel htmlFor={field.name}>Difficulty</FieldLabel>
-                <DifficultySelect
-                  value={field.value}
-                  onChange={field.onChange}
-                  onBlur={field.onBlur}
-                  aria-invalid={fieldState.invalid}
-                />
-                {fieldState.invalid && (
-                  <FieldError errors={[fieldState.error]} />
-                )}
-              </Field>
-            )}
-          />
+          <Field orientation="horizontal">
+            <Controller
+              name="difficultyId"
+              control={form.control}
+              render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.invalid}>
+                  <FieldLabel htmlFor={field.name}>Difficulty</FieldLabel>
+                  <DifficultySelect
+                    value={field.value}
+                    onChange={field.onChange}
+                    onBlur={field.onBlur}
+                    aria-invalid={fieldState.invalid}
+                  />
+                  {fieldState.invalid && (
+                    <FieldError errors={[fieldState.error]} />
+                  )}
+                </Field>
+              )}
+            />
+
+            <Controller
+              name="basePrice"
+              control={form.control}
+              render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.invalid}>
+                  <FieldLabel htmlFor={field.name}>
+                    Base Price (per person)
+                  </FieldLabel>
+                  <Input
+                    {...field}
+                    value={field.value ?? ""}
+                    id={field.name}
+                    type="number"
+                    step="0.01"
+                    min={0}
+                    aria-invalid={fieldState.invalid}
+                    placeholder="e.g. 100.00"
+                    autoComplete="off"
+                  />
+                  {fieldState.invalid && (
+                    <FieldError errors={[fieldState.error]} />
+                  )}
+                </Field>
+              )}
+            />
+          </Field>
 
           <Controller
             name="description"
@@ -434,6 +593,8 @@ const PackageFormFields = () => {
           />
         </FieldGroup>
       </FieldSet>
+
+      <PackageGroupDiscountsField />
       <FieldSet>
         <FieldLegend className="flex w-full items-center justify-between">
           <span>Package Itineraries</span>

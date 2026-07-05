@@ -30,14 +30,25 @@ CREATE TABLE `company_profiles` (
 CREATE TABLE `destinations` (
     `id` VARCHAR(191) NOT NULL,
     `name` VARCHAR(191) NOT NULL,
-    `max_altitude` INTEGER NOT NULL,
-    `latitude` DOUBLE NOT NULL,
-    `longitude` DOUBLE NOT NULL,
+    `elevation` INTEGER NOT NULL,
+    `latitude` DOUBLE NULL,
+    `longitude` DOUBLE NULL,
     `region_id` VARCHAR(191) NOT NULL,
     `created_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updated_at` DATETIME(3) NOT NULL,
 
     UNIQUE INDEX `destinations_region_id_name_key`(`region_id`, `name`),
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
+CREATE TABLE `difficulties` (
+    `id` VARCHAR(191) NOT NULL,
+    `name` VARCHAR(191) NOT NULL,
+    `created_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `updated_at` DATETIME(3) NOT NULL,
+
+    UNIQUE INDEX `difficulties_name_key`(`name`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -53,12 +64,40 @@ CREATE TABLE `faqs` (
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
+CREATE TABLE `image_attachments` (
+    `id` VARCHAR(191) NOT NULL,
+    `imageId` VARCHAR(191) NOT NULL,
+    `entityType` ENUM('PACKAGE', 'DESTINATION', 'REGION') NOT NULL,
+    `entityId` VARCHAR(191) NOT NULL,
+    `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `updatedAt` DATETIME(3) NOT NULL,
+
+    INDEX `image_attachments_entityType_entityId_idx`(`entityType`, `entityId`),
+    INDEX `image_attachments_imageId_idx`(`imageId`),
+    UNIQUE INDEX `image_attachments_imageId_entityType_entityId_key`(`imageId`, `entityType`, `entityId`),
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
+CREATE TABLE `images` (
+    `id` VARCHAR(191) NOT NULL,
+    `url` VARCHAR(191) NOT NULL,
+    `alt_text` VARCHAR(191) NULL,
+    `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `updatedAt` DATETIME(3) NOT NULL,
+
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
 CREATE TABLE `itineraries` (
     `id` VARCHAR(191) NOT NULL,
     `package_id` VARCHAR(191) NOT NULL,
     `day_number` INTEGER NOT NULL,
     `title` VARCHAR(191) NOT NULL,
-    `description` TEXT NOT NULL,
+    `html_description` TEXT NOT NULL,
+    `distance_km` DOUBLE NULL,
+    `duration_hours` INTEGER NULL,
     `created_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updated_at` DATETIME(3) NOT NULL,
 
@@ -71,6 +110,7 @@ CREATE TABLE `itinerary_destinations` (
     `id` VARCHAR(191) NOT NULL,
     `itinerary_id` VARCHAR(191) NOT NULL,
     `destination_id` VARCHAR(191) NOT NULL,
+    `order` INTEGER NOT NULL,
 
     INDEX `itinerary_destinations_destination_id_idx`(`destination_id`),
     UNIQUE INDEX `itinerary_destinations_itinerary_id_destination_id_key`(`itinerary_id`, `destination_id`),
@@ -90,11 +130,27 @@ CREATE TABLE `package_faqs` (
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
+CREATE TABLE `package_group_discounts` (
+    `id` VARCHAR(191) NOT NULL,
+    `package_id` VARCHAR(191) NOT NULL,
+    `min_people` INTEGER NOT NULL,
+    `price` DECIMAL(10, 2) NOT NULL,
+    `created_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `updated_at` DATETIME(3) NOT NULL,
+
+    UNIQUE INDEX `package_group_discounts_package_id_min_people_key`(`package_id`, `min_people`),
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
 CREATE TABLE `packages` (
     `id` VARCHAR(191) NOT NULL,
     `slug` VARCHAR(191) NOT NULL,
     `name` VARCHAR(191) NOT NULL,
-    `overview` TEXT NULL,
+    `description` VARCHAR(300) NULL,
+    `html_overview` TEXT NULL,
+    `base_price` DECIMAL(10, 2) NOT NULL,
+    `difficulty_id` VARCHAR(191) NOT NULL,
     `created_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updated_at` DATETIME(3) NOT NULL,
 
@@ -133,6 +189,9 @@ ALTER TABLE `company_contacts` ADD CONSTRAINT `company_contacts_company_id_fkey`
 ALTER TABLE `destinations` ADD CONSTRAINT `destinations_region_id_fkey` FOREIGN KEY (`region_id`) REFERENCES `regions`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
+ALTER TABLE `image_attachments` ADD CONSTRAINT `image_attachments_imageId_fkey` FOREIGN KEY (`imageId`) REFERENCES `images`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
 ALTER TABLE `itineraries` ADD CONSTRAINT `itineraries_package_id_fkey` FOREIGN KEY (`package_id`) REFERENCES `packages`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
@@ -146,3 +205,9 @@ ALTER TABLE `package_faqs` ADD CONSTRAINT `package_faqs_package_id_fkey` FOREIGN
 
 -- AddForeignKey
 ALTER TABLE `package_faqs` ADD CONSTRAINT `package_faqs_faq_id_fkey` FOREIGN KEY (`faq_id`) REFERENCES `faqs`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `package_group_discounts` ADD CONSTRAINT `package_group_discounts_package_id_fkey` FOREIGN KEY (`package_id`) REFERENCES `packages`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `packages` ADD CONSTRAINT `packages_difficulty_id_fkey` FOREIGN KEY (`difficulty_id`) REFERENCES `difficulties`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;

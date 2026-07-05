@@ -18,12 +18,21 @@ const packageSelect = {
   name: true,
   description: true,
   htmlOverview: true,
+  basePrice: true,
   difficultyId: true,
   difficulty: {
     select: {
       id: true,
       name: true,
     },
+  },
+  groupDiscounts: {
+    select: {
+      id: true,
+      minPeople: true,
+      price: true,
+    },
+    orderBy: { minPeople: "asc" },
   },
   itineraries: {
     select: {
@@ -133,10 +142,32 @@ async function attachFaqsToPackage(
   )
 }
 
+// Full replace, not merge: wipes existing tiers for the package and
+// recreates from the submitted array. This is deliberate — group
+// discounts support edit/delete of individual tiers, so an append-only
+// approach (like itineraries/faqs use) would leave stale rows behind
+// every time a tier is removed or its price changes.
+async function replaceGroupDiscountsForPackage(
+  packageId: string,
+  groupDiscounts: NonNullable<CreatePackageInput["groupDiscounts"]>
+) {
+  await prisma.packageGroupDiscount.deleteMany({ where: { packageId } })
+
+  if (groupDiscounts.length === 0) return
+
+  await prisma.packageGroupDiscount.createMany({
+    data: groupDiscounts.map((discount) => ({
+      packageId,
+      minPeople: discount.minPeople,
+      price: discount.price,
+    })),
+  })
+}
+
 // ------------------------------------------------------------------ create
 
 export async function createPackage(dto: CreatePackageInput) {
-  const { itineraries, faqs, ...packageData } = dto
+  const { itineraries, faqs, groupDiscounts, ...packageData } = dto
 
   try {
     // 1. Create the package
@@ -146,6 +177,7 @@ export async function createPackage(dto: CreatePackageInput) {
         name: packageData.name,
         description: packageData.description,
         htmlOverview: packageData.htmlOverview,
+        basePrice: packageData.basePrice,
         difficultyId: packageData.difficultyId,
       },
       select: { id: true },
@@ -166,7 +198,12 @@ export async function createPackage(dto: CreatePackageInput) {
       await attachFaqsToPackage(pkg.id, faqs)
     }
 
-    // 4. Return the full package with itineraries + faqs attached
+    // 4. If group discount tiers are provided, create them
+    if (groupDiscounts) {
+      await replaceGroupDiscountsForPackage(pkg.id, groupDiscounts)
+    }
+
+    // 5. Return the full package with itineraries + faqs + discounts attached
     return findPackageByIdOrThrow(pkg.id)
   } catch (error) {
     throwIfDuplicatePackageSlug(packageData.slug, error)
@@ -217,7 +254,7 @@ export async function getPackageBySlug(
 export async function updatePackageById(id: string, dto: UpdatePackageInput) {
   await findPackageByIdOrThrow(id)
 
-  const { itineraries, faqs, ...packageData } = dto
+  const { itineraries, faqs, groupDiscounts, ...packageData } = dto
 
   try {
     await prisma.package.update({
@@ -236,6 +273,13 @@ export async function updatePackageById(id: string, dto: UpdatePackageInput) {
 
     if (faqs && faqs.length > 0) {
       await attachFaqsToPackage(id, faqs)
+    }
+
+    // Only touch group discounts if the caller actually sent the key.
+    // groupDiscounts: [] means "delete all tiers" — that's a valid,
+    // intentional state, not "nothing was sent".
+    if (groupDiscounts !== undefined) {
+      await replaceGroupDiscountsForPackage(id, groupDiscounts)
     }
 
     return findPackageByIdOrThrow(id)

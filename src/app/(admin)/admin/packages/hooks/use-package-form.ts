@@ -13,6 +13,7 @@ const defaultValues: CreatePackageInput = {
   slug: "",
   description: "",
   htmlOverview: "",
+  basePrice: 0,
   difficultyId: "",
   itineraries: [
     {

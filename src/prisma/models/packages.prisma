@@ -6,11 +6,14 @@ model Package {
     description  String? @db.VarChar(300)
     htmlOverview String? @map("html_overview") @db.Text
 
+    basePrice Decimal @map("base_price") @db.Decimal(10, 2)
+
     difficultyId String     @map("difficulty_id")
     difficulty   Difficulty @relation(fields: [difficultyId], references: [id], onDelete: Restrict)
 
-    itineraries Itinerary[]
-    faqs        PackageFaq[]
+    itineraries    Itinerary[]
+    faqs           PackageFaq[]
+    groupDiscounts PackageGroupDiscount[]
 
     createdAt DateTime @default(now()) @map("created_at")
     updatedAt DateTime @updatedAt @map("updated_at")

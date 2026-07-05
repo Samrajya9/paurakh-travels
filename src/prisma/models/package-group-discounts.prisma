@@ -1,0 +1,16 @@
+model PackageGroupDiscount {
+    id String @id @default(cuid())
+
+    packageId String  @map("package_id")
+    package   Package @relation(fields: [packageId], references: [id], onDelete: Cascade)
+
+    minPeople Int @map("min_people")
+
+    price Decimal @db.Decimal(10, 2)
+
+    createdAt DateTime @default(now()) @map("created_at")
+    updatedAt DateTime @updatedAt @map("updated_at")
+
+    @@unique([packageId, minPeople])
+    @@map("package_group_discounts")
+}

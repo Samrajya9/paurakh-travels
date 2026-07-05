@@ -1,15 +1,3 @@
-/**
- * Prisma seed — run with: pnpm prisma db seed
- *
- * Seeds:
- *   1. One admin user (upserted — safe to re-run)
- *   2. Company profile + contacts (upserted — safe to re-run)
- *
- * Required env vars (same .env the app uses):
- *   DATABASE_URL   — Prisma connection string
- *   PEPPER         — argon2 pepper (must match auth.service.ts)
- */
-
 import "dotenv/config"
 import * as fs from "fs"
 import * as path from "path"
@@ -247,6 +235,7 @@ const PACKAGE = {
   name: "Everest Base Camp",
   description:
     "Trek through Sherpa villages and dramatic Himalayan scenery to the foot of Mount Everest. A 14-day strenuous adventure featuring Namche Bazaar, Tengboche Monastery, and sweeping views from Kala Patthar at 5,644m.",
+  basePrice: 1200,
 
   htmlOverview: `<h2 class="scroll-m-20 text-xl font-semibold tracking-tight text-foreground">Trip Overview</h2>
 <p>The <strong class="font-bold">Everest Base Camp Trek</strong> is one of the most iconic trekking routes in the world, taking you through Sherpa villages, ancient monasteries, and dramatic mountain scenery to the foot of the world's tallest peak.</p>
@@ -352,37 +341,10 @@ const PACKAGE_FAQS: { question: string; answer: string }[] = [
   },
 ]
 
-// Maps an uploaded filename to the destination it illustrates. Any file in
-// public/uploads not listed here is still seeded as an Image row, just left
-// unattached — safe to extend as more photos are added.
-const IMAGE_ATTACHMENT_MAP: Record<
-  string,
-  { entityType: (typeof EntityType)[keyof typeof EntityType]; lookup: string }
-> = {
-  "the-destination-everest-base-camp.png": {
-    entityType: EntityType.DESTINATION,
-    lookup: "Everest Base Camp",
-  },
-  "the-gateway-namche-bazaar.png": {
-    entityType: EntityType.DESTINATION,
-    lookup: "Namche Bazaar",
-  },
-  "critical-acclimatization-above-dingboche.png": {
-    entityType: EntityType.DESTINATION,
-    lookup: "Dingboche",
-  },
-  "the-final-approach-gorak-shep-and-everest.png": {
-    entityType: EntityType.DESTINATION,
-    lookup: "Kala Patthar",
-  },
-  "on-the-trail-crossing-a-suspension-bridge.png": {
-    entityType: EntityType.DESTINATION,
-    lookup: "Lukla",
-  },
-}
-
-// The package's own hero image — reuses one of the same uploaded files.
-const PACKAGE_HERO_IMAGE = "the-destination-everest-base-camp.png"
+const PACKAGE_GROUP_DISCOUNTS: { minPeople: number; price: number }[] = [
+  { minPeople: 4, price: 1050 },
+  { minPeople: 9, price: 950 },
+]
 
 const DIFFICULTIES: string[] = [
   "Easy",
@@ -584,6 +546,7 @@ async function main() {
       slug: PACKAGE.slug,
       name: PACKAGE.name,
       description: PACKAGE.description,
+      basePrice: PACKAGE.basePrice,
       htmlOverview: PACKAGE.htmlOverview,
       difficultyId: strenuous.id,
     },
@@ -592,6 +555,26 @@ async function main() {
   })
 
   console.log(`\n✓ Package: ${pkg.name}`)
+
+  for (const tier of PACKAGE_GROUP_DISCOUNTS) {
+    await prisma.packageGroupDiscount.upsert({
+      where: {
+        packageId_minPeople: {
+          packageId: pkg.id,
+          minPeople: tier.minPeople,
+        },
+      },
+      create: {
+        packageId: pkg.id,
+        minPeople: tier.minPeople,
+        price: tier.price,
+      },
+      update: {},
+    })
+    console.log(
+      `    Discount tier: ${tier.minPeople}+ people → Rs. ${tier.price}`
+    )
+  }
 
   for (const day of PACKAGE_ITINERARIES) {
     const destination = await prisma.destination.findFirst({
@@ -666,62 +649,24 @@ async function main() {
     console.log(`    FAQ: ${faqData.question}`)
   }
 
-  // ── 7. Image attachments ────────────────────────────────────────────────────
+  // ── 7. Package image attachments ────────────────────────────────────────────
 
-  // Hero image → attach directly to the package
-  const heroImage = imagesByFilename.get(PACKAGE_HERO_IMAGE)
-  if (heroImage) {
+  for (const image of imagesByFilename.values()) {
     await prisma.imageAttachment.upsert({
       where: {
         imageId_entityType_entityId: {
-          imageId: heroImage.id,
+          imageId: image.id,
           entityType: EntityType.PACKAGE,
           entityId: pkg.id,
         },
       },
       create: {
-        imageId: heroImage.id,
+        imageId: image.id,
         entityType: EntityType.PACKAGE,
         entityId: pkg.id,
       },
       update: {},
     })
-    console.log(`    Attached hero image to package`)
-  }
-
-  // Mapped images → attach to their destinations
-  for (const [filename, mapping] of Object.entries(IMAGE_ATTACHMENT_MAP)) {
-    const image = imagesByFilename.get(filename)
-    if (!image) continue
-
-    const destination = await prisma.destination.findFirst({
-      where: { name: mapping.lookup },
-      select: { id: true },
-    })
-
-    if (!destination) {
-      console.warn(
-        `  ⚠ Skipping attachment for "${filename}": destination "${mapping.lookup}" not found`
-      )
-      continue
-    }
-
-    await prisma.imageAttachment.upsert({
-      where: {
-        imageId_entityType_entityId: {
-          imageId: image.id,
-          entityType: mapping.entityType,
-          entityId: destination.id,
-        },
-      },
-      create: {
-        imageId: image.id,
-        entityType: mapping.entityType,
-        entityId: destination.id,
-      },
-      update: {},
-    })
-    console.log(`    Attached ${filename} → ${mapping.lookup}`)
   }
 
   console.log("\n🌱 Seed complete.")

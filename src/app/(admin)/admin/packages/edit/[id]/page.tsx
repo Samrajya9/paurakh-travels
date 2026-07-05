@@ -22,6 +22,7 @@ export default async function EditPackagePage({ params }: RouteContext) {
     name: pkg.name,
     description: pkg.description ?? "",
     htmlOverview: pkg.htmlOverview ?? "",
+    basePrice: pkg.basePrice.toNumber(),
     difficultyId: pkg.difficultyId,
     itineraries: pkg.itineraries.map((itinerary) => ({
       dayNumber: itinerary.dayNumber,
@@ -38,6 +39,12 @@ export default async function EditPackagePage({ params }: RouteContext) {
       ? pkg.faqs.map((pf) => ({
           question: pf.faq.question,
           answer: pf.faq.answer,
+        }))
+      : undefined,
+    groupDiscounts: pkg.groupDiscounts.length
+      ? pkg.groupDiscounts.map((gd) => ({
+          minPeople: gd.minPeople,
+          price: gd.price.toNumber(),
         }))
       : undefined,
   }
