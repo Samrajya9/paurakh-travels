@@ -80,19 +80,25 @@ const PackageHero: React.FC<PackageHeroProps> = ({
           </Button>
           <PackageLike
             packageId="cmr7cl5zh001z9nhibpfjqowo"
-            liked={false}
+            liked={true}
             size={"lg"}
           >
             {(liked) => (
               <>
-                <Heart
-                  className={cn(
-                    "size-4 transition-all",
-                    liked
-                      ? "fill-primary text-primary"
-                      : "text-muted-foreground"
-                  )}
-                />
+                <div className="relative size-4">
+                  {/* Outline */}
+                  <Heart className="absolute inset-0 text-muted-foreground" />
+
+                  {/* Filled */}
+                  <Heart
+                    className={cn(
+                      "absolute inset-0 fill-primary text-primary transition-all duration-300",
+                      liked
+                        ? "[clip-path:inset(100%_0_0_0)]"
+                        : "[clip-path:inset(0_0_0_0)]"
+                    )}
+                  />
+                </div>
               </>
             )}
           </PackageLike>
