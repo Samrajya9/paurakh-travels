@@ -4,6 +4,7 @@ import { cn } from "@/lib/utils"
 import { toast } from "sonner"
 import React from "react"
 import { useAuth } from "@/context/auth.context"
+import { useLikedPackages } from "@/context/liked-packages.context"
 import { VariantProps } from "class-variance-authority"
 
 // 1. Change children to accept a function that provides the `liked` state
@@ -29,6 +30,7 @@ export default function PackageLike({
   ...props
 }: PackageLikeProps) {
   const { user } = useAuth()
+  const { markLiked, markUnliked } = useLikedPackages()
   const [liked, setLiked] = React.useState(() => initialLiked)
 
   const confirmedLikedRef = React.useRef(initialLiked)
@@ -67,6 +69,16 @@ export default function PackageLike({
           await unlikePackage()
         }
         confirmedLikedRef.current = desiredLiked
+
+        // Only touch the shared set once the server has actually
+        // confirmed the change — other cards for this same package
+        // (e.g. on the listing page and inside the detail page at
+        // once) pick this up for free via context.
+        if (desiredLiked) {
+          markLiked(packageId)
+        } else {
+          markUnliked(packageId)
+        }
       } catch {
         setLiked(confirmedLikedRef.current)
         toast.error(
@@ -76,8 +88,8 @@ export default function PackageLike({
         )
       }
     },
-    [packageId]
-  ) // eslint-disable-line react-hooks/exhaustive-deps
+    [packageId, markLiked, markUnliked]
+  )
 
   const handleLikeClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     // Prevent accidental form submissions or parent triggers if nested

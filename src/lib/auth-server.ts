@@ -6,6 +6,8 @@ import type { User } from "@/context/auth.context"
 import { verifyAccessToken } from "./jwt"
 import { UserType } from "@/constants/enums/user-type"
 
+import { cache } from "react"
+
 export function payloadToUser(payload: jose.JWTPayload): User {
   return {
     id: payload.sub as string,
@@ -19,7 +21,7 @@ export function payloadToUser(payload: jose.JWTPayload): User {
  * cookies into the request before this runs. All this needs to do is
  * verify the (guaranteed-fresh) access token.
  */
-export async function getCurrentUser(): Promise<User | null> {
+export const getCurrentUser = cache(async () => {
   const cookieStore = await cookies()
   const accessToken = cookieStore.get("access_token")?.value
 
@@ -31,4 +33,4 @@ export async function getCurrentUser(): Promise<User | null> {
   } catch {
     return null
   }
-}
+})

@@ -88,7 +88,8 @@ export default function HeroSection() {
         fill
         priority
         sizes="100vw"
-        className="object-cover object-[center_35%]"
+        // className="object-cover object-[center_35%]"
+        className="object-cover object-bottom"
       />
 
       <HeroCurveGradient />

@@ -42,7 +42,7 @@ export default async function RootLayout({
         "antialiased",
         poppins.variable,
         inter.variable,
-        "font-sans",
+        "font-sans"
       )}
     >
       <body cz-shortcut-listen="true">

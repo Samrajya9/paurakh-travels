@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation"
 import { Search } from "lucide-react"
-import { type FormEvent, useState } from "react"
+import { useState } from "react"
 
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
@@ -15,7 +15,7 @@ export function HeroSearch({ className }: HeroSearchProps) {
   const router = useRouter()
   const [query, setQuery] = useState("")
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  function handleSubmit(event: SubmitEvent) {
     event.preventDefault()
     const trimmed = query.trim()
     const destination = trimmed
@@ -29,7 +29,7 @@ export function HeroSearch({ className }: HeroSearchProps) {
       onSubmit={handleSubmit}
       className={cn(
         "flex w-full max-w-xl flex-col gap-3 sm:flex-row sm:items-stretch",
-        className,
+        className
       )}
       role="search"
       aria-label="Search treks and destinations"
