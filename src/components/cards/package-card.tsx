@@ -4,6 +4,7 @@ import * as React from "react"
 import Image from "next/image"
 import Link from "next/link"
 import { Clock, Mountain, Users, ArrowRight, Heart } from "lucide-react"
+import { cva, type VariantProps } from "class-variance-authority"
 
 import { cn } from "@/lib/utils"
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card"
@@ -14,7 +15,9 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel"
-import { Button } from "@/components/ui/button"
+import { Button, buttonVariants } from "@/components/ui/button"
+import { useAuth } from "@/context/auth.context"
+import { toast } from "sonner"
 
 interface Difficulty {
   id: string
@@ -143,24 +146,15 @@ export function PackageCard({
           )}
         </Carousel>
 
-        <button
-          type="button"
-          onClick={handleLikeClick}
-          aria-pressed={liked}
-          aria-label={liked ? "Remove from favorites" : "Add to favorites"}
+        <PackageLike
+          packageId={pkg.id}
+          liked={true}
           className={cn(
             "absolute top-2 right-2 flex size-8 items-center justify-center rounded-full",
             "bg-background/90 shadow-sm backdrop-blur-sm transition-colors",
             "hover:bg-background"
           )}
-        >
-          <Heart
-            className={cn(
-              "size-4 transition-all",
-              liked ? "fill-primary text-primary" : "text-muted-foreground"
-            )}
-          />
-        </button>
+        />
       </div>
 
       <CardHeader className="gap-2 pt-5">
@@ -234,5 +228,114 @@ export function PackageCard({
         </Button>
       </CardFooter>
     </Card>
+  )
+}
+
+interface PackageLikeProps
+  extends React.ComponentProps<"button">, VariantProps<typeof buttonVariants> {
+  packageId: string
+  liked?: boolean
+}
+
+const LIKE_DEBOUNCE_MS = 600
+
+function PackageLike({
+  packageId,
+  liked: initialLiked = false,
+  className,
+  disabled,
+  ...props
+}: PackageLikeProps) {
+  const { user } = useAuth()
+  const [liked, setLiked] = React.useState(() => initialLiked)
+
+  // Last state actually confirmed by the server — the debounced sync
+  // always compares against this, not against whatever the previous
+  // click happened to leave behind.
+  const confirmedLikedRef = React.useRef(initialLiked)
+  const debounceTimeoutRef = React.useRef<ReturnType<typeof setTimeout> | null>(
+    null
+  )
+
+  React.useEffect(() => {
+    return () => {
+      if (debounceTimeoutRef.current) clearTimeout(debounceTimeoutRef.current)
+    }
+  }, [])
+
+  const likePackage = async () => {
+    const response = await fetch(`/api/packages/${packageId}/like`, {
+      method: "POST",
+    })
+    if (!response.ok) throw new Error("Failed to like package")
+  }
+
+  const unlikePackage = async () => {
+    const response = await fetch(`/api/packages/${packageId}/like`, {
+      method: "DELETE",
+    })
+    if (!response.ok) throw new Error("Failed to unlike package")
+  }
+
+  const syncLikeState = React.useCallback(
+    async (desiredLiked: boolean) => {
+      // Nothing net-changed since the last confirmed server state, skip the call.
+      if (desiredLiked === confirmedLikedRef.current) return
+
+      try {
+        if (desiredLiked) {
+          await likePackage()
+        } else {
+          await unlikePackage()
+        }
+        confirmedLikedRef.current = desiredLiked
+      } catch {
+        setLiked(confirmedLikedRef.current)
+        toast.error(
+          desiredLiked
+            ? "Couldn't like this package. Please try again."
+            : "Couldn't remove this package from favorites. Please try again."
+        )
+      }
+    },
+    [packageId]
+  ) // eslint-disable-line react-hooks/exhaustive-deps
+
+  const handleLikeClick = () => {
+    if (!user) {
+      toast.error("Please log in to like packages.")
+      return
+    }
+
+    setLiked((previous) => {
+      const next = !previous
+
+      if (debounceTimeoutRef.current) clearTimeout(debounceTimeoutRef.current)
+      debounceTimeoutRef.current = setTimeout(() => {
+        syncLikeState(next)
+      }, LIKE_DEBOUNCE_MS)
+
+      return next
+    })
+  }
+
+  return (
+    <Button
+      type="button"
+      variant={"outline"}
+      aria-pressed={liked}
+      aria-label={liked ? "Remove from favorites" : "Add to favorites"}
+      onClick={handleLikeClick}
+      // disabled={disabled || !user}
+      className={cn(className)}
+      {...props}
+    >
+      <Heart
+        className={cn(
+          "size-4 transition-all",
+          liked ? "fill-primary text-primary" : "text-muted-foreground"
+        )}
+      />
+    </Button>
   )
 }
