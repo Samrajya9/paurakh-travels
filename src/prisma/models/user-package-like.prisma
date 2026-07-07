@@ -1,0 +1,12 @@
+model UserPackageLike {
+    id        String   @id @default(cuid())
+    userId    String   @map("user_id")
+    packageId String   @map("package_id") // or Int, depending on Package.id
+    createdAt DateTime @default(now()) @map("created_at")
+
+    user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+    package Package @relation(fields: [packageId], references: [id], onDelete: Cascade)
+
+    @@unique([userId, packageId])
+    @@map("user_package_likes")
+}

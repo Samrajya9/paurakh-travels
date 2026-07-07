@@ -9,6 +9,8 @@ model User {
   password  String
   user_type UserType @default(CUSTOMER)
 
+  likes UserPackageLike[]
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
