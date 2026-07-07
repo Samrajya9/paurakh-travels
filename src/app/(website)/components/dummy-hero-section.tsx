@@ -38,7 +38,7 @@ export default function DummyHeroSection() {
           fill
           priority
           sizes="100vw"
-          className="object-cover object-bottom"
+          className="object-cover object-[0%_60%]"
         />
         <div
           className={cn(

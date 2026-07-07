@@ -8,19 +8,13 @@ import { Section } from "./ui/section"
 
 export default function NavBar() {
   const { user } = useAuth()
+
   return (
-    // <header className="fixed inset-x-0 top-0 z-50 bg-transparent">
-    // <nav aria-label="Primary navigation" className="bg-transparent">
-
-    // </nav>
-    // </header>
-
     <>
       <header className="fixed inset-x-0 top-0 z-50 bg-transparent">
         <Section
           asChild
           width="constrained"
-          background="transparent"
           className="flex items-center justify-between bg-transparent py-6"
         >
           <nav aria-label="Primary navigation">

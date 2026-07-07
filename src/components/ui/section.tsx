@@ -9,14 +9,9 @@ const sectionVariants = cva("px-6 py-16 text-foreground lg:px-10", {
       fullWidth: "w-full",
       constrained: "mx-auto max-w-9xl",
     },
-    background: {
-      default: "bg-background",
-      transparent: "bg-transparent",
-    },
   },
   defaultVariants: {
     width: "fullWidth",
-    background: "default",
   },
 })
 
