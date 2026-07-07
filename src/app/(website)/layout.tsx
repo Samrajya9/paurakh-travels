@@ -1,4 +1,5 @@
 import { Footer } from "@/components/footer"
+import NavBar from "@/components/nav"
 import { LikedPackagesProvider } from "@/context/liked-packages.context"
 import { getCurrentUser } from "@/lib/auth-server"
 import { getAllLikedPackageIdsForUser } from "@/services/user-package-like.service"
@@ -17,6 +18,7 @@ export default async function WebsiteLayout({
   return (
     <>
       <LikedPackagesProvider initialLikedPackageIds={initialLikedPackageIds}>
+        <NavBar />
         <main>{children}</main>
         <Footer />
       </LikedPackagesProvider>

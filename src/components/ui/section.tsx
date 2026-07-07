@@ -1,23 +1,24 @@
 import * as React from "react"
 import { Slot } from "radix-ui"
 import { cva, type VariantProps } from "class-variance-authority"
-
 import { cn } from "@/lib/utils"
 
-const sectionVariants = cva(
-  "bg-background px-6 py-16 text-foreground lg:px-10",
-  {
-    variants: {
-      width: {
-        fullWidth: "w-full",
-        constrained: "mx-auto max-w-9xl",
-      },
+const sectionVariants = cva("px-6 py-16 text-foreground lg:px-10", {
+  variants: {
+    width: {
+      fullWidth: "w-full",
+      constrained: "mx-auto max-w-9xl",
     },
-    defaultVariants: {
-      width: "fullWidth",
+    background: {
+      default: "bg-background",
+      transparent: "bg-transparent",
     },
-  }
-)
+  },
+  defaultVariants: {
+    width: "fullWidth",
+    background: "default",
+  },
+})
 
 type SectionProps = React.ComponentProps<"section"> &
   VariantProps<typeof sectionVariants> & {
