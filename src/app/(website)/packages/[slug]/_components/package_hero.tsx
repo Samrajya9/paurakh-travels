@@ -5,6 +5,10 @@ import PackageTitle from "./package_title"
 import { Icon } from "../page"
 import StarRating from "./package_rating"
 import PackageImage from "./package_image"
+import PackageLike from "@/components/package-like"
+import { Button } from "@/components/ui/button"
+import { Heart } from "lucide-react"
+import { cn } from "@/lib/utils"
 
 interface PackageHeroProps {
   title: string
@@ -53,7 +57,7 @@ const PackageHero: React.FC<PackageHeroProps> = ({
   const handleShare = async () => {
     try {
       await navigator.clipboard.writeText(window.location.href)
-    } catch { }
+    } catch {}
     setShareToast(true)
     setTimeout(() => setShareToast(false), 2500)
   }
@@ -63,21 +67,35 @@ const PackageHero: React.FC<PackageHeroProps> = ({
       <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
         <PackageTitle title={title} />
         <div className="flex shrink-0 items-center gap-2">
-          <button
-            onClick={handleShare}
-            className="relative flex items-center gap-1.5 rounded-lg border border-muted-foreground px-3 py-1.5 text-sm font-medium text-muted-foreground transition-all duration-300 ease-in hover:scale-[1] hover:border-primary hover:text-primary focus:ring-2 focus:ring-primary focus:outline-none active:scale-[0.98]"
-          >
+          <Button variant={"outline"} size={"lg"} onClick={handleShare}>
             <Icon.Share /> Share
             {shareToast && (
-              <span className="absolute -top-9 left-1/2 -translate-x-1/2 rounded-lg bg-gray-900 px-2.5 py-1 text-xs whitespace-nowrap text-white shadow-lg animate-in fade-in duration-300">
+              <span className="absolute -top-9 left-1/2 -translate-x-1/2 animate-in rounded-lg bg-gray-900 px-2.5 py-1 text-xs whitespace-nowrap text-white shadow-lg duration-300 fade-in">
                 Link copied!
               </span>
             )}
-          </button>
-
-          <button className="flex items-center gap-1.5 rounded-lg border border-muted-foreground px-3 py-1.5 text-sm font-medium text-muted-foreground transition-all duration-300 ease-in hover:scale-[1] hover:border-primary hover:text-primary focus:ring-2 focus:ring-primary focus:outline-none active:scale-[0.98]">
+          </Button>
+          <Button variant={"outline"} size={"lg"}>
             <Icon.Doc /> Get Brochure
-          </button>
+          </Button>
+          <PackageLike
+            packageId="cmr7cl5zh001z9nhibpfjqowo"
+            liked={false}
+            size={"lg"}
+          >
+            {(liked) => (
+              <>
+                <Heart
+                  className={cn(
+                    "size-4 transition-all",
+                    liked
+                      ? "fill-primary text-primary"
+                      : "text-muted-foreground"
+                  )}
+                />
+              </>
+            )}
+          </PackageLike>
         </div>
       </div>
 
@@ -88,7 +106,7 @@ const PackageHero: React.FC<PackageHeroProps> = ({
         </span>
         <span className="text-sm text-muted-foreground">
           Based on{" "}
-          <button className="font-medium text-primary hover:underline focus:outline-none transition-all duration-300">
+          <button className="font-medium text-primary transition-all duration-300 hover:underline focus:outline-none">
             {reviewCount} reviews
           </button>
         </span>
