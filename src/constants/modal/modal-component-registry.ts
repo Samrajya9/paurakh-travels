@@ -5,4 +5,5 @@ export const MODAL_REGISTRY = {
   CREATE_DESTINATION_MODAL_ID: "create-destination",
   CREATE_DIFFICULTY_MODAL_ID: "create-difficulty",
   EDIT_DIFFICULTY_MODAL_ID: "edit-difficulty",
+  IMAGE_PICKER_MODAL_ID: "image-picker",
 }

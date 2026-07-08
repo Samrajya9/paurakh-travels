@@ -1,15 +1,31 @@
 "use client"
 
-import { useEffect, useState } from "react"
-import Image from "next/image"
-import { X, Loader2 } from "lucide-react"
+import { useEffect, useState, type KeyboardEvent } from "react"
+import { Check, X, Loader2 } from "lucide-react"
 import { toast } from "sonner"
 
 import { Button } from "@/components/ui/button"
 import { Skeleton } from "@/components/ui/skeleton"
+import { cn } from "@/lib/utils"
 import type { Image as ImageRecord } from "@/services/image.service"
 
-export default function MediaGrid() {
+interface MediaGridProps {
+  // Optional server-side filter, forwarded to GET /api/images?search=
+  search?: string
+  // When true, clicking a card selects it instead of showing a delete
+  // button — used by ImagePickerDialog. Standalone media-library usage
+  // (the /admin/media page) simply omits these props.
+  selectable?: boolean
+  selectedId?: string | null
+  onSelect?: (image: ImageRecord) => void
+}
+
+export default function MediaGrid({
+  search,
+  selectable = false,
+  selectedId = null,
+  onSelect,
+}: MediaGridProps) {
   const [images, setImages] = useState<ImageRecord[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -17,14 +33,18 @@ export default function MediaGrid() {
 
   useEffect(() => {
     fetchImages()
-  }, [])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [search])
 
   async function fetchImages() {
     setLoading(true)
     setError(null)
 
     try {
-      const res = await fetch("/api/images")
+      const url = search
+        ? `/api/images?search=${encodeURIComponent(search)}`
+        : "/api/images"
+      const res = await fetch(url)
       if (!res.ok) throw new Error("Failed to fetch images")
 
       const data: ImageRecord[] = await res.json()
@@ -73,7 +93,7 @@ export default function MediaGrid() {
   if (images.length === 0) {
     return (
       <div className="py-10 text-center text-sm text-muted-foreground">
-        No images found.
+        {search ? "No images match your search." : "No images found."}
       </div>
     )
   }
@@ -86,6 +106,9 @@ export default function MediaGrid() {
           image={image}
           deleting={deletingId === image.id}
           onDelete={() => handleDelete(image.id)}
+          selectable={selectable}
+          selected={selectedId === image.id}
+          onSelect={onSelect ? () => onSelect(image) : undefined}
         />
       ))}
     </div>
@@ -96,34 +119,81 @@ interface MediaGridItemProps {
   image: ImageRecord
   deleting: boolean
   onDelete: () => void
+  selectable: boolean
+  selected: boolean
+  onSelect?: () => void
 }
 
-function MediaGridItem({ image, deleting, onDelete }: MediaGridItemProps) {
-  return (
-    <div className="group relative aspect-square overflow-hidden rounded-md border border-border">
-      <img
-        src={image.url}
-        alt={image.altText ?? "Untitled image"}
-        // fill
-        sizes="(min-width: 768px) 33vw, (min-width: 640px) 50vw, 100vw"
-        className="absolute inset-0 object-cover"
-      />
+function MediaGridItem({
+  image,
+  deleting,
+  onDelete,
+  selectable,
+  selected,
+  onSelect,
+}: MediaGridItemProps) {
+  const thumbnail = (
+    <img
+      src={image.url}
+      alt={image.altText ?? "Untitled image"}
+      sizes="(min-width: 768px) 33vw, (min-width: 640px) 50vw, 100vw"
+      className="absolute inset-0 size-full object-cover"
+    />
+  )
 
-      <Button
-        type="button"
-        variant="destructive"
-        size="icon-xs"
-        className="absolute top-2 right-2 rounded-full opacity-0 shadow-sm transition-opacity group-hover:opacity-100 focus-visible:opacity-100"
-        disabled={deleting}
-        aria-label={`Delete ${image.altText ?? "image"}`}
-        onClick={onDelete}
-      >
-        {deleting ? (
-          <Loader2 className="size-2.5 animate-spin" />
-        ) : (
-          <X className="size-2.5" />
-        )}
-      </Button>
+  return (
+    <div
+      className={cn(
+        "group relative aspect-square overflow-hidden rounded-md border border-border",
+        selectable && "cursor-pointer transition-colors hover:border-primary",
+        selected && "border-primary ring-2 ring-primary ring-offset-1"
+      )}
+      {...(selectable
+        ? {
+            role: "button",
+            tabIndex: 0,
+            "aria-pressed": selected,
+            onClick: onSelect,
+            onKeyDown: (e: KeyboardEvent) => {
+              if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault()
+                onSelect?.()
+              }
+            },
+          }
+        : {})}
+    >
+      {thumbnail}
+
+      {selected && (
+        <div className="absolute top-2 right-2 flex size-5 items-center justify-center rounded-full bg-primary text-primary-foreground">
+          <Check className="size-3" />
+        </div>
+      )}
+
+      {/* Deleting is a destructive, standalone-library-only action — hidden
+          while picking an image for another form, so a pick flow can never
+          accidentally remove an image everyone else is using. */}
+      {!selectable && (
+        <Button
+          type="button"
+          variant="destructive"
+          size="icon-xs"
+          className="absolute top-2 right-2 rounded-full opacity-0 shadow-sm transition-opacity group-hover:opacity-100 focus-visible:opacity-100"
+          disabled={deleting}
+          aria-label={`Delete ${image.altText ?? "image"}`}
+          onClick={(e) => {
+            e.stopPropagation()
+            onDelete()
+          }}
+        >
+          {deleting ? (
+            <Loader2 className="size-2.5 animate-spin" />
+          ) : (
+            <X className="size-2.5" />
+          )}
+        </Button>
+      )}
 
       {image.altText && (
         <p className="absolute inset-x-0 bottom-0 truncate bg-black/50 px-2 py-1 text-[0.65rem] text-white">
