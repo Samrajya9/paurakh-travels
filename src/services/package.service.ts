@@ -5,6 +5,7 @@ import { AppError } from "@/lib/errors"
 import { createItinerary } from "@/services/itinerary.service"
 import { createFaq } from "@/services/faq.service"
 import {
+  attachImageToEntity,
   getAttachmentsForEntity,
   type ImageAttachment,
 } from "@/services/image-attachment.service"
@@ -167,7 +168,7 @@ async function replaceGroupDiscountsForPackage(
 // ------------------------------------------------------------------ create
 
 export async function createPackage(dto: CreatePackageInput) {
-  const { itineraries, faqs, groupDiscounts, ...packageData } = dto
+  const { itineraries, faqs, groupDiscounts, imageId, ...packageData } = dto
 
   try {
     // 1. Create the package
@@ -201,6 +202,14 @@ export async function createPackage(dto: CreatePackageInput) {
     // 4. If group discount tiers are provided, create them
     if (groupDiscounts) {
       await replaceGroupDiscountsForPackage(pkg.id, groupDiscounts)
+    }
+
+    if (imageId) {
+      await attachImageToEntity({
+        imageId,
+        entityId: pkg.id,
+        entityType: EntityType.PACKAGE,
+      })
     }
 
     // 5. Return the full package with itineraries + faqs + discounts attached

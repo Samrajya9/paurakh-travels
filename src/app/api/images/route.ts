@@ -4,6 +4,9 @@ import { handleApiError } from "@/lib/api-error-handler"
 import { uploadFile } from "@/lib/upload"
 import { UploadImageSchema } from "@/schemas/upload-image.schema"
 import { createImage, getAllImages } from "@/services/image.service"
+import { uploadToR2 } from "@/lib/upload/r2-upload"
+import { randomUUID } from "crypto"
+import path from "path"
 
 // GET /api/images
 // GET /api/images?search=<term>   ← optional filter by url/altText
@@ -39,7 +42,15 @@ export async function POST(req: NextRequest) {
     }
 
     const { file, altText } = parsed.data
-    const { url } = await uploadFile(file)
+
+    const extension = path.extname(file.name)
+    const fileName = `${randomUUID()}${extension}`
+
+    const { url } = await uploadToR2({
+      file,
+      objectKey: `paurakh-travels/uploads/${fileName}`,
+    })
+    // const { url } = await uploadFile(file)
 
     const image = await createImage({ url, altText })
     return NextResponse.json(image, { status: 201 })

@@ -83,6 +83,8 @@ export const CreatePackageSchema = z.object({
         seenMinPeople.add(discount.minPeople)
       })
     }),
+  // This should be imageIds
+  imageId: z.cuid2("Invalid image id"),
 })
 
 export type CreatePackageInput = z.infer<typeof CreatePackageSchema>

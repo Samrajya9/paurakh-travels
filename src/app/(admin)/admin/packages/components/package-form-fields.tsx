@@ -23,9 +23,9 @@ import RichTextEditor from "@/components/tiptap/rich-text-editor"
 import { PlusIcon, TrashIcon } from "lucide-react"
 import DestinationSelect from "../../destinations/components/destination-select"
 import { Textarea } from "@/components/ui/textarea"
-import { PackageGroupDiscountSchema } from "@/schemas/create-package.schema"
 
 import DifficultySelect from "../../packages/difficulties/components/difficulty-select"
+import ImageSelector from "../../media/components/image-selector"
 
 // Owns the top-level, optional `groupDiscounts` field array.
 function PackageGroupDiscountsField() {
@@ -377,78 +377,6 @@ const PackageFormFields = () => {
 
   return (
     <>
-      {/* <FieldSet>
-        <FieldLegend>Package Information</FieldLegend>
-        <FieldDescription>
-          Add basic information about the package.
-        </FieldDescription>
-
-        <FieldGroup>
-          <Field orientation="horizontal">
-            <Controller
-              name="name"
-              control={form.control}
-              render={({ field, fieldState }) => (
-                <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel htmlFor={field.name}>Package Name</FieldLabel>
-                  <Input
-                    {...field}
-                    id={field.name}
-                    aria-invalid={fieldState.invalid}
-                    placeholder="Name of the Package"
-                    autoComplete="off"
-                  />
-                  {fieldState.invalid && (
-                    <FieldError errors={[fieldState.error]} />
-                  )}
-                </Field>
-              )}
-            />
-
-            <Controller
-              name="slug"
-              control={form.control}
-              render={({ field, fieldState }) => (
-                <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel htmlFor={field.name}>Slug</FieldLabel>
-                  <Input
-                    {...field}
-                    id={field.name}
-                    onChange={(e) => {
-                      isSlugManuallyEdited.current = true
-                      field.onChange(slugify(e.target.value))
-                    }}
-                    aria-invalid={fieldState.invalid}
-                    placeholder="everest-base-camp-trek"
-                    autoComplete="off"
-                  />
-                  {fieldState.invalid && (
-                    <FieldError errors={[fieldState.error]} />
-                  )}
-                </Field>
-              )}
-            />
-          </Field>
-
-          <Controller
-            name="htmlOverview"
-            control={form.control}
-            render={({ field, fieldState }) => (
-              <Field data-invalid={fieldState.invalid}>
-                <FieldLabel htmlFor={field.name}>Overview</FieldLabel>
-                <RichTextEditor
-                  value={field.value || ""}
-                  onChange={(value) => field.onChange(value)}
-                />
-                {fieldState.invalid && (
-                  <FieldError errors={[fieldState.error]} />
-                )}
-              </Field>
-            )}
-          />
-        </FieldGroup>
-      </FieldSet> */}
-
       <FieldSet>
         <FieldLegend>Package Information</FieldLegend>
         <FieldDescription>
@@ -591,10 +519,28 @@ const PackageFormFields = () => {
               </Field>
             )}
           />
+
+          <Controller
+            name="imageId"
+            control={form.control}
+            render={({ field, fieldState }) => (
+              <Field data-invalid={fieldState.invalid}>
+                <FieldLabel htmlFor={field.name}>Image</FieldLabel>
+                <FieldDescription>
+                  The main image for the package.
+                </FieldDescription>
+                <ImageSelector {...field} />
+                {fieldState.invalid && (
+                  <FieldError errors={[fieldState.error]} />
+                )}
+              </Field>
+            )}
+          />
         </FieldGroup>
       </FieldSet>
 
       <PackageGroupDiscountsField />
+
       <FieldSet>
         <FieldLegend className="flex w-full items-center justify-between">
           <span>Package Itineraries</span>

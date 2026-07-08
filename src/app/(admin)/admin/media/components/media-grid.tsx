@@ -10,11 +10,7 @@ import { cn } from "@/lib/utils"
 import type { Image as ImageRecord } from "@/services/image.service"
 
 interface MediaGridProps {
-  // Optional server-side filter, forwarded to GET /api/images?search=
   search?: string
-  // When true, clicking a card selects it instead of showing a delete
-  // button — used by ImagePickerDialog. Standalone media-library usage
-  // (the /admin/media page) simply omits these props.
   selectable?: boolean
   selectedId?: string | null
   onSelect?: (image: ImageRecord) => void

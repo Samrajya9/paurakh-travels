@@ -1,3 +1,5 @@
+import ImagePickerDialog from "./components/image-picker-dialog"
+import ImageSelector from "./components/image-selector"
 import MediaGrid from "./components/media-grid"
 import UploadImageButton from "./components/upload-image-button"
 
