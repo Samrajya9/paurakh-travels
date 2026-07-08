@@ -156,4 +156,23 @@
       animation: none;
     }
   }
+
+  .animate-zoom-slow {
+    animation: zoom-slow 20s ease-out infinite alternate;
+  }
+
+  @keyframes zoom-slow {
+    from {
+      transform: scale(1);
+    }
+    to {
+      transform: scale(1.05);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .animate-zoom-slow {
+      animation: none;
+    }
+  }
 }

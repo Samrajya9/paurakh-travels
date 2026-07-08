@@ -212,8 +212,28 @@ export async function createPackage(dto: CreatePackageInput) {
 
 // ----------------------------------------------------------------- findAll
 
-export async function getAllPackages(): Promise<PackageWithImages[]> {
+export interface GetAllPackagesOptions {
+  search?: string
+  difficultyId?: string
+}
+
+export async function getAllPackages(
+  options: GetAllPackagesOptions = {}
+): Promise<PackageWithImages[]> {
+  const { search, difficultyId } = options
+
+  const where = {
+    ...(search && {
+      // MySQL's default collation is already case-insensitive, so no
+      // `mode: "insensitive"` here — that option isn't supported on the
+      // mysql provider and would throw at runtime.
+      name: { contains: search },
+    }),
+    ...(difficultyId && { difficultyId }),
+  } satisfies PrismaClient.PackageWhereInput
+
   const packages = await prisma.package.findMany({
+    where,
     select: packageSelect,
     orderBy: { name: "asc" },
   })

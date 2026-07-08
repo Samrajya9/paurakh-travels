@@ -1,4 +1,4 @@
-import { PackageCard } from "@/components/cards/package-card"
+import { FeaturedPackagesSection } from "@/components/sections/featured-packages-section"
 
 const packageData = {
   id: "cmr7cl5zh001z9nhibpfjqowo",
@@ -285,23 +285,10 @@ const packageData = {
 
 export default function PackagesPage() {
   return (
-    <>
-      <div className="flex h-screen w-full items-center justify-center">
-        <div className="flex w-full flex-wrap items-center justify-center gap-4">
-          <PackageCard
-            pkg={packageData}
-            className="max-w-[400px] min-w-[280px] flex-1"
-          />
-          <PackageCard
-            pkg={packageData}
-            className="max-w-[400px] min-w-[280px] flex-1"
-          />
-          <PackageCard
-            pkg={packageData}
-            className="max-w-[400px] min-w-[280px] flex-1"
-          />
-        </div>
-      </div>
-    </>
+    <FeaturedPackagesSection
+      packages={[packageData, packageData, packageData]}
+      heading="Featured Packages"
+      description="Handpicked trekking experiences and cultural tours across Nepal, curated for their distinct character, authentic encounters, and exceptional value."
+    />
   )
 }

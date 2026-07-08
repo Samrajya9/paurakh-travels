@@ -4,9 +4,22 @@ import { handleApiError } from "@/lib/api-error-handler"
 import { CreatePackageSchema } from "@/schemas/create-package.schema"
 import { createPackage, getAllPackages } from "@/services/package.service"
 
-export async function GET() {
+// export async function GET() {
+//   try {
+//     const packages = await getAllPackages()
+//     return NextResponse.json(packages)
+//   } catch (error) {
+//     return handleApiError(error)
+//   }
+// }
+
+export async function GET(req: NextRequest) {
   try {
-    const packages = await getAllPackages()
+    const { searchParams } = new URL(req.url)
+    const search = searchParams.get("q") ?? undefined
+    const difficultyId = searchParams.get("difficultyId") ?? undefined
+
+    const packages = await getAllPackages({ search, difficultyId })
     return NextResponse.json(packages)
   } catch (error) {
     return handleApiError(error)
