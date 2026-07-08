@@ -1,7 +1,7 @@
 "use client"
 
 import * as React from "react"
-import { Frame, Map, MapPinHouse } from "lucide-react"
+import { FilePen, Frame, Map, MapPinHouse } from "lucide-react"
 
 import { NavMain } from "@/components/nav-main"
 import { NavUser } from "@/components/nav-user"
@@ -48,6 +48,11 @@ const data = {
       name: "Destinations",
       url: "/admin/destinations",
       icon: MapPinHouse,
+    },
+    {
+      name: "Media",
+      url: "/admin/media",
+      icon: FilePen,
     },
   ],
 }
