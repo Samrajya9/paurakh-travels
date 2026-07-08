@@ -4,6 +4,7 @@ import prisma from "@/lib/prisma"
 import { AppError } from "@/lib/errors"
 import type { CreateImageInput } from "@/schemas/create-image.schema"
 import type { UpdateImageInput } from "@/schemas/update-image.schema"
+import { clientEnv } from "@/env/client"
 
 const imageSelect = {
   id: true,
@@ -47,7 +48,7 @@ export async function createImage(dto: CreateImageInput) {
 // ----------------------------------------------------------------- findAll
 
 export async function getAllImages(search?: string) {
-  return prisma.image.findMany({
+  const images = await prisma.image.findMany({
     where: search
       ? {
           OR: [
@@ -58,6 +59,13 @@ export async function getAllImages(search?: string) {
       : undefined,
     select: imageSelect,
     orderBy: { createdAt: "desc" },
+  })
+
+  return images.map((image) => {
+    return {
+      ...image,
+      url: `${clientEnv.NEXT_PUBLIC_IMAGE_BASE_URL}${image.url}`,
+    }
   })
 }
 
