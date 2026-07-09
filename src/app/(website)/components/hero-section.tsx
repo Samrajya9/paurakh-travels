@@ -69,7 +69,7 @@ function HeroSummary({ className, ...props }: React.ComponentProps<"div">) {
         be discovered in{" "}
         <RotatingText
           text={["Everest.", "Annapurna.", "Langtang.", "Mustang."]}
-          duration={3000}
+          duration={2500}
         />
       </p>
       <Button variant={"link"} asChild className="px-0">
@@ -95,7 +95,7 @@ const HERO_IMAGES = [
   { src: "/images/screen-2.png", alt: "Everest Base Camp trail" },
 ]
 export function HeroImage() {
-  const autoplay = useRef(Autoplay({ delay: 3000, stopOnInteraction: false }))
+  const autoplay = useRef(Autoplay({ delay: 2500, stopOnInteraction: false }))
 
   return (
     <div className="relative h-48 w-full overflow-clip rounded-md sm:h-72 md:h-96 lg:h-200">

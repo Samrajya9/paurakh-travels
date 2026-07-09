@@ -33,7 +33,7 @@ export default async function WebsiteLayout({
 
   return (
     <LikedPackagesProvider initialLikedPackageIds={initialLikedPackageIds}>
-      {/* <NavBar /> */}
+      <NavBar />
       <main className={cn(playfairDisplay.variable, hankenGrotesk.variable)}>
         {children}
       </main>
