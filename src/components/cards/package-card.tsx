@@ -149,7 +149,7 @@ export function PackageCard({
 
         <PackageLike
           packageId={pkg.id}
-          liked={true}
+          liked={false}
 
           className={cn(
             "absolute top-2 right-2 flex size-8 items-center justify-center rounded-full",

@@ -180,3 +180,18 @@
     }
   }
 }
+
+/* Chrome, Edge, Safari */
+::-webkit-scrollbar {
+  display: none;
+}
+
+/* Firefox */
+html {
+  scrollbar-width: none;
+}
+
+/* IE/Old Edge */
+html {
+  -ms-overflow-style: none;
+}
