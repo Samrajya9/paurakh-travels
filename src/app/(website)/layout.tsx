@@ -1,8 +1,57 @@
+// import { Playfair_Display, Hanken_Grotesk } from "next/font/google"
+
+// import { Footer } from "@/components/footer"
+// import NavBar from "@/components/nav"
+// import { LikedPackagesProvider } from "@/context/liked-packages.context"
+// import { getCurrentUser } from "@/lib/auth-server"
+// import { getAllLikedPackageIdsForUser } from "@/services/user-package-like.service"
+
+// const playfairDisplay = Playfair_Display({
+//   subsets: ["latin"],
+//   weight: ["400", "500", "600", "700"],
+//   variable: "--font-playfair-display",
+// })
+
+// export default async function WebsiteLayout({
+//   children,
+// }: Readonly<{
+//   children: React.ReactNode
+// }>) {
+//   const user = await getCurrentUser()
+//   const initialLikedPackageIds = user
+//     ? await getAllLikedPackageIdsForUser(user.id)
+//     : []
+
+//   return (
+//     <>
+//       <LikedPackagesProvider initialLikedPackageIds={initialLikedPackageIds}>
+//         {/* <NavBar /> */}
+//         <main className={playfairDisplay.variable}>{children}</main> <Footer />
+//       </LikedPackagesProvider>
+//     </>
+//   )
+// }
+
+import { Playfair_Display, Hanken_Grotesk } from "next/font/google"
+
 import { Footer } from "@/components/footer"
 import NavBar from "@/components/nav"
 import { LikedPackagesProvider } from "@/context/liked-packages.context"
 import { getCurrentUser } from "@/lib/auth-server"
 import { getAllLikedPackageIdsForUser } from "@/services/user-package-like.service"
+import { cn } from "@/lib/utils"
+
+const playfairDisplay = Playfair_Display({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-playfair-display",
+})
+
+const hankenGrotesk = Hanken_Grotesk({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700", "800"],
+  variable: "--font-hanken-grotesk",
+})
 
 export default async function WebsiteLayout({
   children,
@@ -16,12 +65,12 @@ export default async function WebsiteLayout({
     : []
 
   return (
-    <>
-      <LikedPackagesProvider initialLikedPackageIds={initialLikedPackageIds}>
-        <NavBar />
-        <main>{children}</main>
-        <Footer />
-      </LikedPackagesProvider>
-    </>
+    <LikedPackagesProvider initialLikedPackageIds={initialLikedPackageIds}>
+      {/* <NavBar /> */}
+      <main className={cn(playfairDisplay.variable, hankenGrotesk.variable)}>
+        {children}
+      </main>
+      <Footer />
+    </LikedPackagesProvider>
   )
 }
