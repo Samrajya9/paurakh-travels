@@ -1,17 +1,26 @@
+"use client"
+
 import { Button } from "@/components/ui/button"
+import RotatingText from "@/components/ui/rotating-text"
 import { Section } from "@/components/ui/section"
 import { cn } from "@/lib/utils"
 import { ArrowRight } from "lucide-react"
-import Image from "next/image"
 import Link from "next/link"
-
+import { useRef } from "react"
+import Image from "next/image"
+import Autoplay from "embla-carousel-autoplay"
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+} from "@/components/ui/carousel"
 export default function HeroSection() {
   return (
     <>
       <Section
         aria-labelledby="hero-heading"
         width={"constrained"}
-        className="isolate"
+        // className="isolate"
       >
         <HeroHeader className="mb-8 sm:mb-14" />
         <HeroImage />
@@ -49,7 +58,6 @@ function HeroHeading({ className, ...props }: React.ComponentProps<"div">) {
 }
 
 function HeroSummary({ className, ...props }: React.ComponentProps<"div">) {
-  const destinationName = `Everest Base Camp`
   return (
     <div
       className={cn("flex flex-col items-start justify-between", className)}
@@ -58,7 +66,11 @@ function HeroSummary({ className, ...props }: React.ComponentProps<"div">) {
       <p className="font-hanken-grotesk text-base leading-normal sm:text-base md:text-lg lg:text-lg">
         Embark on a journey through the timeless artistry and sacred heritage of
         the region, where every landmark and tradition tells a story waiting to
-        be discovered in {destinationName}.
+        be discovered in{" "}
+        <RotatingText
+          text={["Everest.", "Annapurna.", "Langtang.", "Mustang."]}
+          duration={3000}
+        />
       </p>
       <Button variant={"link"} asChild className="px-0">
         <Link href={"/packages"}>
@@ -70,10 +82,46 @@ function HeroSummary({ className, ...props }: React.ComponentProps<"div">) {
   )
 }
 
-function HeroImage() {
+// function HeroImage() {
+//   return (
+//     <div className="relative h-48 w-full overflow-clip rounded-md sm:h-72 md:h-96 lg:h-200">
+//       <Image src={"/images/screen.png"} fill alt="mountain-bg" priority />
+//     </div>
+//   )
+// }
+
+const HERO_IMAGES = [
+  { src: "/images/screen-1.png", alt: "Himalayan mountain range at sunrise" },
+  { src: "/images/screen-2.png", alt: "Everest Base Camp trail" },
+]
+export function HeroImage() {
+  const autoplay = useRef(Autoplay({ delay: 3000, stopOnInteraction: false }))
+
   return (
     <div className="relative h-48 w-full overflow-clip rounded-md sm:h-72 md:h-96 lg:h-200">
-      <Image src={"/images/screen.png"} fill alt="mountain-bg" priority />
+      <Carousel
+        orientation="vertical"
+        opts={{ loop: true }}
+        plugins={[autoplay.current]}
+        className="h-full [&>div]:h-full"
+      >
+        <CarouselContent className="mt-0 h-full">
+          {HERO_IMAGES.map((image) => (
+            <CarouselItem
+              key={image.src}
+              className="relative h-full basis-full pt-0"
+            >
+              <Image
+                src={image.src}
+                alt={image.alt}
+                fill
+                priority
+                className="object-cover"
+              />
+            </CarouselItem>
+          ))}
+        </CarouselContent>
+      </Carousel>
     </div>
   )
 }
