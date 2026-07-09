@@ -13,7 +13,7 @@ export default function HeroSectionV2() {
         width={"constrained"}
         className="isolate"
       >
-        <HeroHeader className="mb-8 sm:mb-12" />
+        <HeroHeader className="mb-8 sm:mb-14" />
         <HeroImage />
       </Section>
     </>
@@ -29,7 +29,7 @@ function HeroHeader({ className, ...props }: React.ComponentProps<"div">) {
       )}
       {...props}
     >
-      <HeroHeading className="w-full sm:max-w-3xl sm:flex-2" />
+      <HeroHeading className="w-full sm:max-w-4xl sm:flex-2" />
       <HeroSummary className="w-full sm:max-w-2xl sm:flex-1 sm:pt-1" />
     </div>
   )
@@ -40,7 +40,7 @@ function HeroHeading({ className, ...props }: React.ComponentProps<"div">) {
     <div className={cn(className)} {...props}>
       <h1
         id="hero-heading"
-        className="font-playfair text-4xl leading-[1.1] font-bold tracking-tight sm:text-4xl md:text-5xl lg:text-7xl"
+        className="font-playfair text-4xl leading-[1.1] font-bold tracking-wide sm:text-4xl md:text-5xl lg:text-7xl"
       >
         Discover the Art and Architecture of Nepal
       </h1>
