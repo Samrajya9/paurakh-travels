@@ -39,7 +39,7 @@ const PlaceTable = () => {
     setError(null)
 
     try {
-      const res = await fetch("/api/destinations")
+      const res = await fetch("/api/places")
       if (!res.ok) throw new Error("Failed to fetch places")
 
       const data: Place[] = await res.json()

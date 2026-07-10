@@ -1,32 +1,32 @@
 import { NextRequest, NextResponse } from "next/server"
 
 import { handleApiError } from "@/lib/api-error-handler"
-import { UpdateDestinationSchema } from "@/schemas/update-destination.schema"
+import { UpdatePlaceSchema } from "@/schemas/update-place.schema"
 import {
-  deleteDestinationById,
-  getDestinationById,
-  updateDestinationById,
-} from "@/services/destination.service"
+  deletePlaceById,
+  getPlaceById,
+  updatePlaceById,
+} from "@/services/place.service"
 
 type RouteContext = { params: Promise<{ id: string }> }
 
-// GET /api/destinations/[id]
+// GET /api/places/[id]
 export async function GET(_req: NextRequest, { params }: RouteContext) {
   try {
     const { id } = await params
-    const destination = await getDestinationById(id)
-    return NextResponse.json(destination)
+    const place = await getPlaceById(id)
+    return NextResponse.json(place)
   } catch (error) {
     return handleApiError(error)
   }
 }
 
-// PATCH /api/destinations/[id]
+// PATCH /api/places/[id]
 export async function PATCH(req: NextRequest, { params }: RouteContext) {
   try {
     const { id } = await params
     const body = await req.json()
-    const parsed = UpdateDestinationSchema.safeParse(body)
+    const parsed = UpdatePlaceSchema.safeParse(body)
 
     if (!parsed.success) {
       return NextResponse.json(
@@ -38,19 +38,19 @@ export async function PATCH(req: NextRequest, { params }: RouteContext) {
       )
     }
 
-    const destination = await updateDestinationById(id, parsed.data)
-    return NextResponse.json(destination)
+    const place = await updatePlaceById(id, parsed.data)
+    return NextResponse.json(place)
   } catch (error) {
     return handleApiError(error)
   }
 }
 
-// DELETE /api/destinations/[id]
+// DELETE /api/places/[id]
 export async function DELETE(_req: NextRequest, { params }: RouteContext) {
   try {
     const { id } = await params
-    const destination = await deleteDestinationById(id)
-    return NextResponse.json(destination)
+    const place = await deletePlaceById(id)
+    return NextResponse.json(place)
   } catch (error) {
     return handleApiError(error)
   }
