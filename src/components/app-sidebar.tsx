@@ -50,6 +50,11 @@ const data = {
       icon: MapPinHouse,
     },
     {
+      name: "Destinations",
+      url: "/admin/destinations",
+      icon: MapPinHouse,
+    },
+    {
       name: "Media",
       url: "/admin/media",
       icon: FilePen,

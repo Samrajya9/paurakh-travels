@@ -24,46 +24,56 @@ const RegionForm = ({
   const form = useRegionForm()
   const { closeModal } = useDialogContext()
 
-  const handleSubmit = form.handleSubmit(async (data) => {
-    try {
-      const res = await fetch("/api/regions", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
-      })
+  const handleSubmit = form.handleSubmit(
+    async (data) => {
+      console.log("data", data)
 
-      if (!res.ok) {
-        const body: CreateRegionErrorResponse = await res.json()
+      try {
+        const res = await fetch("/api/regions", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(data),
+        })
 
-        if (res.status === 422 && body.errors) {
-          for (const [field, messages] of Object.entries(body.errors)) {
-            form.setError(field as keyof CreateRegionInput, {
-              type: "server",
-              message: messages?.[0],
-            })
+        if (!res.ok) {
+          const body: CreateRegionErrorResponse = await res.json()
+
+          if (res.status === 422 && body.errors) {
+            for (const [field, messages] of Object.entries(body.errors)) {
+              form.setError(field as keyof CreateRegionInput, {
+                type: "server",
+                message: messages?.[0],
+              })
+            }
+            return
           }
+
+          toast.error(body.message ?? "Something went wrong. Please try again.")
           return
         }
 
-        toast.error(body.message ?? "Something went wrong. Please try again.")
-        return
+        const created: Region = await res.json()
+        form.reset()
+        toast.success("Region created.")
+        onCreated?.(created)
+        closeModal(MODAL_REGISTRY.CREATE_REGION_MODAL_ID)
+      } catch {
+        toast.error("Could not reach the server. Please try again.")
       }
-
-      const created: Region = await res.json()
-      form.reset()
-      toast.success("Region created.")
-      onCreated?.(created)
-      closeModal(MODAL_REGISTRY.CREATE_REGION_MODAL_ID)
-    } catch {
-      toast.error("Could not reach the server. Please try again.")
+    },
+    (err) => {
+      console.error(err)
     }
-  })
+  )
 
   return (
     <FormProvider {...form}>
       <form
         id="form-create-region"
-        onSubmit={handleSubmit}
+        onSubmit={(e) => {
+          console.log("submit event")
+          handleSubmit(e)
+        }}
         className="space-y-4"
       >
         <RegionFormFields />
