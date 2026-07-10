@@ -11,9 +11,9 @@ import {
 } from "@/components/ui/select"
 import { useEffect, useState } from "react"
 
-type Destination = { id: string; name: string }
+type Place = { id: string; name: string }
 
-type DestinationSelectProps = {
+type PlaceSelectProps = {
   value?: string
   onChange?: (value: string) => void
   onBlur?: () => void
@@ -21,24 +21,24 @@ type DestinationSelectProps = {
   "aria-invalid"?: boolean
 }
 
-export default function DestinationSelect({
+export default function PlaceSelect({
   value,
   onChange,
   onBlur,
   disabled,
   "aria-invalid": ariaInvalid,
-}: DestinationSelectProps) {
-  const [destinations, setDestinations] = useState<Destination[]>([])
+}: PlaceSelectProps) {
+  const [places, setPlaces] = useState<Place[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState(false)
 
   useEffect(() => {
-    fetch("/api/destinations")
+    fetch("/api/places")
       .then((res) => {
         if (!res.ok) throw new Error()
         return res.json()
       })
-      .then((data: Destination[]) => setDestinations(data))
+      .then((data: Place[]) => setPlaces(data))
       .catch(() => setError(true))
       .finally(() => setIsLoading(false))
   }, [])
@@ -54,23 +54,23 @@ export default function DestinationSelect({
         aria-invalid={ariaInvalid}
         onBlur={onBlur}
       >
-        <SelectValue placeholder="Select a Destination" />
+        <SelectValue placeholder="Select a Place" />
       </SelectTrigger>
       <SelectContent>
         <SelectGroup>
-          <SelectLabel>Destinations</SelectLabel>
+          <SelectLabel>Places</SelectLabel>
           {isLoading ? (
             <SelectItem value="loading" disabled>
-              Loading destinations...
+              Loading places...
             </SelectItem>
           ) : error ? (
             <SelectItem value="error" disabled>
-              Failed to load destinations
+              Failed to load places
             </SelectItem>
           ) : (
-            destinations.map((destination) => (
-              <SelectItem key={destination.id} value={destination.id}>
-                {destination.name}
+            places.map((place) => (
+              <SelectItem key={place.id} value={place.id}>
+                {place.name}
               </SelectItem>
             ))
           )}

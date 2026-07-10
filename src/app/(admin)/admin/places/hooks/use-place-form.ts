@@ -1,14 +1,14 @@
 "use client"
 
-import {
-  CreateDestinationInput,
-  CreateDestinationSchema,
-} from "@/schemas/create-place.schema"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useEffect } from "react"
 import { useForm } from "react-hook-form"
+import {
+  CreatePlaceInput,
+  CreatePlaceSchema,
+} from "@/schemas/create-place.schema"
 
-const defaultValues: CreateDestinationInput = {
+const defaultValues: CreatePlaceInput = {
   name: "",
   elevation: 0,
   latitude: undefined,
@@ -16,12 +16,10 @@ const defaultValues: CreateDestinationInput = {
   regionId: "",
 }
 
-export const useDestinationForm = (
-  initialValues: Partial<CreateDestinationInput> = {}
-) => {
+export const usePlaceForm = (initialValues: Partial<CreatePlaceInput> = {}) => {
   const form = useForm({
     defaultValues: { ...defaultValues, ...initialValues },
-    resolver: zodResolver(CreateDestinationSchema),
+    resolver: zodResolver(CreatePlaceSchema),
   })
 
   useEffect(() => {

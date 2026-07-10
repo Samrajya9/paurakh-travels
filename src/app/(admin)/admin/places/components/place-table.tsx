@@ -20,61 +20,62 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Skeleton } from "@/components/ui/skeleton"
-import type { Destination } from "@/services/destination.service"
 
-export default function DestinationTable() {
+import type { Place } from "@/services/place.service"
+
+const PlaceTable = () => {
   const router = useRouter()
 
-  const [destinations, setDestinations] = useState<Destination[]>([])
+  const [places, setPlaces] = useState<Place[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
-    fetchDestinations()
+    fetchPlaces()
   }, [])
 
-  async function fetchDestinations() {
+  async function fetchPlaces() {
     setLoading(true)
     setError(null)
 
     try {
       const res = await fetch("/api/destinations")
-      if (!res.ok) throw new Error("Failed to fetch destinations")
+      if (!res.ok) throw new Error("Failed to fetch places")
 
-      const data: Destination[] = await res.json()
-      setDestinations(data)
+      const data: Place[] = await res.json()
+      setPlaces(data)
     } catch {
-      setError("Something went wrong while loading destinations.")
+      setError("Something went wrong while loading places.")
     } finally {
       setLoading(false)
     }
   }
 
   async function handleDelete(id: string) {
-    const prev = destinations
-    setDestinations((curr) => curr.filter((d) => d.id !== id))
+    const prev = places
+    setPlaces((curr) => curr.filter((d) => d.id !== id))
 
-    const res = await fetch(`/api/destinations/${id}`, { method: "DELETE" })
-    if (!res.ok) setDestinations(prev)
+    const res = await fetch(`/api/places/${id}`, { method: "DELETE" })
+    if (!res.ok) setPlaces(prev)
   }
 
-  if (loading) return <DestinationTableSkeleton />
+  if (loading) return <PlaceTableSkeleton />
 
   if (error) {
     return (
       <div className="flex flex-col items-center gap-2 py-10 text-sm text-muted-foreground">
         <p>{error}</p>
-        <Button variant="outline" size="sm" onClick={fetchDestinations}>
+        <Button variant="outline" size="sm" onClick={fetchPlaces}>
           Retry
         </Button>
       </div>
     )
   }
 
-  if (destinations.length === 0) {
+  if (places.length === 0) {
     return (
       <div className="py-10 text-center text-sm text-muted-foreground">
-        No destinations found.
+        No places found.
       </div>
     )
   }
@@ -91,14 +92,14 @@ export default function DestinationTable() {
         </TableRow>
       </TableHeader>
       <TableBody>
-        {destinations.map((destination) => (
-          <TableRow key={destination.id}>
-            <TableCell className="font-medium">{destination.name}</TableCell>
-            <TableCell>{destination.region.name}</TableCell>
-            <TableCell>{destination.elevation.toLocaleString()}</TableCell>
+        {places.map((place) => (
+          <TableRow key={place.id}>
+            <TableCell className="font-medium">{place.name}</TableCell>
+            <TableCell>{place.region.name}</TableCell>
+            <TableCell>{place.elevation.toLocaleString()}</TableCell>
             <TableCell className="text-muted-foreground">
-              {destination.latitude != null && destination.longitude != null
-                ? `${destination.latitude}, ${destination.longitude}`
+              {place.latitude != null && place.longitude != null
+                ? `${place.latitude}, ${place.longitude}`
                 : "—"}
             </TableCell>
             <TableCell className="text-right">
@@ -111,7 +112,7 @@ export default function DestinationTable() {
                 <DropdownMenuContent align="end">
                   <DropdownMenuItem
                     onClick={() =>
-                      router.push(`/admin/destinations/edit/${destination.id}`)
+                      router.push(`/admin/places/edit/${place.id}`)
                     }
                   >
                     <Pencil className="size-4" />
@@ -119,7 +120,7 @@ export default function DestinationTable() {
                   </DropdownMenuItem>
                   <DropdownMenuItem
                     variant="destructive"
-                    onClick={() => handleDelete(destination.id)}
+                    onClick={() => handleDelete(place.id)}
                   >
                     <Trash2 className="size-4" />
                     Delete
@@ -134,7 +135,7 @@ export default function DestinationTable() {
   )
 }
 
-function DestinationTableSkeleton() {
+function PlaceTableSkeleton() {
   return (
     <div className="space-y-2">
       {Array.from({ length: 5 }).map((_, i) => (
@@ -143,3 +144,4 @@ function DestinationTableSkeleton() {
     </div>
   )
 }
+export default PlaceTable

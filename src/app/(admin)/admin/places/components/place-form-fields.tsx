@@ -1,4 +1,4 @@
-import { CreateDestinationInput } from "@/schemas/create-place.schema"
+import { CreatePlaceInput } from "@/schemas/create-place.schema"
 import { Controller, useFormContext } from "react-hook-form"
 import {
   Field,
@@ -13,16 +13,16 @@ import { Input } from "@/components/ui/input"
 import RegionSelect from "../../regions/components/region-select"
 import AddRegionButton from "../../regions/components/add-region-btn"
 
-export default function DestinationFormFields() {
-  const form = useFormContext<CreateDestinationInput>()
+export default function PlaceFormFields() {
+  const form = useFormContext<CreatePlaceInput>()
 
   return (
     <>
       <FieldGroup>
         <FieldSet>
-          <FieldLegend>Destination Information</FieldLegend>
+          <FieldLegend>Place Information</FieldLegend>
           <FieldDescription>
-            Add basic information about the destination.
+            Add basic information about the Place.
           </FieldDescription>
           <FieldGroup>
             <Controller
@@ -31,14 +31,12 @@ export default function DestinationFormFields() {
               render={({ field, fieldState }) => {
                 return (
                   <Field data-invalid={fieldState.invalid}>
-                    <FieldLabel htmlFor={field.name}>
-                      Destination Name
-                    </FieldLabel>
+                    <FieldLabel htmlFor={field.name}>Place Name</FieldLabel>
                     <Input
                       {...field}
                       id={field.name}
                       aria-invalid={fieldState.invalid}
-                      placeholder="Name of the Destination"
+                      placeholder="Name of the Place"
                       autoComplete="off"
                     />
                     {fieldState.invalid && (

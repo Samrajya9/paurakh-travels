@@ -3,16 +3,18 @@
 import { Button } from "@/components/ui/button"
 import { useRouter } from "next/navigation"
 
-export default function CreateDestinationButton() {
+export default function CreatePlaceButton() {
   const router = useRouter()
 
   const handleClick = () => {
-    router.push("/admin/destinations/create")
+    router.push("/admin/places/create")
   }
 
   return (
     <>
-      <Button onClick={handleClick}>Create Destination</Button>
+      <Button onClick={handleClick} size={"lg"}>
+        Create Place
+      </Button>
     </>
   )
 }

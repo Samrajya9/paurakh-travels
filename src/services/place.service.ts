@@ -1,6 +1,7 @@
 import { Prisma as PrismaClient } from "@prisma/client"
 
 import prisma from "@/lib/prisma"
+
 import { AppError } from "@/lib/errors"
 import type { CreatePlaceInput } from "@/schemas/create-place.schema"
 import type { UpdatePlaceInput } from "@/schemas/update-place.schema"

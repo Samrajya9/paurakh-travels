@@ -21,7 +21,7 @@ import {
 } from "react-hook-form"
 import RichTextEditor from "@/components/tiptap/rich-text-editor"
 import { PlusIcon, TrashIcon } from "lucide-react"
-import DestinationSelect from "../../destinations/components/destination-select"
+import DestinationSelect from "../../places/components/place-select"
 import { Textarea } from "@/components/ui/textarea"
 
 import DifficultySelect from "../../packages/difficulties/components/difficulty-select"

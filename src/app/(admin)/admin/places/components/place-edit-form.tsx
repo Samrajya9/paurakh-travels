@@ -4,24 +4,24 @@ import { FormProvider } from "react-hook-form"
 import { useRouter } from "next/navigation"
 import { toast } from "sonner"
 
-import { useDestinationForm } from "../hooks/use-destination-form"
-import DestinationFormFields from "./destination-form-fields"
+import { usePlaceForm } from "../hooks/use-place-form"
+import PlaceFormFields from "./place-form-fields"
 import { Button } from "@/components/ui/button"
-import type { CreateDestinationInput } from "@/schemas/create-place.schema"
+import type { CreatePlaceInput } from "@/schemas/create-place.schema"
 
-export default function DestinationEditForm({
-  destinationId,
+export default function PlaceEditForm({
+  placeId,
   initialValues,
 }: {
-  destinationId: string
-  initialValues: CreateDestinationInput
+  placeId: string
+  initialValues: CreatePlaceInput
 }) {
   const router = useRouter()
-  const form = useDestinationForm(initialValues)
+  const form = usePlaceForm(initialValues)
 
   const handleSubmit = form.handleSubmit(async (data) => {
     try {
-      const res = await fetch(`/api/destinations/${destinationId}`, {
+      const res = await fetch(`/api/places/${placeId}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
@@ -35,7 +35,7 @@ export default function DestinationEditForm({
 
         if (res.status === 422 && body.errors) {
           for (const [field, messages] of Object.entries(body.errors)) {
-            form.setError(field as keyof CreateDestinationInput, {
+            form.setError(field as keyof CreatePlaceInput, {
               type: "server",
               message: messages?.[0],
             })
@@ -57,7 +57,8 @@ export default function DestinationEditForm({
   return (
     <FormProvider {...form}>
       <form className="space-y-4" onSubmit={handleSubmit}>
-        <DestinationFormFields />
+        <PlaceFormFields />
+
         <Button
           type="submit"
           className="self-end"

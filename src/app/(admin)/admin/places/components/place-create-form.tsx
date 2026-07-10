@@ -1,17 +1,17 @@
 "use client"
 import { FormProvider } from "react-hook-form"
-import { useDestinationForm } from "../hooks/use-destination-form"
-import DestinationFormFields from "./destination-form-fields"
+import { usePlaceForm } from "../hooks/use-place-form"
+import PlaceFormFields from "./place-form-fields"
 import { Button } from "@/components/ui/button"
 import { toast } from "sonner"
-import { CreateDestinationInput } from "@/schemas/create-place.schema"
+import { CreatePlaceInput } from "@/schemas/create-place.schema"
 
-export default function DestinationCreateForm() {
-  const form = useDestinationForm()
+export default function PlaceCreateForm() {
+  const form = usePlaceForm()
 
   const handleSubmit = form.handleSubmit(async (data) => {
     try {
-      const res = await fetch("/api/destinations", {
+      const res = await fetch("/api/places", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
@@ -25,7 +25,7 @@ export default function DestinationCreateForm() {
 
         if (res.status === 422 && body.errors) {
           for (const [field, messages] of Object.entries(body.errors)) {
-            form.setError(field as keyof CreateDestinationInput, {
+            form.setError(field as keyof CreatePlaceInput, {
               type: "server",
               message: messages?.[0],
             })
@@ -43,11 +43,13 @@ export default function DestinationCreateForm() {
       toast.error("Could not reach the server. Please try again.")
     }
   })
+
   return (
     <>
       <FormProvider {...form}>
         <form className="space-y-4" onSubmit={handleSubmit}>
-          <DestinationFormFields />
+          <PlaceFormFields />
+
           <Button
             type="submit"
             className="self-end"
