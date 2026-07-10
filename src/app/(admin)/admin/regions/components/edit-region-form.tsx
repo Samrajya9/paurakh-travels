@@ -21,7 +21,7 @@ export default function EditRegionForm({
   region: Region
   onSuccess: (region: Region) => void
 }) {
-  const form = useRegionForm({ name: region.name })
+  const form = useRegionForm({ name: region.name, destinationId: region.destinationId })
 
   const handleSubmit = form.handleSubmit(async (data) => {
     try {

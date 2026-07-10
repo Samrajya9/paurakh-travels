@@ -8,6 +8,7 @@ import { useForm } from "react-hook-form"
 
 const defaultValues: CreateRegionInput = {
   name: "",
+  destinationId: "",
 }
 
 export const useRegionForm = (

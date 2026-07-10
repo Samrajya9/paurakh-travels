@@ -96,6 +96,7 @@ export default function RegionTable({
       <TableHeader>
         <TableRow>
           <TableHead>Name</TableHead>
+          <TableHead>Destination</TableHead>
           <TableHead className="w-12 text-right">Actions</TableHead>
         </TableRow>
       </TableHeader>
@@ -103,6 +104,7 @@ export default function RegionTable({
         {regions.map((region) => (
           <TableRow key={region.id}>
             <TableCell className="font-medium">{region.name}</TableCell>
+            <TableCell>{region.destination?.name || "N/A"}</TableCell>
             <TableCell className="text-right">
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
