@@ -4,15 +4,6 @@ import { handleApiError } from "@/lib/api-error-handler"
 import { CreatePackageSchema } from "@/schemas/create-package.schema"
 import { createPackage, getAllPackages } from "@/services/package.service"
 
-// export async function GET() {
-//   try {
-//     const packages = await getAllPackages()
-//     return NextResponse.json(packages)
-//   } catch (error) {
-//     return handleApiError(error)
-//   }
-// }
-
 export async function GET(req: NextRequest) {
   try {
     const { searchParams } = new URL(req.url)

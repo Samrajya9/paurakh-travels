@@ -121,6 +121,5 @@ export async function deleteRegionById(id: string) {
 
   return prisma.region.delete({
     where: { id },
-    select: regionSelect,
   })
 }

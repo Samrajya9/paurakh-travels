@@ -45,8 +45,8 @@ const data = {
       icon: Frame,
     },
     {
-      name: "Destinations",
-      url: "/admin/destinations",
+      name: "Places",
+      url: "/admin/places",
       icon: MapPinHouse,
     },
     {
