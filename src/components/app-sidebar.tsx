@@ -19,7 +19,7 @@ const data = {
   navMain: [
     {
       title: "Packages",
-      url: "/admin/packages",
+      url: "#",
       icon: Map,
       isActive: true,
       items: [
@@ -37,23 +37,29 @@ const data = {
         },
       ],
     },
+
+    {
+      title: "Geography",
+      url: "#",
+      icon: MapPinHouse,
+      isActive: false,
+      items: [
+        {
+          title: "Destinations",
+          url: "/admin/destinations",
+        },
+        {
+          title: "Regions",
+          url: "/admin/regions",
+        },
+        {
+          title: "Places",
+          url: "/admin/places",
+        },
+      ],
+    },
   ],
   projects: [
-    {
-      name: "Region",
-      url: "/admin/regions",
-      icon: Frame,
-    },
-    {
-      name: "Places",
-      url: "/admin/places",
-      icon: MapPinHouse,
-    },
-    {
-      name: "Destinations",
-      url: "/admin/destinations",
-      icon: MapPinHouse,
-    },
     {
       name: "Media",
       url: "/admin/media",
