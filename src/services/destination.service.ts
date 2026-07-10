@@ -2,7 +2,7 @@ import { Prisma as PrismaClient } from "@prisma/client"
 
 import prisma from "@/lib/prisma"
 import { AppError } from "@/lib/errors"
-import type { CreateDestinationInput } from "@/schemas/create-destination.schema"
+import type { CreateDestinationInput } from "@/schemas/create-place.schema"
 import type { UpdateDestinationInput } from "@/schemas/update-destination.schema"
 
 const destinationSelect = {

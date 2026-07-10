@@ -1,7 +1,7 @@
 import { z } from "zod"
 
-export const ItineraryDestinationSchema = z.object({
-  destinationId: z.cuid2("Invalid destination id"),
+export const ItineraryPlaceSchema = z.object({
+  placeId: z.cuid2("Invalid place id"),
   order: z.coerce
     .number()
     .int("Order must be a whole number")
@@ -40,9 +40,9 @@ export const CreateItinerarySchema = z.object({
     .optional(),
 
   // Optional at the itinerary level (e.g. a standalone itinerary form
-  // that doesn't collect destinations). Package creation requires it —
+  // that doesn't collect places). Package creation requires it —
   // see CreatePackageSchema, which overrides this to be required.
-  destinations: z.array(ItineraryDestinationSchema).optional(),
+  places: z.array(ItineraryPlaceSchema).optional(),
 })
 
 export type CreateItineraryInput = z.infer<typeof CreateItinerarySchema>

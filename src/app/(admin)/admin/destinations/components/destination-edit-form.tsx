@@ -7,7 +7,7 @@ import { toast } from "sonner"
 import { useDestinationForm } from "../hooks/use-destination-form"
 import DestinationFormFields from "./destination-form-fields"
 import { Button } from "@/components/ui/button"
-import type { CreateDestinationInput } from "@/schemas/create-destination.schema"
+import type { CreateDestinationInput } from "@/schemas/create-place.schema"
 
 export default function DestinationEditForm({
   destinationId,

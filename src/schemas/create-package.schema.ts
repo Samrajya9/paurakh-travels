@@ -1,7 +1,7 @@
 import { z } from "zod"
 import {
   CreateItinerarySchema,
-  ItineraryDestinationSchema,
+  ItineraryPlaceSchema,
 } from "./create-itinerary.schema"
 import { CreateFaqSchema } from "./create-faq.schema"
 
@@ -49,11 +49,21 @@ export const CreatePackageSchema = z.object({
 
   difficultyId: z.cuid2("Invalid difficulty id"),
 
+  // Optional: Package.categoryId is nullable in the schema.
+  categoryId: z.cuid2("Invalid category id").optional().nullable(),
+
+  // Zero or more tag-style associations. Omitting a key means "none of
+  // these" — no min(1), since a package needn't have activities,
+  // seasons, or themes assigned.
+  activityIds: z.array(z.cuid2("Invalid activity id")).optional(),
+  seasonIds: z.array(z.cuid2("Invalid season id")).optional(),
+  themeIds: z.array(z.cuid2("Invalid theme id")).optional(),
+
   itineraries: z.array(
     CreateItinerarySchema.omit({
       packageId: true,
     }).extend({
-      destinations: z.array(ItineraryDestinationSchema),
+      places: z.array(ItineraryPlaceSchema),
     })
   ),
 

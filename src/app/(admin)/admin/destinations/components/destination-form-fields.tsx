@@ -1,4 +1,4 @@
-import { CreateDestinationInput } from "@/schemas/create-destination.schema"
+import { CreateDestinationInput } from "@/schemas/create-place.schema"
 import { Controller, useFormContext } from "react-hook-form"
 import {
   Field,

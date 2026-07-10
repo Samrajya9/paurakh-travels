@@ -3,7 +3,7 @@
 import {
   CreateDestinationInput,
   CreateDestinationSchema,
-} from "@/schemas/create-destination.schema"
+} from "@/schemas/create-place.schema"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useEffect } from "react"
 import { useForm } from "react-hook-form"

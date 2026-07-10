@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server"
 
 import { handleApiError } from "@/lib/api-error-handler"
-import { CreateDestinationSchema } from "@/schemas/create-destination.schema"
+import { CreateDestinationSchema } from "@/schemas/create-place.schema"
 import {
   createDestination,
   getAllDestinations,

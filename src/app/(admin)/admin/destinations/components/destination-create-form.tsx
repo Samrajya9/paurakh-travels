@@ -4,7 +4,7 @@ import { useDestinationForm } from "../hooks/use-destination-form"
 import DestinationFormFields from "./destination-form-fields"
 import { Button } from "@/components/ui/button"
 import { toast } from "sonner"
-import { CreateDestinationInput } from "@/schemas/create-destination.schema"
+import { CreateDestinationInput } from "@/schemas/create-place.schema"
 
 export default function DestinationCreateForm() {
   const form = useDestinationForm()
