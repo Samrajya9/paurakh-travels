@@ -1,0 +1,19 @@
+model Place {
+    id        String @id @default(cuid())
+    name      String
+    elevation Int
+
+    latitude  Float?
+    longitude Float?
+
+    regionId String @map("region_id")
+    region   Region @relation(fields: [regionId], references: [id], onDelete: Restrict)
+
+    itineraryPlaces ItineraryPlace[]
+
+    createdAt DateTime @default(now()) @map("created_at")
+    updatedAt DateTime @updatedAt @map("updated_at")
+
+    @@unique([regionId, name])
+    @@map("places")
+}

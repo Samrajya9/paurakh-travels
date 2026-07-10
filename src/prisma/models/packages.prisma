@@ -11,9 +11,15 @@ model Package {
     difficultyId String     @map("difficulty_id")
     difficulty   Difficulty @relation(fields: [difficultyId], references: [id], onDelete: Restrict)
 
+    categoryId String?   @map("category_id")
+    category   Category? @relation(fields: [categoryId], references: [id], onDelete: Restrict)
+
     itineraries    Itinerary[]
     faqs           PackageFaq[]
     groupDiscounts PackageGroupDiscount[]
+    activities     PackageActivity[]
+    seasons        PackageSeason[]
+    themes         PackageTheme[]
 
     likes UserPackageLike[]
 

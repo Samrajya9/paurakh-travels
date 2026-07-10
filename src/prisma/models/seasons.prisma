@@ -1,0 +1,26 @@
+model Season {
+    id   String @id @default(cuid())
+    name String @unique
+
+    packages PackageSeason[]
+
+    createdAt DateTime @default(now()) @map("created_at")
+    updatedAt DateTime @updatedAt @map("updated_at")
+
+    @@map("seasons")
+}
+
+model PackageSeason {
+    id        String @id @default(cuid())
+    packageId String @map("package_id")
+    seasonId  String @map("season_id")
+
+    package Package @relation(fields: [packageId], references: [id], onDelete: Cascade)
+    season  Season  @relation(fields: [seasonId], references: [id], onDelete: Cascade)
+
+    createdAt DateTime @default(now()) @map("created_at")
+
+    @@unique([packageId, seasonId])
+    @@index([seasonId])
+    @@map("package_seasons")
+}

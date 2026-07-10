@@ -1,0 +1,14 @@
+model ItineraryPlace {
+  id          String @id @default(cuid())
+  itineraryId String @map("itinerary_id")
+  placeId     String @map("place_id")
+
+  order Int
+
+  itinerary Itinerary @relation(fields: [itineraryId], references: [id], onDelete: Cascade)
+  place     Place     @relation(fields: [placeId], references: [id], onDelete: Cascade)
+
+  @@unique([itineraryId, placeId])
+  @@index([placeId])
+  @@map("itinerary_places")
+}

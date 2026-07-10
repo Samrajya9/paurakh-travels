@@ -10,7 +10,7 @@ model Itinerary {
     distanceKm    Float? @map("distance_km")
     durationHours Int?   @map("duration_hours")
 
-    destinations ItineraryDestination[]
+    places ItineraryPlace[]
 
     createdAt DateTime @default(now()) @map("created_at")
     updatedAt DateTime @updatedAt @map("updated_at")

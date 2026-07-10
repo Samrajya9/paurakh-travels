@@ -1,8 +1,11 @@
 model Region {
     id   String @id @default(cuid())
-    name String @unique // ← "Everest Region" twice is a data bug
+    name String @unique
 
-    destinations Destination[]
+    destinationId String      @map("destination_id")
+    destination   Destination @relation(fields: [destinationId], references: [id], onDelete: Restrict)
+
+    places Place[]
 
     createdAt DateTime @default(now()) @map("created_at")
     updatedAt DateTime @updatedAt @map("updated_at")
