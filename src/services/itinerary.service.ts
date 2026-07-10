@@ -20,15 +20,24 @@ const itinerarySelect = {
   htmlDescription: true,
   distanceKm: true,
   durationHours: true,
-  destinations: {
+  places: {
     select: {
       id: true,
-      destinationId: true,
+      placeId: true,
       order: true,
-      destination: {
+      place: {
         select: {
           id: true,
           name: true,
+          elevation: true,
+          latitude: true,
+          longitude: true,
+          region: {
+            select: {
+              id: true,
+              name: true,
+            },
+          },
         },
       },
     },
@@ -95,14 +104,14 @@ export async function createItinerary(dto: CreateItineraryInput) {
         htmlDescription: dto.htmlDescription,
         distanceKm: dto.distanceKm,
         durationHours: dto.durationHours,
-        // Nested write: creates the ItineraryDestination rows in the
+        // Nested write: creates the ItineraryPlace rows in the
         // same operation as the itinerary itself.
-        destinations:
-          dto.destinations && dto.destinations.length > 0
+        places:
+          dto.places && dto.places.length > 0
             ? {
-                create: dto.destinations.map((d) => ({
-                  destinationId: d.destinationId,
-                  order: d.order,
+                create: dto.places.map((p) => ({
+                  placeId: p.placeId,
+                  order: p.order,
                 })),
               }
             : undefined,
@@ -161,15 +170,15 @@ export async function updateItineraryById(
         htmlDescription: dto.htmlDescription,
         distanceKm: dto.distanceKm,
         durationHours: dto.durationHours,
-        // Only touch destinations if the caller actually sent a new set.
+        // Only touch places if the caller actually sent a new set.
         // Replaces the full list: wipe existing links, then recreate —
         // both happen inside Prisma's implicit nested-write transaction.
-        destinations: dto.destinations
+        places: dto.places
           ? {
               deleteMany: {},
-              create: dto.destinations.map((d) => ({
-                destinationId: d.destinationId,
-                order: d.order,
+              create: dto.places.map((p) => ({
+                placeId: p.placeId,
+                order: p.order,
               })),
             }
           : undefined,

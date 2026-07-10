@@ -2,17 +2,12 @@ import { Prisma as PrismaClient } from "@prisma/client"
 
 import prisma from "@/lib/prisma"
 import { AppError } from "@/lib/errors"
-import type { CreateDestinationInput } from "@/schemas/create-place.schema"
+import type { CreateDestinationInput } from "@/schemas/create-destination.schema"
 import type { UpdateDestinationInput } from "@/schemas/update-destination.schema"
 
 const destinationSelect = {
   id: true,
   name: true,
-  elevation: true,
-  latitude: true,
-  longitude: true,
-  regionId: true,
-  region: { select: { id: true, name: true } },
   createdAt: true,
   updatedAt: true,
 } satisfies PrismaClient.DestinationSelect
@@ -41,10 +36,7 @@ function throwIfDuplicateDestination(name: string, error: unknown): never {
     error instanceof PrismaClient.PrismaClientKnownRequestError &&
     error.code === "P2002"
   ) {
-    throw new AppError(
-      `A destination named "${name}" already exists in this region.`,
-      409
-    )
+    throw new AppError(`Destination "${name}" already exists.`, 409)
   }
 
   throw error
@@ -55,13 +47,7 @@ function throwIfDuplicateDestination(name: string, error: unknown): never {
 export async function createDestination(dto: CreateDestinationInput) {
   try {
     return await prisma.destination.create({
-      data: {
-        name: dto.name,
-        elevation: dto.elevation,
-        latitude: dto.latitude,
-        longitude: dto.longitude,
-        regionId: dto.regionId,
-      },
+      data: { name: dto.name },
       select: destinationSelect,
     })
   } catch (error) {
@@ -73,14 +59,6 @@ export async function createDestination(dto: CreateDestinationInput) {
 
 export async function getAllDestinations() {
   return prisma.destination.findMany({
-    select: destinationSelect,
-    orderBy: { name: "asc" },
-  })
-}
-
-export async function getDestinationsByRegion(regionId: string) {
-  return prisma.destination.findMany({
-    where: { regionId },
     select: destinationSelect,
     orderBy: { name: "asc" },
   })

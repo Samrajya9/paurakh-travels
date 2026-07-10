@@ -27,6 +27,31 @@ const packageSelect = {
       name: true,
     },
   },
+  categoryId: true,
+  category: {
+    select: {
+      id: true,
+      name: true,
+    },
+  },
+  activities: {
+    select: {
+      id: true,
+      activity: { select: { id: true, name: true } },
+    },
+  },
+  seasons: {
+    select: {
+      id: true,
+      season: { select: { id: true, name: true } },
+    },
+  },
+  themes: {
+    select: {
+      id: true,
+      theme: { select: { id: true, name: true } },
+    },
+  },
   groupDiscounts: {
     select: {
       id: true,
@@ -43,12 +68,12 @@ const packageSelect = {
       htmlDescription: true,
       distanceKm: true,
       durationHours: true,
-      destinations: {
+      places: {
         select: {
           id: true,
-          destinationId: true,
+          placeId: true,
           order: true,
-          destination: {
+          place: {
             select: {
               id: true,
               name: true,
@@ -165,10 +190,59 @@ async function replaceGroupDiscountsForPackage(
   })
 }
 
+// Full replace, not merge — same rationale as replaceGroupDiscountsForPackage:
+// these tag-style associations support add/remove of individual entries, so
+// wiping and recreating from the submitted array avoids leaving stale rows
+// behind when an id is removed.
+async function replaceActivitiesForPackage(
+  packageId: string,
+  activityIds: string[]
+) {
+  await prisma.packageActivity.deleteMany({ where: { packageId } })
+
+  if (activityIds.length === 0) return
+
+  await prisma.packageActivity.createMany({
+    data: activityIds.map((activityId) => ({ packageId, activityId })),
+  })
+}
+
+async function replaceSeasonsForPackage(
+  packageId: string,
+  seasonIds: string[]
+) {
+  await prisma.packageSeason.deleteMany({ where: { packageId } })
+
+  if (seasonIds.length === 0) return
+
+  await prisma.packageSeason.createMany({
+    data: seasonIds.map((seasonId) => ({ packageId, seasonId })),
+  })
+}
+
+async function replaceThemesForPackage(packageId: string, themeIds: string[]) {
+  await prisma.packageTheme.deleteMany({ where: { packageId } })
+
+  if (themeIds.length === 0) return
+
+  await prisma.packageTheme.createMany({
+    data: themeIds.map((themeId) => ({ packageId, themeId })),
+  })
+}
+
 // ------------------------------------------------------------------ create
 
 export async function createPackage(dto: CreatePackageInput) {
-  const { itineraries, faqs, groupDiscounts, imageId, ...packageData } = dto
+  const {
+    itineraries,
+    faqs,
+    groupDiscounts,
+    imageId,
+    activityIds,
+    seasonIds,
+    themeIds,
+    ...packageData
+  } = dto
 
   try {
     // 1. Create the package
@@ -180,6 +254,7 @@ export async function createPackage(dto: CreatePackageInput) {
         htmlOverview: packageData.htmlOverview,
         basePrice: packageData.basePrice,
         difficultyId: packageData.difficultyId,
+        categoryId: packageData.categoryId,
       },
       select: { id: true },
     })
@@ -202,6 +277,19 @@ export async function createPackage(dto: CreatePackageInput) {
     // 4. If group discount tiers are provided, create them
     if (groupDiscounts) {
       await replaceGroupDiscountsForPackage(pkg.id, groupDiscounts)
+    }
+
+    // 4b. Tag-style associations — activities, seasons, themes
+    if (activityIds) {
+      await replaceActivitiesForPackage(pkg.id, activityIds)
+    }
+
+    if (seasonIds) {
+      await replaceSeasonsForPackage(pkg.id, seasonIds)
+    }
+
+    if (themeIds) {
+      await replaceThemesForPackage(pkg.id, themeIds)
     }
 
     if (imageId) {
@@ -283,7 +371,16 @@ export async function getPackageBySlug(
 export async function updatePackageById(id: string, dto: UpdatePackageInput) {
   await findPackageByIdOrThrow(id)
 
-  const { itineraries, faqs, groupDiscounts, ...packageData } = dto
+  const {
+    itineraries,
+    faqs,
+    groupDiscounts,
+    imageId,
+    activityIds,
+    seasonIds,
+    themeIds,
+    ...packageData
+  } = dto
 
   try {
     await prisma.package.update({
@@ -309,6 +406,20 @@ export async function updatePackageById(id: string, dto: UpdatePackageInput) {
     // intentional state, not "nothing was sent".
     if (groupDiscounts !== undefined) {
       await replaceGroupDiscountsForPackage(id, groupDiscounts)
+    }
+
+    // Same "key present means intentional" rule for the tag-style
+    // associations — an empty array means "clear them all".
+    if (activityIds !== undefined) {
+      await replaceActivitiesForPackage(id, activityIds)
+    }
+
+    if (seasonIds !== undefined) {
+      await replaceSeasonsForPackage(id, seasonIds)
+    }
+
+    if (themeIds !== undefined) {
+      await replaceThemesForPackage(id, themeIds)
     }
 
     return findPackageByIdOrThrow(id)
