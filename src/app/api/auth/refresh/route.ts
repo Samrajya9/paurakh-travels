@@ -1,18 +1,19 @@
 import type { NextRequest } from "next/server"
-import {
-  verifyRefreshToken,
-  signAccessToken,
-  signRefreshToken,
-} from "@/services/auth.service"
+
 import {
   accessTokenCookieOptions,
   refreshTokenCookieOptions,
   serializeCookie,
 } from "@/lib/cookies"
 import { extractRefreshToken } from "@/lib/tokens"
+import {
+  verifyRefreshToken,
+  signAccessToken,
+  signRefreshToken,
+} from "@/lib/jwt"
 
 export async function POST(req: NextRequest) {
-  const refreshToken = extractRefreshToken(req)
+  const refreshToken = await extractRefreshToken()
 
   if (!refreshToken) {
     return Response.json({ error: "Unauthorized" }, { status: 401 })

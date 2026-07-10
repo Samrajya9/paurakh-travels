@@ -8,12 +8,17 @@ import {
   updateCompanyContact,
 } from "@/services/company-contacts.service"
 
-type RouteContext = { params: { id: string } }
-
+type RouteContext = {
+  params: Promise<{
+    id: string
+  }>
+}
 // GET /api/company-contacts/[id]
-export async function GET(_req: NextRequest, { params }: RouteContext) {
+export async function GET(req: NextRequest, { params }: RouteContext) {
   try {
-    const contact = await getCompanyContact(params.id)
+    const { id } = await params
+
+    const contact = await getCompanyContact(id)
     return NextResponse.json(contact)
   } catch (error) {
     return handleApiError(error)
@@ -23,6 +28,7 @@ export async function GET(_req: NextRequest, { params }: RouteContext) {
 // PATCH /api/company-contacts/[id]
 export async function PATCH(req: NextRequest, { params }: RouteContext) {
   try {
+    const { id } = await params
     const body = await req.json()
     const parsed = CompanyContactUpdateSchema.safeParse(body)
 
@@ -36,7 +42,7 @@ export async function PATCH(req: NextRequest, { params }: RouteContext) {
       )
     }
 
-    const contact = await updateCompanyContact(params.id, parsed.data)
+    const contact = await updateCompanyContact(id, parsed.data)
     return NextResponse.json(contact)
   } catch (error) {
     return handleApiError(error)
@@ -46,7 +52,8 @@ export async function PATCH(req: NextRequest, { params }: RouteContext) {
 // DELETE /api/company-contacts/[id]
 export async function DELETE(_req: NextRequest, { params }: RouteContext) {
   try {
-    const contact = await deleteCompanyContact(params.id)
+    const { id } = await params
+    const contact = await deleteCompanyContact(id)
     return NextResponse.json(contact)
   } catch (error) {
     return handleApiError(error)
