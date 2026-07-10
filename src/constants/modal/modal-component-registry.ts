@@ -6,5 +6,13 @@ export const MODAL_REGISTRY = {
   EDIT_DESTINATION_MODAL_ID: "edit-destination",
   CREATE_DIFFICULTY_MODAL_ID: "create-difficulty",
   EDIT_DIFFICULTY_MODAL_ID: "edit-difficulty",
+  CREATE_ACTIVITY_MODAL_ID: "create-activity",
+  EDIT_ACTIVITY_MODAL_ID: "edit-activity",
+  CREATE_CATEGORY_MODAL_ID: "create-category",
+  EDIT_CATEGORY_MODAL_ID: "edit-category",
+  CREATE_THEME_MODAL_ID: "create-theme",
+  EDIT_THEME_MODAL_ID: "edit-theme",
+  CREATE_SEASON_MODAL_ID: "create-season",
+  EDIT_SEASON_MODAL_ID: "edit-season",
   IMAGE_PICKER_MODAL_ID: "image-picker",
 }

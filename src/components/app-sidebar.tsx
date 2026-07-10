@@ -58,6 +58,30 @@ const data = {
         },
       ],
     },
+    {
+      title: "Taxonomy",
+      url: "#",
+      icon: Frame,
+      isActive: false,
+      items: [
+        {
+          title: "Activities",
+          url: "/admin/activities",
+        },
+        {
+          title: "Categories",
+          url: "/admin/categories",
+        },
+        {
+          title: "Themes",
+          url: "/admin/themes",
+        },
+        {
+          title: "Seasons",
+          url: "/admin/seasons",
+        },
+      ],
+    },
   ],
   projects: [
     {
