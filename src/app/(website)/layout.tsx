@@ -5,7 +5,7 @@ import { LikedPackagesProvider } from "@/context/liked-packages.context"
 import { getCurrentUser } from "@/lib/auth-server"
 import { getAllLikedPackageIdsForUser } from "@/services/user-package-like.service"
 import { cn } from "@/lib/utils"
-import NewNavBar from "@/components/ui/nav-bar/new-nav-bar"
+import NewNavBar from "@/components/ui/nav-bar/nav-bar"
 
 const playfairDisplay = Playfair_Display({
   subsets: ["latin"],
