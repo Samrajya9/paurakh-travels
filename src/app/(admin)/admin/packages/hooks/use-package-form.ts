@@ -15,6 +15,11 @@ const defaultValues: CreatePackageInput = {
   htmlOverview: "",
   basePrice: 0,
   difficultyId: "",
+  categoryId: "",
+  activityIds: [],
+  seasonIds: [],
+  themeIds: [],
+  imageId: "",
   itineraries: [
     {
       dayNumber: 1,
@@ -22,9 +27,9 @@ const defaultValues: CreatePackageInput = {
       htmlDescription: "",
       distanceKm: undefined,
       durationHours: undefined,
-      destinations: [
+      places: [
         {
-          destinationId: "",
+          placeId: "",
           order: 1,
         },
       ],

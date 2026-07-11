@@ -11,7 +11,7 @@ export const DESTINATIONS: {
   }[]
 }[] = [
   {
-    name: "Everest",
+    name: "NEPAL",
     regions: [
       {
         name: "Everest Region",
@@ -54,11 +54,6 @@ export const DESTINATIONS: {
           },
         ],
       },
-    ],
-  },
-  {
-    name: "Annapurna",
-    regions: [
       {
         name: "Annapurna Region",
         places: [
@@ -106,11 +101,6 @@ export const DESTINATIONS: {
           },
         ],
       },
-    ],
-  },
-  {
-    name: "Langtang",
-    regions: [
       {
         name: "Langtang Region",
         places: [
@@ -140,11 +130,6 @@ export const DESTINATIONS: {
           },
         ],
       },
-    ],
-  },
-  {
-    name: "Manaslu",
-    regions: [
       {
         name: "Manaslu Region",
         places: [
@@ -168,11 +153,6 @@ export const DESTINATIONS: {
           },
         ],
       },
-    ],
-  },
-  {
-    name: "Kathmandu Valley",
-    regions: [
       {
         name: "Kathmandu Valley",
         places: [
@@ -183,22 +163,32 @@ export const DESTINATIONS: {
             longitude: 85.324,
           },
           {
+            name: "Nagarkot",
+            elevation: 2175,
+            latitude: 27.7172,
+            longitude: 85.5199,
+          },
+        ],
+      },
+      {
+        name: "BHAKTAPUR REGION",
+        places: [
+          {
             name: "Bhaktapur",
             elevation: 1401,
             latitude: 27.671,
             longitude: 85.4298,
           },
+        ],
+      },
+      {
+        name: "LALITPUR REGION",
+        places: [
           {
             name: "Patan",
             elevation: 1350,
             latitude: 27.6727,
             longitude: 85.3247,
-          },
-          {
-            name: "Nagarkot",
-            elevation: 2175,
-            latitude: 27.7172,
-            longitude: 85.5199,
           },
         ],
       },

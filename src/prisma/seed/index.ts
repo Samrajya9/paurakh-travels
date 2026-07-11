@@ -163,14 +163,24 @@ async function main() {
 
   // ── 5.5. Categories, Activities, Seasons, Themes ─────────────────────────
   console.log("")
+  const categoriesByName = new Map<string, { id: string }>()
 
   for (const name of CATEGORIES) {
-    await prisma.category.upsert({
+    const category = await prisma.category.upsert({
       where: { name },
       create: { name },
       update: {},
+      select: { id: true, name: true },
     })
+    categoriesByName.set(name, category)
     console.log(`✓ Category: ${name}`)
+  }
+
+  const trekking = categoriesByName.get("Trekking")
+  if (!trekking) {
+    throw new Error(
+      `Category "Trekking" not found — did the category seed loop run first?`
+    )
   }
 
   console.log("")
@@ -213,6 +223,7 @@ async function main() {
       basePrice: PACKAGE.basePrice,
       htmlOverview: PACKAGE.htmlOverview,
       difficultyId: strenuous.id,
+      categoryId: trekking.id,
     },
     update: {},
     select: { id: true, name: true },

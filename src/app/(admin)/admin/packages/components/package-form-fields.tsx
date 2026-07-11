@@ -21,10 +21,12 @@ import {
 } from "react-hook-form"
 import RichTextEditor from "@/components/tiptap/rich-text-editor"
 import { PlusIcon, TrashIcon } from "lucide-react"
-import DestinationSelect from "../../places/components/place-select"
+import PlaceSelect from "../../places/components/place-select"
 import { Textarea } from "@/components/ui/textarea"
 
 import DifficultySelect from "../../packages/difficulties/components/difficulty-select"
+import CategorySelect from "../../categories/components/category-select"
+import TagToggleGroup from "@/components/inputs/tag-toggle-group"
 import ImageSelector from "../../media/components/image-selector"
 
 // Owns the top-level, optional `groupDiscounts` field array.
@@ -164,52 +166,48 @@ function slugify(value: string) {
     .replace(/\s+/g, "-")
 }
 
-// Owns the nested `itineraries.${itineraryIndex}.destinations` field array.
-function ItineraryDestinationsField({
-  itineraryIndex,
-}: {
-  itineraryIndex: number
-}) {
+// Owns the nested `itineraries.${itineraryIndex}.places` field array.
+function ItineraryPlacesField({ itineraryIndex }: { itineraryIndex: number }) {
   const form = useFormContext<CreatePackageInput>()
 
   const { fields, append, remove } = useFieldArray({
     control: form.control,
-    name: `itineraries.${itineraryIndex}.destinations`,
+    name: `itineraries.${itineraryIndex}.places`,
   })
 
   return (
     <Field>
       <FieldLegend className="flex w-full items-center justify-between">
-        <span>Destinations</span>
+        <span>Places</span>
         <Button
           type="button"
           size="sm"
           onClick={() =>
             append({
-              destinationId: "",
+              placeId: "",
               order: fields.length + 1,
             })
           }
           className="flex items-center gap-1.5"
         >
           <PlusIcon className="h-4 w-4" />
-          Add Destination
+          Add Place
         </Button>
       </FieldLegend>
       <FieldDescription>
-        Add destinations in the order you want them to appear in the package
+        Add places in the order you want them to appear in the package
       </FieldDescription>
 
       <FieldGroup>
-        {fields.map((field, destIndex) => (
+        {fields.map((field, placeIndex) => (
           <div key={field.id} className="flex items-end gap-3">
             <Controller
               control={form.control}
-              name={`itineraries.${itineraryIndex}.destinations.${destIndex}.destinationId`}
+              name={`itineraries.${itineraryIndex}.places.${placeIndex}.placeId`}
               render={({ field, fieldState }) => (
                 <Field className="flex-1" data-invalid={fieldState.invalid}>
-                  <FieldLabel htmlFor={field.name}>Destination</FieldLabel>
-                  <DestinationSelect
+                  <FieldLabel htmlFor={field.name}>Place</FieldLabel>
+                  <PlaceSelect
                     value={field.value}
                     onChange={field.onChange}
                     onBlur={field.onBlur}
@@ -224,7 +222,7 @@ function ItineraryDestinationsField({
 
             <Controller
               control={form.control}
-              name={`itineraries.${itineraryIndex}.destinations.${destIndex}.order`}
+              name={`itineraries.${itineraryIndex}.places.${placeIndex}.order`}
               render={({ field, fieldState }) => (
                 <Field className="w-24" data-invalid={fieldState.invalid}>
                   <FieldLabel htmlFor={field.name}>Order</FieldLabel>
@@ -247,7 +245,7 @@ function ItineraryDestinationsField({
               type="button"
               variant="destructive"
               size="icon"
-              onClick={() => remove(destIndex)}
+              onClick={() => remove(placeIndex)}
               disabled={fields.length <= 1}
             >
               <TrashIcon className="size-4" />
@@ -256,6 +254,98 @@ function ItineraryDestinationsField({
         ))}
       </FieldGroup>
     </Field>
+  )
+}
+
+// Owns the top-level, optional tag-style associations: categoryId
+// (single select) plus activityIds / seasonIds / themeIds (multi-select
+// tag pickers). All four are optional per CreatePackageSchema.
+function PackageClassificationFields() {
+  const form = useFormContext<CreatePackageInput>()
+
+  return (
+    <FieldSet>
+      <FieldLegend>Classification</FieldLegend>
+      <FieldDescription>
+        Optional. Helps travelers filter and discover this package.
+      </FieldDescription>
+
+      <FieldGroup>
+        <Controller
+          name="categoryId"
+          control={form.control}
+          render={({ field, fieldState }) => (
+            <Field data-invalid={fieldState.invalid}>
+              <FieldLabel htmlFor={field.name}>Category</FieldLabel>
+              <CategorySelect
+                value={field.value ?? undefined}
+                onChange={field.onChange}
+                onBlur={field.onBlur}
+                aria-invalid={fieldState.invalid}
+              />
+              {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+            </Field>
+          )}
+        />
+
+        <Controller
+          name="activityIds"
+          control={form.control}
+          render={({ field, fieldState }) => (
+            <Field data-invalid={fieldState.invalid}>
+              <FieldLabel htmlFor={field.name}>Activities</FieldLabel>
+              <TagToggleGroup
+                endpoint="/api/activities"
+                value={field.value ?? []}
+                onChange={field.onChange}
+                onBlur={field.onBlur}
+                aria-invalid={fieldState.invalid}
+                emptyLabel="No activities yet — add some from the Activities page."
+              />
+              {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+            </Field>
+          )}
+        />
+
+        <Controller
+          name="seasonIds"
+          control={form.control}
+          render={({ field, fieldState }) => (
+            <Field data-invalid={fieldState.invalid}>
+              <FieldLabel htmlFor={field.name}>Seasons</FieldLabel>
+              <TagToggleGroup
+                endpoint="/api/seasons"
+                value={field.value ?? []}
+                onChange={field.onChange}
+                onBlur={field.onBlur}
+                aria-invalid={fieldState.invalid}
+                emptyLabel="No seasons yet — add some from the Seasons page."
+              />
+              {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+            </Field>
+          )}
+        />
+
+        <Controller
+          name="themeIds"
+          control={form.control}
+          render={({ field, fieldState }) => (
+            <Field data-invalid={fieldState.invalid}>
+              <FieldLabel htmlFor={field.name}>Themes</FieldLabel>
+              <TagToggleGroup
+                endpoint="/api/themes"
+                value={field.value ?? []}
+                onChange={field.onChange}
+                onBlur={field.onBlur}
+                aria-invalid={fieldState.invalid}
+                emptyLabel="No themes yet — add some from the Themes page."
+              />
+              {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+            </Field>
+          )}
+        />
+      </FieldGroup>
+    </FieldSet>
   )
 }
 
@@ -539,6 +629,8 @@ const PackageFormFields = () => {
         </FieldGroup>
       </FieldSet>
 
+      <PackageClassificationFields />
+
       <PackageGroupDiscountsField />
 
       <FieldSet>
@@ -553,9 +645,9 @@ const PackageFormFields = () => {
                 htmlDescription: "",
                 distanceKm: undefined,
                 durationHours: undefined,
-                destinations: [
+                places: [
                   {
-                    destinationId: "",
+                    placeId: "",
                     order: fields.length + 1,
                   },
                 ],
@@ -706,7 +798,7 @@ const PackageFormFields = () => {
                   )}
                 />
 
-                <ItineraryDestinationsField itineraryIndex={index} />
+                <ItineraryPlacesField itineraryIndex={index} />
               </FieldGroup>
             </div>
           ))}

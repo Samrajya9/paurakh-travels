@@ -181,7 +181,7 @@ CREATE TABLE `packages` (
     `html_overview` TEXT NULL,
     `base_price` DECIMAL(10, 2) NOT NULL,
     `difficulty_id` VARCHAR(191) NOT NULL,
-    `category_id` VARCHAR(191) NULL,
+    `category_id` VARCHAR(191) NOT NULL,
     `created_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updated_at` DATETIME(3) NOT NULL,
 

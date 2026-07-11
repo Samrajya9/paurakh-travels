@@ -24,15 +24,20 @@ export default async function EditPackagePage({ params }: RouteContext) {
     htmlOverview: pkg.htmlOverview ?? "",
     basePrice: pkg.basePrice.toNumber(),
     difficultyId: pkg.difficultyId,
+    categoryId: pkg.categoryId,
+    activityIds: pkg.activities.map((a) => a.activity.id),
+    seasonIds: pkg.seasons.map((s) => s.season.id),
+    themeIds: pkg.themes.map((t) => t.theme.id),
+    imageId: pkg.images[0]?.image.id ?? "",
     itineraries: pkg.itineraries.map((itinerary) => ({
       dayNumber: itinerary.dayNumber,
       title: itinerary.title,
       htmlDescription: itinerary.htmlDescription,
       distanceKm: itinerary.distanceKm ?? undefined,
       durationHours: itinerary.durationHours ?? undefined,
-      destinations: itinerary.destinations.map((d) => ({
-        destinationId: d.destinationId,
-        order: d.order,
+      places: itinerary.places.map((p) => ({
+        placeId: p.placeId,
+        order: p.order,
       })),
     })),
     faqs: pkg.faqs.length
