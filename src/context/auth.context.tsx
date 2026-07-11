@@ -8,7 +8,7 @@ import {
   useState,
 } from "react"
 import type { LoginInput } from "@/types/login.type"
-import { UserType } from "@/types/users-type.enum"
+import { UserType } from "@/constants/enums/user-type"
 
 export interface User {
   id: string

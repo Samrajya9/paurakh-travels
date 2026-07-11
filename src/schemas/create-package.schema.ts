@@ -48,7 +48,7 @@ export const CreatePackageSchema = z.object({
   basePrice: z.coerce.number().positive("Base price must be greater than 0"),
 
   difficultyId: z.cuid2("Invalid difficulty id"),
-  categoryId: z.cuid2("Invalid category id").optional(),
+  categoryId: z.cuid2("Invalid category id"),
 
   // Zero or more tag-style associations. Omitting a key means "none of
   // these" — no min(1), since a package needn't have activities,
