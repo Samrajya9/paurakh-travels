@@ -56,7 +56,7 @@ export default function CategorySelect({
       >
         <SelectValue placeholder="Select a Category" />
       </SelectTrigger>
-      <SelectContent>
+      <SelectContent className="max-h-64">
         <SelectGroup>
           <SelectLabel>Categories</SelectLabel>
           {isLoading ? (
