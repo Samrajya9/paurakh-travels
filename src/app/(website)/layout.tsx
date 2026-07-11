@@ -1,12 +1,11 @@
 import { Playfair_Display, Hanken_Grotesk } from "next/font/google"
 
 import { Footer } from "@/components/footer"
-import NavBar from "@/components/ui/nav-bar/nav"
 import { LikedPackagesProvider } from "@/context/liked-packages.context"
 import { getCurrentUser } from "@/lib/auth-server"
 import { getAllLikedPackageIdsForUser } from "@/services/user-package-like.service"
 import { cn } from "@/lib/utils"
-import { mockNavBarData } from "@/lib/mock-nav-data"
+import NewNavBar from "@/components/ui/nav-bar/new-nav-bar"
 
 const playfairDisplay = Playfair_Display({
   subsets: ["latin"],
@@ -33,7 +32,8 @@ export default async function WebsiteLayout({
 
   return (
     <LikedPackagesProvider initialLikedPackageIds={initialLikedPackageIds}>
-      <NavBar />
+      {/* <NavBar /> */}
+      <NewNavBar />
       <main className={cn(playfairDisplay.variable, hankenGrotesk.variable)}>
         {children}
       </main>

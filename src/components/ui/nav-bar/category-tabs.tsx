@@ -1,60 +1,41 @@
 "use client"
 
-import { useState } from "react"
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"
 import { ChevronRight } from "lucide-react"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import Link from "next/link"
+import { useState } from "react"
 import { cn } from "@/lib/utils"
+import NavTravelCard, { type TravelPackage } from "./nav-travel-card"
 
-interface TravelPackage {
-  slug: string
-  name: string
-  duration: string
-}
-
-function PackagePreviewCard({ pkg }: { pkg: TravelPackage }) {
-  return (
-    <Link
-      href={`/packages/${pkg.slug}`}
-      className="group flex flex-col gap-0.5 rounded-md p-2 transition-colors hover:bg-primary"
-    >
-      <span className="text-sm leading-none font-semibold group-hover:text-primary-foreground">
-        {pkg.name}
-      </span>
-      <span className="line-clamp-2 text-xs text-muted-foreground group-hover:text-primary-foreground">
-        {pkg.duration}
-      </span>
-    </Link>
-  )
-}
-
-export function CategoryFlyout({
-  items,
-  data,
-  leftLabel,
-  rightLabel = "Featured Packages",
-}: {
-  items: readonly string[]
+interface CategoryTabsProps {
   data: Record<string, TravelPackage[]>
   leftLabel: string
   rightLabel?: string
-}) {
-  const [active, setActive] = useState<string>(items[0])
+  gridMinWidth?: number
+}
+
+export default function CategoryTabs({
+  data,
+  leftLabel,
+  rightLabel = "PACKAGES",
+  gridMinWidth = 200,
+}: CategoryTabsProps) {
+  const keys = Object.keys(data) as Array<keyof typeof data>
+  const [active, setActive] = useState<string>(keys[0])
 
   return (
     <Tabs
       value={active}
-      onValueChange={setActive}
       orientation="vertical"
-      className="z-20 w-[720px] flex-row"
+      onValueChange={setActive}
+      className="w-full flex-row"
     >
-      {/* Left column: category list */}
-      <div className={cn("flex flex-col gap-2 px-2 py-4", "w-[240px]")}>
+      {/* LEFT */}
+      <div className={cn("flex flex-col gap-2 py-4", "max-w-60 flex-1")}>
         <span className="px-2 font-medium tracking-wider text-muted-foreground uppercase">
           {leftLabel}
         </span>
         <TabsList className="h-auto w-full flex-col items-stretch justify-start gap-0.5 bg-transparent p-0">
-          {items.map((item) => {
+          {keys.map((item) => {
             return (
               <TabsTrigger
                 key={item}
@@ -74,18 +55,23 @@ export function CategoryFlyout({
         </TabsList>
       </div>
 
-      {/* Right column: package preview */}
-      <div className={cn("flex flex-1 flex-col gap-2 px-2 py-4", "border-l")}>
+      {/* RIGHT */}
+      <div className={cn("flex flex-1 flex-col gap-2 py-4 pl-6", "border-l")}>
         <span className="px-2 font-medium tracking-wider text-muted-foreground uppercase">
           {rightLabel}
         </span>
-        {items.map((item) => {
+        {keys.map((item) => {
           return (
             <TabsContent key={item} value={item} className="mt-0">
-              <div className="grid grid-cols-2 gap-4">
+              <div
+                className="grid gap-4"
+                style={{
+                  gridTemplateColumns: `repeat(auto-fit, minmax(${gridMinWidth}px, 1fr))`,
+                }}
+              >
                 {data[item]?.length ? (
                   data[item].map((pkg) => (
-                    <PackagePreviewCard key={pkg.slug} pkg={pkg} />
+                    <NavTravelCard key={pkg.slug} pkg={pkg} />
                   ))
                 ) : (
                   <span className="text-xs text-muted-foreground">

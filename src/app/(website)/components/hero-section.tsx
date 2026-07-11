@@ -14,14 +14,11 @@ import {
   CarouselContent,
   CarouselItem,
 } from "@/components/ui/carousel"
+
 export default function HeroSection() {
   return (
     <>
-      <Section
-        aria-labelledby="hero-heading"
-        width={"constrained"}
-        // className="isolate"
-      >
+      <Section aria-labelledby="hero-heading" width={"constrained"}>
         <HeroHeader className="mb-8 sm:mb-14" />
         <HeroImage />
       </Section>
@@ -81,14 +78,6 @@ function HeroSummary({ className, ...props }: React.ComponentProps<"div">) {
     </div>
   )
 }
-
-// function HeroImage() {
-//   return (
-//     <div className="relative h-48 w-full overflow-clip rounded-md sm:h-72 md:h-96 lg:h-200">
-//       <Image src={"/images/screen.png"} fill alt="mountain-bg" priority />
-//     </div>
-//   )
-// }
 
 const HERO_IMAGES = [
   { src: "/images/screen-1.png", alt: "Himalayan mountain range at sunrise" },
