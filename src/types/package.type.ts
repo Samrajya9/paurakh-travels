@@ -1,5 +1,6 @@
+// src/types/package.type.ts
 import type { Prisma } from "@prisma/client"
-import { ImageAttachment } from "./image-attachment.type"
+import type { ImageAttachment } from "./image-attachment.type"
 import { categorySelect } from "./category.type"
 import { difficultySelect } from "./difficulty.type"
 import { activitySelect } from "./activity.type"
@@ -7,8 +8,8 @@ import { seasonSelect } from "./season.type"
 import { themeSelect } from "./theme.type"
 import { itinerarySelect } from "./itinerary.type"
 import { faqSelect } from "./faq.type"
+import type { PackageGroupDiscount } from "./package-group-discount.type"
 import { packageGroupDiscountSelect } from "./package-group-discount.type"
-import { packageFaqSelect } from "./package-faq.type"
 
 export const packageSelect = {
   id: true,
@@ -73,6 +74,12 @@ export const packageSelect = {
   updatedAt: true,
 } satisfies Prisma.PackageSelect
 
-export type Package = Prisma.PackageGetPayload<{
+type PackagePayload = Prisma.PackageGetPayload<{
   select: typeof packageSelect
-}> & { images: ImageAttachment[] }
+}>
+
+export type Package = Omit<PackagePayload, "basePrice" | "groupDiscounts"> & {
+  basePrice: number
+  groupDiscounts: PackageGroupDiscount[]
+  images: ImageAttachment[]
+}
