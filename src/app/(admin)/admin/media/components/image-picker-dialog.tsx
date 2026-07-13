@@ -14,7 +14,7 @@ import { useDebouncedValue } from "@/hooks/use-debounced-value"
 import { MODAL_REGISTRY } from "@/constants/modal/modal-component-registry"
 import MediaGrid from "@/app/(admin)/admin/media/components/media-grid"
 import UploadImageForm from "@/app/(admin)/admin/media/components/upload-image-form"
-import type { Image as ImageRecord } from "@/services/image.service"
+import type { Image as ImageRecord } from "@/types/image.type"
 
 interface ImagePickerDialogProps {
   // Pre-highlight whatever's already selected when the caller reopens the

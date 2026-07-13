@@ -7,7 +7,7 @@ import {
 } from "@/services/user.service"
 import * as argon2 from "argon2"
 import { AppError } from "@/lib/errors"
-import type { LoginInput } from "@/types/login.type"
+import type { LoginInput } from "@/schemas/login.schema"
 import * as jose from "jose"
 import { signAccessToken, signRefreshToken } from "@/lib/jwt"
 

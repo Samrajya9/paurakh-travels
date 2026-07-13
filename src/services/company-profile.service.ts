@@ -1,6 +1,6 @@
 import { Prisma as PrismaClient } from "@prisma/client"
 
-import prisma from "@/lib/prisma"
+import prismaClient from "@/lib/prisma"
 import { AppError } from "@/lib/errors"
 import type { CompanyProfileCreateInput } from "@/schemas/company-profile-create.schema"
 import type { CompanyProfileUpdateInput } from "@/schemas/company-profile-update.schema"
@@ -17,7 +17,7 @@ const companyProfileSelect = {
 
 // ------------------------------------------------------------------ create
 export async function createCompanyProfile(dto: CompanyProfileCreateInput) {
-  const existing = await prisma.companyProfile.findUnique({
+  const existing = await prismaClient.companyProfile.findUnique({
     where: { singleton: true },
   })
 
@@ -28,7 +28,7 @@ export async function createCompanyProfile(dto: CompanyProfileCreateInput) {
     )
   }
 
-  return prisma.companyProfile.create({
+  return prismaClient.companyProfile.create({
     data: dto,
     select: companyProfileSelect,
   })
@@ -36,7 +36,7 @@ export async function createCompanyProfile(dto: CompanyProfileCreateInput) {
 
 // ----------------------------------------------------------------- findOne
 export async function getCompanyProfile() {
-  const profile = await prisma.companyProfile.findUnique({
+  const profile = await prismaClient.companyProfile.findUnique({
     where: { singleton: true },
     select: companyProfileSelect,
   })
@@ -52,7 +52,7 @@ export async function getCompanyProfile() {
 export async function updateCompanyProfile(dto: CompanyProfileUpdateInput) {
   await getCompanyProfile()
 
-  return prisma.companyProfile.update({
+  return prismaClient.companyProfile.update({
     where: { singleton: true },
     data: dto,
     select: companyProfileSelect,
@@ -63,7 +63,7 @@ export async function updateCompanyProfile(dto: CompanyProfileUpdateInput) {
 export async function deleteCompanyProfile() {
   await getCompanyProfile()
 
-  return prisma.companyProfile.delete({
+  return prismaClient.companyProfile.delete({
     where: { singleton: true },
     select: companyProfileSelect,
   })

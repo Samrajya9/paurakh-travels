@@ -7,7 +7,7 @@ import { useRegionForm } from "../hooks/region-form.hook"
 import RegionFormFields from "./region-form-fields"
 import { Button } from "@/components/ui/button"
 import type { CreateRegionInput } from "@/schemas/create-region.schema"
-import type { Region } from "@/services/region.service"
+import type { Region } from "@/types/region.type"
 
 type UpdateRegionErrorResponse = {
   message: string
@@ -21,7 +21,10 @@ export default function EditRegionForm({
   region: Region
   onSuccess: (region: Region) => void
 }) {
-  const form = useRegionForm({ name: region.name, destinationId: region.destinationId })
+  const form = useRegionForm({
+    name: region.name,
+    destinationId: region.destinationId,
+  })
 
   const handleSubmit = form.handleSubmit(async (data) => {
     try {

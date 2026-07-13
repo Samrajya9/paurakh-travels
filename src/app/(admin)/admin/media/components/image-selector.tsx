@@ -8,7 +8,7 @@ import { cn } from "@/lib/utils"
 import { useDialogContext } from "@/hooks/use-dailog"
 import { MODAL_REGISTRY } from "@/constants/modal/modal-component-registry"
 import ImagePickerDialog from "./image-picker-dialog"
-import type { Image as ImageRecord } from "@/services/image.service"
+import type { Image as ImageRecord } from "@/types/image.type"
 
 interface ImageSelectorProps {
   value?: string | null

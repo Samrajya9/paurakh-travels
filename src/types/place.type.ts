@@ -4,6 +4,7 @@
  */
 
 import { Prisma as PrismaClient } from "@prisma/client"
+import { regionSelect } from "./region.type"
 
 export const placeSelect = {
   id: true,
@@ -12,7 +13,7 @@ export const placeSelect = {
   latitude: true,
   longitude: true,
   regionId: true,
-  region: { select: { id: true, name: true } },
+  region: { select: regionSelect },
   createdAt: true,
   updatedAt: true,
 } satisfies PrismaClient.PlaceSelect

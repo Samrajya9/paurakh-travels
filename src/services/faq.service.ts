@@ -1,26 +1,15 @@
 import { Prisma as PrismaClient } from "@prisma/client"
 
-import prisma from "@/lib/prisma"
+import prismaClient from "@/lib/prisma"
 import { AppError } from "@/lib/errors"
 import type { CreateFaqInput } from "@/schemas/create-faq.schema"
 import type { UpdateFaqInput } from "@/schemas/update-faq.schema"
-
-const faqSelect = {
-  id: true,
-  question: true,
-  answer: true,
-  createdAt: true,
-  updatedAt: true,
-} satisfies PrismaClient.FaqSelect
-
-export type Faq = PrismaClient.FaqGetPayload<{
-  select: typeof faqSelect
-}>
+import { faqSelect } from "@/types/faq.type"
 
 // ------------------------------------------------------------------ helpers
 
 async function findFaqByIdOrThrow(id: string) {
-  const faq = await prisma.faq.findUnique({
+  const faq = await prismaClient.faq.findUnique({
     where: { id },
     select: faqSelect,
   })
@@ -35,7 +24,7 @@ async function findFaqByIdOrThrow(id: string) {
 // ------------------------------------------------------------------ create
 
 export async function createFaq(dto: CreateFaqInput) {
-  return prisma.faq.create({
+  return prismaClient.faq.create({
     data: {
       question: dto.question,
       answer: dto.answer,
@@ -47,7 +36,7 @@ export async function createFaq(dto: CreateFaqInput) {
 // ----------------------------------------------------------------- findAll
 
 export async function getAllFaqs() {
-  return prisma.faq.findMany({
+  return prismaClient.faq.findMany({
     select: faqSelect,
     orderBy: { createdAt: "asc" },
   })
@@ -64,7 +53,7 @@ export async function getFaqById(id: string) {
 export async function updateFaqById(id: string, dto: UpdateFaqInput) {
   await findFaqByIdOrThrow(id)
 
-  return prisma.faq.update({
+  return prismaClient.faq.update({
     where: { id },
     data: dto,
     select: faqSelect,
@@ -76,7 +65,7 @@ export async function updateFaqById(id: string, dto: UpdateFaqInput) {
 export async function deleteFaqById(id: string) {
   await findFaqByIdOrThrow(id)
 
-  return prisma.faq.delete({
+  return prismaClient.faq.delete({
     where: { id },
     select: faqSelect,
   })

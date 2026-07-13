@@ -7,7 +7,7 @@ import { useThemeForm } from "../hooks/theme-form.hook"
 import ThemeFormFields from "./theme-form-fields"
 import { Button } from "@/components/ui/button"
 import type { CreateThemeInput } from "@/schemas/create-theme.schema"
-import type { Theme } from "@/services/theme.service"
+import type { Theme } from "@/types/theme.type"
 
 type UpdateThemeErrorResponse = {
   message: string

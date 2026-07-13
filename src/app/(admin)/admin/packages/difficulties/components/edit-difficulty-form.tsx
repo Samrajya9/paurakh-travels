@@ -7,7 +7,7 @@ import { useDifficultyForm } from "../hooks/difficulty-form.hook"
 import DifficultyFormFields from "./difficulty-form-fields"
 import { Button } from "@/components/ui/button"
 import type { CreateDifficultyInput } from "@/schemas/create-difficulty.schema"
-import type { Difficulty } from "@/services/difficulty.service"
+import type { Difficulty } from "@/types/difficulty.type"
 
 type UpdateDifficultyErrorResponse = {
   message: string

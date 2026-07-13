@@ -1,6 +1,6 @@
 import { Prisma as PrismaClient } from "@prisma/client"
 
-import prisma from "@/lib/prisma"
+import prismaClient from "@/lib/prisma"
 
 import { AppError } from "@/lib/errors"
 import type { CreatePlaceInput } from "@/schemas/create-place.schema"
@@ -25,7 +25,7 @@ export type Place = PrismaClient.PlaceGetPayload<{
 // ------------------------------------------------------------------ helpers
 
 async function findPlaceByIdOrThrow(id: string) {
-  const place = await prisma.place.findUnique({
+  const place = await prismaClient.place.findUnique({
     where: { id },
     select: placeSelect,
   })
@@ -38,7 +38,7 @@ async function findPlaceByIdOrThrow(id: string) {
 }
 
 async function throwIfRegionNotFound(regionId: string) {
-  const region = await prisma.region.findUnique({
+  const region = await prismaClient.region.findUnique({
     where: { id: regionId },
   })
 
@@ -67,7 +67,7 @@ export async function createPlace(dto: CreatePlaceInput) {
   await throwIfRegionNotFound(dto.regionId)
 
   try {
-    return await prisma.place.create({
+    return await prismaClient.place.create({
       data: {
         name: dto.name,
         elevation: dto.elevation,
@@ -85,7 +85,7 @@ export async function createPlace(dto: CreatePlaceInput) {
 // ----------------------------------------------------------------- findAll
 
 export async function getAllPlaces() {
-  return prisma.place.findMany({
+  return prismaClient.place.findMany({
     select: placeSelect,
     orderBy: { name: "asc" },
   })
@@ -94,7 +94,7 @@ export async function getAllPlaces() {
 export async function getPlacesByRegion(regionId: string) {
   await throwIfRegionNotFound(regionId)
 
-  return prisma.place.findMany({
+  return prismaClient.place.findMany({
     where: { regionId },
     select: placeSelect,
     orderBy: { name: "asc" },
@@ -117,7 +117,7 @@ export async function updatePlaceById(id: string, dto: UpdatePlaceInput) {
   }
 
   try {
-    return await prisma.place.update({
+    return await prismaClient.place.update({
       where: { id },
       data: dto,
       select: placeSelect,
@@ -132,7 +132,7 @@ export async function updatePlaceById(id: string, dto: UpdatePlaceInput) {
 export async function deletePlaceById(id: string) {
   await findPlaceByIdOrThrow(id)
 
-  return prisma.place.delete({
+  return prismaClient.place.delete({
     where: { id },
     select: placeSelect,
   })

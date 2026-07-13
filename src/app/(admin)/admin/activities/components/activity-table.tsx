@@ -26,7 +26,7 @@ import {
 import { useDialogContext } from "@/hooks/use-dailog"
 import { MODAL_REGISTRY } from "@/constants/modal/modal-component-registry"
 import EditActivityForm from "./edit-activity-form"
-import type { Activity } from "@/services/activity.service"
+import { Activity } from "@/types/activity.type"
 
 type ActivityTableProps = {
   activities: Activity[]

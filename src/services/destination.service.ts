@@ -1,25 +1,15 @@
 import { Prisma as PrismaClient } from "@prisma/client"
 
-import prisma from "@/lib/prisma"
+import prismaClient from "@/lib/prisma"
 import { AppError } from "@/lib/errors"
 import type { CreateDestinationInput } from "@/schemas/create-destination.schema"
 import type { UpdateDestinationInput } from "@/schemas/update-destination.schema"
-
-const destinationSelect = {
-  id: true,
-  name: true,
-  createdAt: true,
-  updatedAt: true,
-} satisfies PrismaClient.DestinationSelect
-
-export type Destination = PrismaClient.DestinationGetPayload<{
-  select: typeof destinationSelect
-}>
+import { destinationSelect } from "@/types/destination.type"
 
 // ------------------------------------------------------------------ helpers
 
 async function findDestinationByIdOrThrow(id: string) {
-  const destination = await prisma.destination.findUnique({
+  const destination = await prismaClient.destination.findUnique({
     where: { id },
     select: destinationSelect,
   })
@@ -46,7 +36,7 @@ function throwIfDuplicateDestination(name: string, error: unknown): never {
 
 export async function createDestination(dto: CreateDestinationInput) {
   try {
-    return await prisma.destination.create({
+    return await prismaClient.destination.create({
       data: { name: dto.name },
       select: destinationSelect,
     })
@@ -58,7 +48,7 @@ export async function createDestination(dto: CreateDestinationInput) {
 // ----------------------------------------------------------------- findAll
 
 export async function getAllDestinations() {
-  return prisma.destination.findMany({
+  return prismaClient.destination.findMany({
     select: destinationSelect,
     orderBy: { name: "asc" },
   })
@@ -79,7 +69,7 @@ export async function updateDestinationById(
   await findDestinationByIdOrThrow(id)
 
   try {
-    return await prisma.destination.update({
+    return await prismaClient.destination.update({
       where: { id },
       data: dto,
       select: destinationSelect,
@@ -94,7 +84,7 @@ export async function updateDestinationById(
 export async function deleteDestinationById(id: string) {
   await findDestinationByIdOrThrow(id)
 
-  return prisma.destination.delete({
+  return prismaClient.destination.delete({
     where: { id },
     select: destinationSelect,
   })

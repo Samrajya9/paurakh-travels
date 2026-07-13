@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button"
 import { CreateDifficultyInput } from "@/schemas/create-difficulty.schema"
 import { useDialogContext } from "@/hooks/use-dailog"
 import { MODAL_REGISTRY } from "@/constants/modal/modal-component-registry"
-import type { Difficulty } from "@/services/difficulty.service"
+import type { Difficulty } from "@/types/difficulty.type"
 
 import { toast } from "sonner"
 

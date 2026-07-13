@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button"
 import { CreateSeasonInput } from "@/schemas/create-season.schema"
 import { useDialogContext } from "@/hooks/use-dailog"
 import { MODAL_REGISTRY } from "@/constants/modal/modal-component-registry"
-import type { Season } from "@/services/season.service"
+import type { Season } from "@/types/season.type"
 
 import { toast } from "sonner"
 

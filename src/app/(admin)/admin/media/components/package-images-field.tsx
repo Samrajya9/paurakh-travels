@@ -10,7 +10,7 @@ import { FieldDescription, FieldLegend, FieldSet } from "@/components/ui/field"
 import { useDialogContext } from "@/hooks/use-dailog"
 import { MODAL_REGISTRY } from "@/constants/modal/modal-component-registry"
 import { EntityType } from "@/constants/enums/entity-type"
-import type { ImageAttachment } from "@/services/image-attachment.service"
+import type { ImageAttachment } from "@/types/image-attachment.type"
 import ImagePickerDialog from "./image-picker-dialog"
 
 interface PackageImagesFieldProps {

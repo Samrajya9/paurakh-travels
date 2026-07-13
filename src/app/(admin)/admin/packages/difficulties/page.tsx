@@ -4,7 +4,7 @@ import { useEffect, useState } from "react"
 
 import AddDifficultyButton from "./components/add-difficulty-btn"
 import DifficultyTable from "./components/difficulty-table"
-import type { Difficulty } from "@/services/difficulty.service"
+import type { Difficulty } from "@/types/difficulty.type"
 
 export default function Page() {
   const [difficulties, setDifficulties] = useState<Difficulty[]>([])

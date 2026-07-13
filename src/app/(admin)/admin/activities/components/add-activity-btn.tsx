@@ -9,7 +9,7 @@ import {
 import { MODAL_REGISTRY } from "@/constants/modal/modal-component-registry"
 import { useDialogContext } from "@/hooks/use-dailog"
 import ActivityForm from "./create-activity-form"
-import type { Activity } from "@/services/activity.service"
+import { Activity } from "@/types/activity.type"
 
 const AddActivityButton = ({
   onCreated,

@@ -7,7 +7,7 @@ import {
   useEffect,
   useState,
 } from "react"
-import type { LoginInput } from "@/types/login.type"
+import type { LoginInput } from "@/schemas/login.schema"
 import { UserType } from "@/constants/enums/user-type"
 
 export interface User {

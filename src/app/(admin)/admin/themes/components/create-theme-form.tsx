@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button"
 import { CreateThemeInput } from "@/schemas/create-theme.schema"
 import { useDialogContext } from "@/hooks/use-dailog"
 import { MODAL_REGISTRY } from "@/constants/modal/modal-component-registry"
-import type { Theme } from "@/services/theme.service"
+import type { Theme } from "@/types/theme.type"
 
 import { toast } from "sonner"
 

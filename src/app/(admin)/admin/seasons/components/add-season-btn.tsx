@@ -9,7 +9,7 @@ import {
 import { MODAL_REGISTRY } from "@/constants/modal/modal-component-registry"
 import { useDialogContext } from "@/hooks/use-dailog"
 import SeasonForm from "./create-season-form"
-import type { Season } from "@/services/season.service"
+import type { Season } from "@/types/season.type"
 
 const AddSeasonButton = ({
   onCreated,

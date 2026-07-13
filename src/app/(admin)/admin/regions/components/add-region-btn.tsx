@@ -9,7 +9,7 @@ import {
 import { MODAL_REGISTRY } from "@/constants/modal/modal-component-registry"
 import { useDialogContext } from "@/hooks/use-dailog"
 import RegionForm from "./create-region-form"
-import type { Region } from "@/services/region.service"
+import type { Region } from "@/types/region.type"
 
 const AddRegionButton = ({
   onCreated,

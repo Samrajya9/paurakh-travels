@@ -8,7 +8,7 @@ import { useForm } from "react-hook-form"
 import { Button } from "@/components/ui/button"
 import { useAuth } from "@/context/auth.context"
 import { LoginSchema } from "@/schemas/login.schema"
-import type { LoginInput } from "@/types/login.type"
+import type { LoginInput } from "@/schemas/login.schema"
 import { EmailInput } from "@/components/inputs/email-input"
 import { PasswordInput } from "@/components/inputs/password-input"
 

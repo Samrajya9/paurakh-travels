@@ -15,7 +15,7 @@ import {
   FieldLabel,
 } from "@/components/ui/field"
 import { cn } from "@/lib/utils"
-import type { Image } from "@/services/image.service"
+import type { Image } from "@/types/image.type"
 import { UploadImageInput } from "@/schemas/upload-image.schema"
 import { useUploadImageForm } from "../hooks/use-upload-image-form"
 

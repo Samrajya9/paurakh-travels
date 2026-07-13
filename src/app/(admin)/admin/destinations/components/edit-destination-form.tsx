@@ -7,7 +7,7 @@ import { useDestinationForm } from "../hooks/destination-form.hook"
 import DestinationFormFields from "./destination-form-fields"
 import { Button } from "@/components/ui/button"
 import type { CreateDestinationInput } from "@/schemas/create-destination.schema"
-import type { Destination } from "@/services/destination.service"
+import { Destination } from "@/types/destination.type"
 
 type UpdateDestinationErrorResponse = {
   message: string
@@ -58,7 +58,11 @@ export default function EditDestinationForm({
 
   return (
     <FormProvider {...form}>
-      <form id="form-edit-destination" onSubmit={handleSubmit} className="space-y-4">
+      <form
+        id="form-edit-destination"
+        onSubmit={handleSubmit}
+        className="space-y-4"
+      >
         <DestinationFormFields />
         <Button
           type="submit"

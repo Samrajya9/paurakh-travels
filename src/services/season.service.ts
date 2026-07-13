@@ -1,25 +1,15 @@
 import { Prisma as PrismaClient } from "@prisma/client"
 
-import prisma from "@/lib/prisma"
+import prismaClient from "@/lib/prisma"
 import { AppError } from "@/lib/errors"
 import type { CreateSeasonInput } from "@/schemas/create-season.schema"
 import type { UpdateSeasonInput } from "@/schemas/update-season.schema"
-
-const seasonSelect = {
-  id: true,
-  name: true,
-  createdAt: true,
-  updatedAt: true,
-} satisfies PrismaClient.SeasonSelect
-
-export type Season = PrismaClient.SeasonGetPayload<{
-  select: typeof seasonSelect
-}>
+import { seasonSelect } from "@/types/season.type"
 
 // ------------------------------------------------------------------ helpers
 
 async function findSeasonByIdOrThrow(id: string) {
-  const season = await prisma.season.findUnique({
+  const season = await prismaClient.season.findUnique({
     where: { id },
     select: seasonSelect,
   })
@@ -46,7 +36,7 @@ function throwIfDuplicateSeasonName(name: string, error: unknown): never {
 
 export async function createSeason(dto: CreateSeasonInput) {
   try {
-    return await prisma.season.create({
+    return await prismaClient.season.create({
       data: { name: dto.name },
       select: seasonSelect,
     })
@@ -58,7 +48,7 @@ export async function createSeason(dto: CreateSeasonInput) {
 // ----------------------------------------------------------------- findAll
 
 export async function getAllSeasons() {
-  return prisma.season.findMany({
+  return prismaClient.season.findMany({
     select: seasonSelect,
     orderBy: { name: "asc" },
   })
@@ -76,7 +66,7 @@ export async function updateSeasonById(id: string, dto: UpdateSeasonInput) {
   await findSeasonByIdOrThrow(id)
 
   try {
-    return await prisma.season.update({
+    return await prismaClient.season.update({
       where: { id },
       data: dto,
       select: seasonSelect,
@@ -91,7 +81,7 @@ export async function updateSeasonById(id: string, dto: UpdateSeasonInput) {
 export async function deleteSeasonById(id: string) {
   await findSeasonByIdOrThrow(id)
 
-  return prisma.season.delete({
+  return prismaClient.season.delete({
     where: { id },
     select: seasonSelect,
   })

@@ -3,14 +3,15 @@
 import { useState } from "react"
 import AddDestinationButton from "./add-destination-btn"
 import DestinationTable from "./destination-table"
-import type { Destination } from "@/services/destination.service"
+import { Destination } from "@/types/destination.type"
 
 export default function DestinationClientPage({
   initialDestinations,
 }: {
   initialDestinations: Destination[]
 }) {
-  const [destinations, setDestinations] = useState<Destination[]>(initialDestinations)
+  const [destinations, setDestinations] =
+    useState<Destination[]>(initialDestinations)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
@@ -43,7 +44,9 @@ export default function DestinationClientPage({
         <AddDestinationButton
           onCreated={(destination) =>
             setDestinations((curr) =>
-              [...curr, destination].sort((a, b) => a.name.localeCompare(b.name))
+              [...curr, destination].sort((a, b) =>
+                a.name.localeCompare(b.name)
+              )
             )
           }
         />

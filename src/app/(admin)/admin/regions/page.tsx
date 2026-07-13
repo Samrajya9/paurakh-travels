@@ -4,7 +4,7 @@ import { useEffect, useState } from "react"
 
 import AddRegionButton from "./components/add-region-btn"
 import RegionTable from "./components/region-table"
-import type { Region } from "@/services/region.service"
+import type { Region } from "@/types/region.type"
 
 export default function Page() {
   const [regions, setRegions] = useState<Region[]>([])

@@ -1,130 +1,22 @@
 import { Prisma as PrismaClient } from "@prisma/client"
 
-import prisma from "@/lib/prisma"
+import prismaClient from "@/lib/prisma"
 import { AppError } from "@/lib/errors"
 import { createItinerary } from "@/services/itinerary.service"
 import { createFaq } from "@/services/faq.service"
 import {
   attachImageToEntity,
   getAttachmentsForEntity,
-  type ImageAttachment,
 } from "@/services/image-attachment.service"
 import { EntityType } from "@/constants/enums/entity-type"
 import type { CreatePackageInput } from "@/schemas/create-package.schema"
 import type { UpdatePackageInput } from "@/schemas/update-package.schema"
-
-const packageSelect = {
-  id: true,
-  slug: true,
-  name: true,
-  description: true,
-  htmlOverview: true,
-  basePrice: true,
-  difficultyId: true,
-  difficulty: {
-    select: {
-      id: true,
-      name: true,
-    },
-  },
-  categoryId: true,
-  category: {
-    select: {
-      id: true,
-      name: true,
-    },
-  },
-  activities: {
-    select: {
-      id: true,
-      activity: { select: { id: true, name: true } },
-    },
-  },
-  seasons: {
-    select: {
-      id: true,
-      season: { select: { id: true, name: true } },
-    },
-  },
-  themes: {
-    select: {
-      id: true,
-      theme: { select: { id: true, name: true } },
-    },
-  },
-  groupDiscounts: {
-    select: {
-      id: true,
-      minPeople: true,
-      price: true,
-    },
-    orderBy: { minPeople: "asc" },
-  },
-  itineraries: {
-    select: {
-      id: true,
-      dayNumber: true,
-      title: true,
-      htmlDescription: true,
-      distanceKm: true,
-      durationHours: true,
-      places: {
-        select: {
-          id: true,
-          placeId: true,
-          order: true,
-          place: {
-            select: {
-              id: true,
-              name: true,
-              elevation: true,
-              latitude: true,
-              longitude: true,
-              region: {
-                select: {
-                  id: true,
-                  name: true,
-                },
-              },
-            },
-          },
-        },
-        orderBy: { order: "asc" },
-      },
-    },
-    orderBy: { dayNumber: "asc" },
-  },
-  faqs: {
-    select: {
-      id: true,
-      order: true,
-      faq: {
-        select: {
-          id: true,
-          question: true,
-          answer: true,
-        },
-      },
-    },
-    orderBy: { order: "asc" },
-  },
-  createdAt: true,
-  updatedAt: true,
-} satisfies PrismaClient.PackageSelect
-
-export type Package = PrismaClient.PackageGetPayload<{
-  select: typeof packageSelect
-}>
-
-// Package has no direct Prisma relation to ImageAttachment (the link is
-// polymorphic via entityType/entityId), so "images" can't be part of
-// packageSelect — it's fetched separately and merged on here.
-export type PackageWithImages = Package & { images: ImageAttachment[] }
+import { Package, packageSelect } from "@/types/package.type"
 
 // ------------------------------------------------------------------ helpers
 
 async function findPackageByIdOrThrow(id: string) {
-  const pkg = await prisma.package.findUnique({
+  const pkg = await prismaClient.package.findUnique({
     where: { id },
     select: packageSelect,
   })
@@ -157,7 +49,7 @@ async function attachFaqsToPackage(
   await Promise.all(
     faqs.map(async (faq, index) => {
       const createdFaq = await createFaq(faq)
-      return prisma.packageFaq.create({
+      return prismaClient.packageFaq.create({
         data: {
           packageId,
           faqId: createdFaq.id,
@@ -177,11 +69,11 @@ async function replaceGroupDiscountsForPackage(
   packageId: string,
   groupDiscounts: NonNullable<CreatePackageInput["groupDiscounts"]>
 ) {
-  await prisma.packageGroupDiscount.deleteMany({ where: { packageId } })
+  await prismaClient.packageGroupDiscount.deleteMany({ where: { packageId } })
 
   if (groupDiscounts.length === 0) return
 
-  await prisma.packageGroupDiscount.createMany({
+  await prismaClient.packageGroupDiscount.createMany({
     data: groupDiscounts.map((discount) => ({
       packageId,
       minPeople: discount.minPeople,
@@ -198,11 +90,11 @@ async function replaceActivitiesForPackage(
   packageId: string,
   activityIds: string[]
 ) {
-  await prisma.packageActivity.deleteMany({ where: { packageId } })
+  await prismaClient.packageActivity.deleteMany({ where: { packageId } })
 
   if (activityIds.length === 0) return
 
-  await prisma.packageActivity.createMany({
+  await prismaClient.packageActivity.createMany({
     data: activityIds.map((activityId) => ({ packageId, activityId })),
   })
 }
@@ -211,21 +103,21 @@ async function replaceSeasonsForPackage(
   packageId: string,
   seasonIds: string[]
 ) {
-  await prisma.packageSeason.deleteMany({ where: { packageId } })
+  await prismaClient.packageSeason.deleteMany({ where: { packageId } })
 
   if (seasonIds.length === 0) return
 
-  await prisma.packageSeason.createMany({
+  await prismaClient.packageSeason.createMany({
     data: seasonIds.map((seasonId) => ({ packageId, seasonId })),
   })
 }
 
 async function replaceThemesForPackage(packageId: string, themeIds: string[]) {
-  await prisma.packageTheme.deleteMany({ where: { packageId } })
+  await prismaClient.packageTheme.deleteMany({ where: { packageId } })
 
   if (themeIds.length === 0) return
 
-  await prisma.packageTheme.createMany({
+  await prismaClient.packageTheme.createMany({
     data: themeIds.map((themeId) => ({ packageId, themeId })),
   })
 }
@@ -246,7 +138,7 @@ export async function createPackage(dto: CreatePackageInput) {
 
   try {
     // 1. Create the package
-    const pkg = await prisma.package.create({
+    const pkg = await prismaClient.package.create({
       data: {
         slug: packageData.slug,
         name: packageData.name,
@@ -316,7 +208,7 @@ export interface GetAllPackagesOptions {
 
 export async function getAllPackages(
   options: GetAllPackagesOptions = {}
-): Promise<PackageWithImages[]> {
+): Promise<Package[]> {
   const { search, difficultyId } = options
 
   const where = {
@@ -329,7 +221,7 @@ export async function getAllPackages(
     ...(difficultyId && { difficultyId }),
   } satisfies PrismaClient.PackageWhereInput
 
-  const packages = await prisma.package.findMany({
+  const packages = await prismaClient.package.findMany({
     where,
     select: packageSelect,
     orderBy: { name: "asc" },
@@ -349,10 +241,8 @@ export async function getPackageById(id: string) {
   return findPackageByIdOrThrow(id)
 }
 
-export async function getPackageBySlug(
-  slug: string
-): Promise<PackageWithImages> {
-  const pkg = await prisma.package.findUnique({
+export async function getPackageBySlug(slug: string): Promise<Package> {
+  const pkg = await prismaClient.package.findUnique({
     where: { slug },
     select: packageSelect,
   })
@@ -383,7 +273,7 @@ export async function updatePackageById(id: string, dto: UpdatePackageInput) {
   } = dto
 
   try {
-    await prisma.package.update({
+    await prismaClient.package.update({
       where: { id },
       data: packageData,
       select: { id: true },
@@ -433,7 +323,7 @@ export async function updatePackageById(id: string, dto: UpdatePackageInput) {
 export async function deletePackageById(id: string) {
   await findPackageByIdOrThrow(id)
 
-  return prisma.package.delete({
+  return prismaClient.package.delete({
     where: { id },
     select: packageSelect,
   })

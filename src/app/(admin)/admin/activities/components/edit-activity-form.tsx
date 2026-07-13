@@ -7,7 +7,7 @@ import { useActivityForm } from "../hooks/activity-form.hook"
 import ActivityFormFields from "./activity-form-fields"
 import { Button } from "@/components/ui/button"
 import type { CreateActivityInput } from "@/schemas/create-activity.schema"
-import type { Activity } from "@/services/activity.service"
+import { Activity } from "@/types/activity.type"
 
 type UpdateActivityErrorResponse = {
   message: string

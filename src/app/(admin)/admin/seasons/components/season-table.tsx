@@ -26,7 +26,7 @@ import {
 import { useDialogContext } from "@/hooks/use-dailog"
 import { MODAL_REGISTRY } from "@/constants/modal/modal-component-registry"
 import EditSeasonForm from "./edit-season-form"
-import type { Season } from "@/services/season.service"
+import type { Season } from "@/types/season.type"
 
 type SeasonTableProps = {
   seasons: Season[]

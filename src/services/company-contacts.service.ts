@@ -1,6 +1,6 @@
 import { Prisma as PrismaClient } from "@prisma/client"
 
-import prisma from "@/lib/prisma"
+import prismaClient from "@/lib/prisma"
 import { AppError } from "@/lib/errors"
 import type { CompanyContactCreateInput } from "@/schemas/company-contacts-create.schema"
 import type { CompanyContactUpdateInput } from "@/schemas/company-contacts-update.schema"
@@ -16,7 +16,7 @@ const companyContactSelect = {
 
 // ------------------------------------------------------------------ helpers
 async function resolveProfileId(): Promise<string> {
-  const profile = await prisma.companyProfile.findUnique({
+  const profile = await prismaClient.companyProfile.findUnique({
     where: { singleton: true },
     select: { id: true },
   })
@@ -32,7 +32,7 @@ async function resolveProfileId(): Promise<string> {
 }
 
 async function findContactOrThrow(id: string) {
-  const contact = await prisma.companyContact.findUnique({
+  const contact = await prismaClient.companyContact.findUnique({
     where: { id },
     select: companyContactSelect,
   })
@@ -48,7 +48,7 @@ async function findContactOrThrow(id: string) {
 export async function createCompanyContact(dto: CompanyContactCreateInput) {
   const companyId = await resolveProfileId()
 
-  return prisma.companyContact.create({
+  return prismaClient.companyContact.create({
     data: { ...dto, companyId },
     select: companyContactSelect,
   })
@@ -58,7 +58,7 @@ export async function createCompanyContact(dto: CompanyContactCreateInput) {
 export async function listCompanyContacts() {
   const companyId = await resolveProfileId()
 
-  return prisma.companyContact.findMany({
+  return prismaClient.companyContact.findMany({
     where: { companyId },
     orderBy: { createdAt: "asc" },
     select: companyContactSelect,
@@ -77,7 +77,7 @@ export async function updateCompanyContact(
 ) {
   await findContactOrThrow(id)
 
-  return prisma.companyContact.update({
+  return prismaClient.companyContact.update({
     where: { id },
     data: dto,
     select: companyContactSelect,
@@ -88,7 +88,7 @@ export async function updateCompanyContact(
 export async function deleteCompanyContact(id: string) {
   await findContactOrThrow(id)
 
-  return prisma.companyContact.delete({
+  return prismaClient.companyContact.delete({
     where: { id },
     select: companyContactSelect,
   })
@@ -98,5 +98,5 @@ export async function deleteCompanyContact(id: string) {
 export async function deleteAllCompanyContacts() {
   const companyId = await resolveProfileId()
 
-  return prisma.companyContact.deleteMany({ where: { companyId } })
+  return prismaClient.companyContact.deleteMany({ where: { companyId } })
 }

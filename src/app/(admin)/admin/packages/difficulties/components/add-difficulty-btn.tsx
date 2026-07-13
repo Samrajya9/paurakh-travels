@@ -9,7 +9,7 @@ import {
 import { MODAL_REGISTRY } from "@/constants/modal/modal-component-registry"
 import { useDialogContext } from "@/hooks/use-dailog"
 import DifficultyForm from "./create-difficulty-form"
-import type { Difficulty } from "@/services/difficulty.service"
+import type { Difficulty } from "@/types/difficulty.type"
 
 const AddDifficultyButton = ({
   onCreated,

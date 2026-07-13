@@ -1,6 +1,6 @@
 import { Prisma as PrismaClient } from "@prisma/client"
 
-import prisma from "@/lib/prisma"
+import prismaClient from "@/lib/prisma"
 import { AppError } from "@/lib/errors"
 import type { CreateCategoryInput } from "@/schemas/create-category.schema"
 import type { UpdateCategoryInput } from "@/schemas/update-category.schema"
@@ -19,7 +19,7 @@ export type Category = PrismaClient.CategoryGetPayload<{
 // ------------------------------------------------------------------ helpers
 
 async function findCategoryByIdOrThrow(id: string) {
-  const category = await prisma.category.findUnique({
+  const category = await prismaClient.category.findUnique({
     where: { id },
     select: categorySelect,
   })
@@ -46,7 +46,7 @@ function throwIfDuplicateCategoryName(name: string, error: unknown): never {
 
 export async function createCategory(dto: CreateCategoryInput) {
   try {
-    return await prisma.category.create({
+    return await prismaClient.category.create({
       data: { name: dto.name },
       select: categorySelect,
     })
@@ -58,7 +58,7 @@ export async function createCategory(dto: CreateCategoryInput) {
 // ----------------------------------------------------------------- findAll
 
 export async function getAllCategories() {
-  return prisma.category.findMany({
+  return prismaClient.category.findMany({
     select: categorySelect,
     orderBy: { name: "asc" },
   })
@@ -76,7 +76,7 @@ export async function updateCategoryById(id: string, dto: UpdateCategoryInput) {
   await findCategoryByIdOrThrow(id)
 
   try {
-    return await prisma.category.update({
+    return await prismaClient.category.update({
       where: { id },
       data: dto,
       select: categorySelect,
@@ -91,7 +91,7 @@ export async function updateCategoryById(id: string, dto: UpdateCategoryInput) {
 export async function deleteCategoryById(id: string) {
   await findCategoryByIdOrThrow(id)
 
-  return prisma.category.delete({
+  return prismaClient.category.delete({
     where: { id },
     select: categorySelect,
   })

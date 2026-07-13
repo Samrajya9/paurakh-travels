@@ -1,9 +1,9 @@
 "use client"
+import type { Activity } from "@/types/activity.type"
 
 import { useState } from "react"
 import AddActivityButton from "./add-activity-btn"
 import ActivityTable from "./activity-table"
-import type { Activity } from "@/services/activity.service"
 
 export default function ActivityClientPage({
   initialActivities,

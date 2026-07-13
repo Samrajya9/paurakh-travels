@@ -26,7 +26,7 @@ import {
 import { useDialogContext } from "@/hooks/use-dailog"
 import { MODAL_REGISTRY } from "@/constants/modal/modal-component-registry"
 import EditThemeForm from "./edit-theme-form"
-import type { Theme } from "@/services/theme.service"
+import type { Theme } from "@/types/theme.type"
 
 type ThemeTableProps = {
   themes: Theme[]

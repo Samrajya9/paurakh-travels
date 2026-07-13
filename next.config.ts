@@ -29,7 +29,7 @@ const nextConfig: NextConfig = {
       },
     ],
   },
-  output: process.env.NODE_ENV === "production" ? "standalone" : undefined,
+  output: process.env.NODE_ENV === "production" ? undefined : "standalone",
 
   transpilePackages: ["@t3-oss/env-nextjs", "@t3-oss/env-core"],
 }

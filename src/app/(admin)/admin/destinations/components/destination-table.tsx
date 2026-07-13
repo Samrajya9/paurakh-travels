@@ -26,7 +26,7 @@ import {
 import { useDialogContext } from "@/hooks/use-dailog"
 import { MODAL_REGISTRY } from "@/constants/modal/modal-component-registry"
 import EditDestinationForm from "./edit-destination-form"
-import type { Destination } from "@/services/destination.service"
+import { Destination } from "@/types/destination.type"
 
 type DestinationTableProps = {
   destinations: Destination[]

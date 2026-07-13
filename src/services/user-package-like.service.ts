@@ -1,19 +1,13 @@
 import { Prisma } from "@prisma/client"
-import prisma from "@/lib/prisma"
+import prismaClient from "@/lib/prisma"
 import {
   createUserPackageLikeSchema,
   type CreateUserPackageLikeInput,
 } from "@/schemas/create-user-package-like.schema"
-
-const userPackageLikeSelect = {
-  id: true,
-  userId: true,
-  packageId: true,
-  createdAt: true,
-} satisfies Prisma.UserPackageLikeSelect
+import { userPackageLikeSelect } from "@/types/user-package-like.type"
 
 export async function throwIfAlreadyLiked(userId: string, packageId: string) {
-  const existing = await prisma.userPackageLike.findUnique({
+  const existing = await prismaClient.userPackageLike.findUnique({
     where: {
       userId_packageId: {
         userId,
@@ -31,7 +25,7 @@ export async function throwIfAlreadyLiked(userId: string, packageId: string) {
  * Returns all package ids the given user has liked.
  */
 export async function getAllLikedPackageIdsForUser(userId: string) {
-  const likes = await prisma.userPackageLike.findMany({
+  const likes = await prismaClient.userPackageLike.findMany({
     where: { userId },
     select: { packageId: true },
   })
@@ -47,7 +41,7 @@ export async function addPackageLike(input: CreateUserPackageLikeInput) {
 
   await throwIfAlreadyLiked(data.userId, data.packageId)
 
-  return prisma.userPackageLike.create({
+  return prismaClient.userPackageLike.create({
     data,
     select: userPackageLikeSelect,
   })
@@ -57,7 +51,7 @@ export async function addPackageLike(input: CreateUserPackageLikeInput) {
  * Removes a package_id from the user's liked list.
  */
 export async function removePackageLike(userId: string, packageId: string) {
-  return prisma.userPackageLike.delete({
+  return prismaClient.userPackageLike.delete({
     where: {
       userId_packageId: {
         userId,

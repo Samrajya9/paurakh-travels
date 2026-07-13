@@ -3,7 +3,7 @@
 import { useState } from "react"
 import AddSeasonButton from "./add-season-btn"
 import SeasonTable from "./season-table"
-import type { Season } from "@/services/season.service"
+import type { Season } from "@/types/season.type"
 
 export default function SeasonClientPage({
   initialSeasons,

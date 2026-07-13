@@ -1,60 +1,15 @@
 import { Prisma as PrismaClient } from "@prisma/client"
 
-import prisma from "@/lib/prisma"
+import prismaClient from "@/lib/prisma"
 import { AppError } from "@/lib/errors"
 import type { CreateItineraryInput } from "@/schemas/create-itinerary.schema"
 import type { UpdateItineraryInput } from "@/schemas/update-itinerary.schema"
-
-const itinerarySelect = {
-  id: true,
-  packageId: true,
-  package: {
-    select: {
-      id: true,
-      name: true,
-      slug: true,
-    },
-  },
-  dayNumber: true,
-  title: true,
-  htmlDescription: true,
-  distanceKm: true,
-  durationHours: true,
-  places: {
-    select: {
-      id: true,
-      placeId: true,
-      order: true,
-      place: {
-        select: {
-          id: true,
-          name: true,
-          elevation: true,
-          latitude: true,
-          longitude: true,
-          region: {
-            select: {
-              id: true,
-              name: true,
-            },
-          },
-        },
-      },
-    },
-    orderBy: { order: "asc" },
-  },
-  createdAt: true,
-  updatedAt: true,
-} satisfies PrismaClient.ItinerarySelect
-
-export type Itinerary = PrismaClient.ItineraryGetPayload<{
-  select: typeof itinerarySelect
-}>
+import { itinerarySelect } from "@/types/itinerary.type"
 
 // ------------------------------------------------------------------ helpers
 
 async function findItineraryByIdOrThrow(id: string) {
-  const itinerary = await prisma.itinerary.findUnique({
+  const itinerary = await prismaClient.itinerary.findUnique({
     where: { id },
     select: itinerarySelect,
   })
@@ -67,7 +22,7 @@ async function findItineraryByIdOrThrow(id: string) {
 }
 
 async function throwIfPackageNotFound(packageId: string) {
-  const pkg = await prisma.package.findUnique({
+  const pkg = await prismaClient.package.findUnique({
     where: { id: packageId },
   })
 
@@ -96,7 +51,7 @@ export async function createItinerary(dto: CreateItineraryInput) {
   await throwIfPackageNotFound(dto.packageId)
 
   try {
-    return await prisma.itinerary.create({
+    return await prismaClient.itinerary.create({
       data: {
         packageId: dto.packageId,
         dayNumber: dto.dayNumber,
@@ -126,7 +81,7 @@ export async function createItinerary(dto: CreateItineraryInput) {
 // ----------------------------------------------------------------- findAll
 
 export async function getAllItineraries() {
-  return prisma.itinerary.findMany({
+  return prismaClient.itinerary.findMany({
     select: itinerarySelect,
     orderBy: [{ packageId: "asc" }, { dayNumber: "asc" }],
   })
@@ -135,7 +90,7 @@ export async function getAllItineraries() {
 export async function getItinerariesByPackageId(packageId: string) {
   await throwIfPackageNotFound(packageId)
 
-  return prisma.itinerary.findMany({
+  return prismaClient.itinerary.findMany({
     where: { packageId },
     select: itinerarySelect,
     orderBy: { dayNumber: "asc" },
@@ -161,7 +116,7 @@ export async function updateItineraryById(
   }
 
   try {
-    return await prisma.itinerary.update({
+    return await prismaClient.itinerary.update({
       where: { id },
       data: {
         packageId: dto.packageId,
@@ -195,7 +150,7 @@ export async function updateItineraryById(
 export async function deleteItineraryById(id: string) {
   await findItineraryByIdOrThrow(id)
 
-  return prisma.itinerary.delete({
+  return prismaClient.itinerary.delete({
     where: { id },
     select: itinerarySelect,
   })

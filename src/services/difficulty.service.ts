@@ -1,25 +1,15 @@
 import { Prisma as PrismaClient } from "@prisma/client"
 
-import prisma from "@/lib/prisma"
+import prismaClient from "@/lib/prisma"
 import { AppError } from "@/lib/errors"
 import type { CreateDifficultyInput } from "@/schemas/create-difficulty.schema"
 import type { UpdateDifficultyInput } from "@/schemas/update-difficulty.schema"
-
-const difficultySelect = {
-  id: true,
-  name: true,
-  createdAt: true,
-  updatedAt: true,
-} satisfies PrismaClient.DifficultySelect
-
-export type Difficulty = PrismaClient.DifficultyGetPayload<{
-  select: typeof difficultySelect
-}>
+import { difficultySelect } from "@/types/difficulty.type"
 
 // ------------------------------------------------------------------ helpers
 
 async function findDifficultyByIdOrThrow(id: string) {
-  const difficulty = await prisma.difficulty.findUnique({
+  const difficulty = await prismaClient.difficulty.findUnique({
     where: { id },
     select: difficultySelect,
   })
@@ -46,7 +36,7 @@ function throwIfDuplicateDifficultyName(name: string, error: unknown): never {
 
 export async function createDifficulty(dto: CreateDifficultyInput) {
   try {
-    return await prisma.difficulty.create({
+    return await prismaClient.difficulty.create({
       data: { name: dto.name },
       select: difficultySelect,
     })
@@ -58,7 +48,7 @@ export async function createDifficulty(dto: CreateDifficultyInput) {
 // ----------------------------------------------------------------- findAll
 
 export async function getAllDifficulties() {
-  return prisma.difficulty.findMany({
+  return prismaClient.difficulty.findMany({
     select: difficultySelect,
     orderBy: { name: "asc" },
   })
@@ -79,7 +69,7 @@ export async function updateDifficultyById(
   await findDifficultyByIdOrThrow(id)
 
   try {
-    return await prisma.difficulty.update({
+    return await prismaClient.difficulty.update({
       where: { id },
       data: dto,
       select: difficultySelect,
@@ -94,7 +84,7 @@ export async function updateDifficultyById(
 export async function deleteDifficultyById(id: string) {
   await findDifficultyByIdOrThrow(id)
 
-  return prisma.difficulty.delete({
+  return prismaClient.difficulty.delete({
     where: { id },
     select: difficultySelect,
   })

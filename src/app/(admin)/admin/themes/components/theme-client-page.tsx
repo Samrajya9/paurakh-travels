@@ -3,7 +3,7 @@
 import { useState } from "react"
 import AddThemeButton from "./add-theme-btn"
 import ThemeTable from "./theme-table"
-import type { Theme } from "@/services/theme.service"
+import type { Theme } from "@/types/theme.type"
 
 export default function ThemeClientPage({
   initialThemes,

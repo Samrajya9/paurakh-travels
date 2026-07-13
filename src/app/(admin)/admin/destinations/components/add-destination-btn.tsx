@@ -9,7 +9,7 @@ import {
 import { MODAL_REGISTRY } from "@/constants/modal/modal-component-registry"
 import { useDialogContext } from "@/hooks/use-dailog"
 import DestinationForm from "./create-destination-form"
-import type { Destination } from "@/services/destination.service"
+import { Destination } from "@/types/destination.type"
 
 const AddDestinationButton = ({
   onCreated,

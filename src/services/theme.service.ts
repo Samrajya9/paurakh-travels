@@ -1,25 +1,16 @@
 import { Prisma as PrismaClient } from "@prisma/client"
 
-import prisma from "@/lib/prisma"
+import prismaClient from "@/lib/prisma"
+
 import { AppError } from "@/lib/errors"
 import type { CreateThemeInput } from "@/schemas/create-theme.schema"
 import type { UpdateThemeInput } from "@/schemas/update-theme.schema"
-
-const themeSelect = {
-  id: true,
-  name: true,
-  createdAt: true,
-  updatedAt: true,
-} satisfies PrismaClient.ThemeSelect
-
-export type Theme = PrismaClient.ThemeGetPayload<{
-  select: typeof themeSelect
-}>
+import { themeSelect } from "@/types/theme.type"
 
 // ------------------------------------------------------------------ helpers
 
 async function findThemeByIdOrThrow(id: string) {
-  const theme = await prisma.theme.findUnique({
+  const theme = await prismaClient.theme.findUnique({
     where: { id },
     select: themeSelect,
   })
@@ -46,7 +37,7 @@ function throwIfDuplicateThemeName(name: string, error: unknown): never {
 
 export async function createTheme(dto: CreateThemeInput) {
   try {
-    return await prisma.theme.create({
+    return await prismaClient.theme.create({
       data: { name: dto.name },
       select: themeSelect,
     })
@@ -58,7 +49,7 @@ export async function createTheme(dto: CreateThemeInput) {
 // ----------------------------------------------------------------- findAll
 
 export async function getAllThemes() {
-  return prisma.theme.findMany({
+  return prismaClient.theme.findMany({
     select: themeSelect,
     orderBy: { name: "asc" },
   })
@@ -76,7 +67,7 @@ export async function updateThemeById(id: string, dto: UpdateThemeInput) {
   await findThemeByIdOrThrow(id)
 
   try {
-    return await prisma.theme.update({
+    return await prismaClient.theme.update({
       where: { id },
       data: dto,
       select: themeSelect,
@@ -91,7 +82,7 @@ export async function updateThemeById(id: string, dto: UpdateThemeInput) {
 export async function deleteThemeById(id: string) {
   await findThemeByIdOrThrow(id)
 
-  return prisma.theme.delete({
+  return prismaClient.theme.delete({
     where: { id },
     select: themeSelect,
   })

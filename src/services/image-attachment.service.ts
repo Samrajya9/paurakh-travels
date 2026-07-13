@@ -1,32 +1,15 @@
 import { Prisma as PrismaClient } from "@prisma/client"
 
-import prisma from "@/lib/prisma"
+import prismaClient from "@/lib/prisma"
 import { AppError } from "@/lib/errors"
 import type { EntityType } from "@/constants/enums/entity-type"
 import type { CreateImageAttachmentInput } from "@/schemas/create-image-attachment.schema"
-
-const imageAttachmentSelect = {
-  id: true,
-  entityType: true,
-  entityId: true,
-  image: {
-    select: {
-      id: true,
-      url: true,
-      altText: true,
-    },
-  },
-  createdAt: true,
-} satisfies PrismaClient.ImageAttachmentSelect
-
-export type ImageAttachment = PrismaClient.ImageAttachmentGetPayload<{
-  select: typeof imageAttachmentSelect
-}>
+import { imageAttachmentSelect } from "@/types/image-attachment.type"
 
 // ------------------------------------------------------------------ helpers
 
 async function findAttachmentByIdOrThrow(id: string) {
-  const attachment = await prisma.imageAttachment.findUnique({
+  const attachment = await prismaClient.imageAttachment.findUnique({
     where: { id },
     select: imageAttachmentSelect,
   })
@@ -53,7 +36,7 @@ function throwIfDuplicateAttachment(error: unknown): never {
 
 export async function attachImageToEntity(dto: CreateImageAttachmentInput) {
   try {
-    return await prisma.imageAttachment.create({
+    return await prismaClient.imageAttachment.create({
       data: {
         imageId: dto.imageId,
         entityType: dto.entityType,
@@ -72,7 +55,7 @@ export async function getAttachmentsForEntity(
   entityType: EntityType,
   entityId: string
 ) {
-  return prisma.imageAttachment.findMany({
+  return prismaClient.imageAttachment.findMany({
     where: { entityType, entityId },
     select: imageAttachmentSelect,
     orderBy: { createdAt: "asc" },
@@ -87,7 +70,7 @@ export async function detachImageFromEntity(id: string) {
   // Only removes the link. The Image row itself is untouched and stays
   // in the media library for reuse elsewhere — this is the "detach",
   // not a "delete image" operation.
-  return prisma.imageAttachment.delete({
+  return prismaClient.imageAttachment.delete({
     where: { id },
     select: imageAttachmentSelect,
   })

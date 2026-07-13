@@ -1,27 +1,15 @@
 import { Prisma as PrismaClient } from "@prisma/client"
 
-import prisma from "@/lib/prisma"
+import prismaClient from "@/lib/prisma"
 import { AppError } from "@/lib/errors"
 import type { CreateRegionInput } from "@/schemas/create-region.schema"
 import type { UpdateRegionInput } from "@/schemas/update-region.schema"
-
-const regionSelect = {
-  id: true,
-  name: true,
-  destinationId: true,
-  destination: { select: { id: true, name: true } },
-  createdAt: true,
-  updatedAt: true,
-} satisfies PrismaClient.RegionSelect
-
-export type Region = PrismaClient.RegionGetPayload<{
-  select: typeof regionSelect
-}>
+import { regionSelect } from "@/types/region.type"
 
 // ------------------------------------------------------------------ helpers
 
 async function findRegionByIdOrThrow(id: string) {
-  const region = await prisma.region.findUnique({
+  const region = await prismaClient.region.findUnique({
     where: { id },
     select: regionSelect,
   })
@@ -34,7 +22,7 @@ async function findRegionByIdOrThrow(id: string) {
 }
 
 async function throwIfDestinationNotFound(destinationId: string) {
-  const destination = await prisma.destination.findUnique({
+  const destination = await prismaClient.destination.findUnique({
     where: { id: destinationId },
   })
 
@@ -60,7 +48,7 @@ export async function createRegion(dto: CreateRegionInput) {
   await throwIfDestinationNotFound(dto.destinationId)
 
   try {
-    return await prisma.region.create({
+    return await prismaClient.region.create({
       data: { name: dto.name, destinationId: dto.destinationId },
       select: regionSelect,
     })
@@ -72,7 +60,7 @@ export async function createRegion(dto: CreateRegionInput) {
 // ----------------------------------------------------------------- findAll
 
 export async function getAllRegions() {
-  return prisma.region.findMany({
+  return prismaClient.region.findMany({
     select: regionSelect,
     orderBy: { name: "asc" },
   })
@@ -81,7 +69,7 @@ export async function getAllRegions() {
 export async function getRegionsByDestination(destinationId: string) {
   await throwIfDestinationNotFound(destinationId)
 
-  return prisma.region.findMany({
+  return prismaClient.region.findMany({
     where: { destinationId },
     select: regionSelect,
     orderBy: { name: "asc" },
@@ -104,7 +92,7 @@ export async function updateRegionById(id: string, dto: UpdateRegionInput) {
   }
 
   try {
-    return await prisma.region.update({
+    return await prismaClient.region.update({
       where: { id },
       data: dto,
       select: regionSelect,
@@ -119,7 +107,7 @@ export async function updateRegionById(id: string, dto: UpdateRegionInput) {
 export async function deleteRegionById(id: string) {
   await findRegionByIdOrThrow(id)
 
-  return prisma.region.delete({
+  return prismaClient.region.delete({
     where: { id },
   })
 }

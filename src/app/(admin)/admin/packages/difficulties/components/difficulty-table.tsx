@@ -26,7 +26,7 @@ import {
 import { useDialogContext } from "@/hooks/use-dailog"
 import { MODAL_REGISTRY } from "@/constants/modal/modal-component-registry"
 import EditDifficultyForm from "./edit-difficulty-form"
-import type { Difficulty } from "@/services/difficulty.service"
+import type { Difficulty } from "@/types/difficulty.type"
 
 type DifficultyTableProps = {
   difficulties: Difficulty[]

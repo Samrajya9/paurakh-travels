@@ -9,7 +9,7 @@ import {
 import { MODAL_REGISTRY } from "@/constants/modal/modal-component-registry"
 import { useDialogContext } from "@/hooks/use-dailog"
 import ThemeForm from "./create-theme-form"
-import type { Theme } from "@/services/theme.service"
+import type { Theme } from "@/types/theme.type"
 
 const AddThemeButton = ({
   onCreated,

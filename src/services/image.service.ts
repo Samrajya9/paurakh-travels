@@ -1,27 +1,16 @@
 import { Prisma as PrismaClient } from "@prisma/client"
 
-import prisma from "@/lib/prisma"
+import prismaClient from "@/lib/prisma"
 import { AppError } from "@/lib/errors"
 import type { CreateImageInput } from "@/schemas/create-image.schema"
 import type { UpdateImageInput } from "@/schemas/update-image.schema"
 import { clientEnv } from "@/env/client"
-
-const imageSelect = {
-  id: true,
-  url: true,
-  altText: true,
-  createdAt: true,
-  updatedAt: true,
-} satisfies PrismaClient.ImageSelect
-
-export type Image = PrismaClient.ImageGetPayload<{
-  select: typeof imageSelect
-}>
+import { imageSelect } from "@/types/image.type"
 
 // ------------------------------------------------------------------ helpers
 
 async function findImageByIdOrThrow(id: string) {
-  const image = await prisma.image.findUnique({
+  const image = await prismaClient.image.findUnique({
     where: { id },
     select: imageSelect,
   })
@@ -36,7 +25,7 @@ async function findImageByIdOrThrow(id: string) {
 // ------------------------------------------------------------------ create
 
 export async function createImage(dto: CreateImageInput) {
-  return prisma.image.create({
+  return prismaClient.image.create({
     data: {
       url: dto.url,
       altText: dto.altText,
@@ -48,7 +37,7 @@ export async function createImage(dto: CreateImageInput) {
 // ----------------------------------------------------------------- findAll
 
 export async function getAllImages(search?: string) {
-  const images = await prisma.image.findMany({
+  const images = await prismaClient.image.findMany({
     where: search
       ? {
           OR: [
@@ -80,7 +69,7 @@ export async function getImageById(id: string) {
 export async function updateImageById(id: string, dto: UpdateImageInput) {
   await findImageByIdOrThrow(id)
 
-  return prisma.image.update({
+  return prismaClient.image.update({
     where: { id },
     data: dto,
     select: imageSelect,
@@ -96,7 +85,7 @@ export async function deleteImageById(id: string) {
   // every entity currently displaying this image loses the link too —
   // that's a deliberate consequence of deleting from the media library,
   // not a bug.
-  return prisma.image.delete({
+  return prismaClient.image.delete({
     where: { id },
     select: imageSelect,
   })

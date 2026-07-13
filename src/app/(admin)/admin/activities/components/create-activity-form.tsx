@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button"
 import { CreateActivityInput } from "@/schemas/create-activity.schema"
 import { useDialogContext } from "@/hooks/use-dailog"
 import { MODAL_REGISTRY } from "@/constants/modal/modal-component-registry"
-import type { Activity } from "@/services/activity.service"
+import { Activity } from "@/types/activity.type"
 
 import { toast } from "sonner"
 

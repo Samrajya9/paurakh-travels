@@ -20,12 +20,12 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Skeleton } from "@/components/ui/skeleton"
-import type { PackageWithImages } from "@/services/package.service"
+import { Package } from "@/types/package.type"
 
 export default function PackageTable() {
   const router = useRouter()
 
-  const [packages, setPackages] = useState<PackageWithImages[]>([])
+  const [packages, setPackages] = useState<Package[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
@@ -41,7 +41,7 @@ export default function PackageTable() {
       const res = await fetch("/api/packages")
       if (!res.ok) throw new Error("Failed to fetch packages")
 
-      const data: PackageWithImages[] = await res.json()
+      const data: Package[] = await res.json()
       setPackages(data)
     } catch {
       setError("Something went wrong while loading packages.")

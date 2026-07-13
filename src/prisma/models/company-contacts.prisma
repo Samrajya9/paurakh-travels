@@ -12,10 +12,11 @@ enum CompanyContactType {
 }
 
 model CompanyContact {
-    id        String             @id @default(cuid())
-    companyId String             @map("company_id")
-    type      CompanyContactType
-    value     String
+    id        String @id @default(cuid())
+    companyId String @map("company_id")
+
+    type  CompanyContactType
+    value String
 
     company CompanyProfile @relation(fields: [companyId], references: [id], onDelete: Cascade)
 

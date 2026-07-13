@@ -7,7 +7,7 @@ import { useSeasonForm } from "../hooks/season-form.hook"
 import SeasonFormFields from "./season-form-fields"
 import { Button } from "@/components/ui/button"
 import type { CreateSeasonInput } from "@/schemas/create-season.schema"
-import type { Season } from "@/services/season.service"
+import type { Season } from "@/types/season.type"
 
 type UpdateSeasonErrorResponse = {
   message: string

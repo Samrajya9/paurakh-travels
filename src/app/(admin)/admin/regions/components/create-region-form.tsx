@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button"
 import { CreateRegionInput } from "@/schemas/create-region.schema"
 import { useDialogContext } from "@/hooks/use-dailog"
 import { MODAL_REGISTRY } from "@/constants/modal/modal-component-registry"
-import type { Region } from "@/services/region.service"
+import type { Region } from "@/types/region.type"
 
 import { toast } from "sonner"
 

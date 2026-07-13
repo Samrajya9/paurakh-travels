@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button"
 import { CreateDestinationInput } from "@/schemas/create-destination.schema"
 import { useDialogContext } from "@/hooks/use-dailog"
 import { MODAL_REGISTRY } from "@/constants/modal/modal-component-registry"
-import type { Destination } from "@/services/destination.service"
+import { Destination } from "@/types/destination.type"
 
 import { toast } from "sonner"
 

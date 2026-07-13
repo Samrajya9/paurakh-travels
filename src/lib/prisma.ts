@@ -1,8 +1,13 @@
 import { PrismaClient } from "@prisma/client"
 
-const prisma = new PrismaClient()
-const globalForPrisma = global as unknown as { prisma: typeof prisma }
+const globalForPrisma = globalThis as {
+  prisma?: PrismaClient
+}
 
-if (process.env.NODE_ENV !== "production") globalForPrisma.prisma = prisma
+export const prismaClient = globalForPrisma.prisma ?? new PrismaClient()
 
-export default prisma
+if (process.env.NODE_ENV !== "production") {
+  globalForPrisma.prisma = prismaClient
+}
+
+export default prismaClient

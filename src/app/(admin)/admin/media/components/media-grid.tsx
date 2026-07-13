@@ -7,7 +7,7 @@ import { toast } from "sonner"
 import { Button } from "@/components/ui/button"
 import { Skeleton } from "@/components/ui/skeleton"
 import { cn } from "@/lib/utils"
-import type { Image as ImageRecord } from "@/services/image.service"
+import type { Image as ImageRecord } from "@/types/image.type"
 
 interface MediaGridProps {
   search?: string
