@@ -38,7 +38,10 @@ export default function MobileNav() {
         <Button
           variant="ghost"
           size="icon"
-          onClick={() => setOpen(true)}
+          onClick={() => {
+            console.log("hamburger clicked")
+            setOpen(true)
+          }}
           aria-label="Open menu"
         >
           <Menu className="size-5" />

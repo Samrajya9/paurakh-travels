@@ -3,7 +3,7 @@ import { Slot } from "radix-ui"
 import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "@/lib/utils"
 
-const sectionVariants = cva("px-6 py-16 text-foreground lg:px-10", {
+const sectionVariants = cva("px-6 py-8 lg:px-10 lg:py-16", {
   variants: {
     width: {
       fullWidth: "w-full",
