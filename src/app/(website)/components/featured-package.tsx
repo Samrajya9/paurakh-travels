@@ -5,6 +5,7 @@ import { Section, SectionContent } from "@/components/ui/section"
 import { ArrowRight } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
+import { ViewExpeditionsLink } from "@/components/links/view-expeditions-link"
 
 const packageData = {
   id: "cmr7cl5zh001z9nhibpfjqowoasdasdas",
@@ -318,12 +319,7 @@ function Header() {
           Our Tourist Destinations
         </h2>
       </div>
-      <Button variant={"link"} asChild className="px-0">
-        <Link href={"/packages"}>
-          <span>VIEW EXPEDITIONS</span>
-          <ArrowRight className="-translate-y-px" />
-        </Link>
-      </Button>
+      <ViewExpeditionsLink />
     </div>
   )
 }

@@ -14,11 +14,12 @@ import {
   CarouselContent,
   CarouselItem,
 } from "@/components/ui/carousel"
+import { ViewExpeditionsLink } from "@/components/links/view-expeditions-link"
 
 export default function HeroSection() {
   return (
     <>
-      <Section aria-labelledby="hero-heading">
+      <Section aria-labelledby="hero-heading" className="">
         <SectionContent constrained>
           <HeroHeader className="mb-8 sm:mb-14" />
           <HeroImage />
@@ -71,12 +72,7 @@ function HeroSummary({ className, ...props }: React.ComponentProps<"div">) {
           duration={2500}
         />
       </p>
-      <Button variant={"link"} asChild className="px-0">
-        <Link href={"/packages"}>
-          <span>VIEW EXPEDITIONS</span>
-          <ArrowRight className="-translate-y-px" />
-        </Link>
-      </Button>
+      <ViewExpeditionsLink />
     </div>
   )
 }

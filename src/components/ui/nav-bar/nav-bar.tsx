@@ -57,11 +57,8 @@ export default function NavBar() {
   const isOpen = Boolean(activePanel)
 
   return (
-    <Section asChild>
-      <header
-        className="relative z-40 bg-transparent"
-        onMouseLeave={scheduleClose}
-      >
+    <Section asChild size={"sm"}>
+      <header className="relative z-40" onMouseLeave={scheduleClose}>
         <SectionContent asChild constrained>
           <nav aria-label="Primary navigation">
             {/* Mobile row (logo + hamburger) — desktop grid below is hidden on mobile */}
@@ -199,7 +196,9 @@ export default function NavBar() {
           onMouseEnter={clearCloseTimeout}
           onMouseLeave={scheduleClose}
         >
-          <SectionContent className="py-8">{activePanel}</SectionContent>
+          <SectionContent className="py-8" constrained>
+            {activePanel}
+          </SectionContent>
         </div>
       </header>
     </Section>
