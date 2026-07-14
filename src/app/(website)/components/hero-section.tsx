@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button"
 import RotatingText from "@/components/ui/rotating-text"
-import { Section } from "@/components/ui/section"
+import { Section, SectionContent } from "@/components/ui/section"
 import { cn } from "@/lib/utils"
 import { ArrowRight } from "lucide-react"
 import Link from "next/link"
@@ -18,9 +18,11 @@ import {
 export default function HeroSection() {
   return (
     <>
-      <Section aria-labelledby="hero-heading" width={"constrained"}>
-        <HeroHeader className="mb-8 sm:mb-14" />
-        <HeroImage />
+      <Section aria-labelledby="hero-heading">
+        <SectionContent constrained>
+          <HeroHeader className="mb-8 sm:mb-14" />
+          <HeroImage />
+        </SectionContent>
       </Section>
     </>
   )

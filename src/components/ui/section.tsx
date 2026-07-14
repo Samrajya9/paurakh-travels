@@ -3,15 +3,17 @@ import { Slot } from "radix-ui"
 import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "@/lib/utils"
 
-const sectionVariants = cva("px-6 py-8 lg:px-10 lg:py-16", {
+const sectionVariants = cva("w-full", {
   variants: {
-    width: {
-      fullWidth: "w-full",
-      constrained: "mx-auto max-w-9xl",
+    size: {
+      sm: "px-4 py-6 lg:px-6 lg:py-8",
+      md: "px-6 py-8 lg:px-10 lg:py-16",
+      lg: "px-8 py-12 lg:px-14 lg:py-20",
+      xl: "px-10 py-16 lg:px-20 lg:py-28",
     },
   },
   defaultVariants: {
-    width: "fullWidth",
+    size: "md",
   },
 })
 
@@ -20,22 +22,39 @@ type SectionProps = React.ComponentProps<"section"> &
     asChild?: boolean
   }
 
-function Section({
-  className,
-  width,
-  asChild = false,
-  ...props
-}: SectionProps) {
+function Section({ className, size, asChild = false, ...props }: SectionProps) {
   const Comp = asChild ? Slot.Root : "section"
 
   return (
     <Comp
       data-slot="section"
-      data-width={width}
-      className={cn(sectionVariants({ width, className }))}
+      data-size={size}
+      className={cn(sectionVariants({ size }), className)}
       {...props}
     />
   )
 }
 
-export { Section, sectionVariants }
+type SectionContentProps = React.ComponentProps<"div"> & {
+  asChild?: boolean
+  constrained?: boolean
+}
+
+function SectionContent({
+  className,
+  asChild = false,
+  constrained = false,
+  ...props
+}: SectionContentProps) {
+  const Comp = asChild ? Slot.Root : "div"
+
+  return (
+    <Comp
+      data-slot="section-content"
+      className={cn(constrained && "mx-auto max-w-9xl", className)}
+      {...props}
+    />
+  )
+}
+
+export { Section, SectionContent, sectionVariants }

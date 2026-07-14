@@ -2,7 +2,7 @@
 import Link from "next/link"
 import { Button } from "./ui/button"
 import { EmailInput } from "./inputs/email-input"
-import { Section } from "./ui/section"
+import { Section, SectionContent } from "./ui/section"
 import { useCompanyProfile } from "@/context/company-profile-context"
 
 const NAV_COLUMNS = [
@@ -108,119 +108,134 @@ export function Footer() {
   ].filter((s): s is typeof s & { href: string } => !!s?.href)
 
   return (
-    <Section asChild width={"constrained"} className="space-y-6">
-      <footer>
-        <div className="grid grid-cols-1 gap-10 md:grid-cols-2 lg:grid-cols-5">
-          {/* brand column — spans 2 cols on large screens */}
-          <div className="flex flex-col gap-8 lg:col-span-2">
-            {/* logo */}
-            <Link href="/" className="flex w-fit items-center gap-2.5">
-              <span className="flex h-8 w-8 items-center justify-center rounded-sm bg-primary">
-                <svg
-                  width="18"
-                  height="18"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="white"
-                  strokeWidth="2.2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  aria-hidden="true"
-                >
-                  <path d="M3 17l4-8 4 4 3-5 4 9" />
-                  <path d="M3 21h18" />
-                </svg>
-              </span>
-              <span className="text-base font-semibold tracking-tight text-foreground">
-                Paurakh Travels
-              </span>
-            </Link>
+    <>
+      <Section asChild className="lg:pb-0">
+        <footer>
+          <SectionContent
+            constrained
+            className="grid grid-cols-1 gap-10 md:grid-cols-2 lg:grid-cols-5"
+          >
+            {/* brand column — spans 2 cols on large screens */}
+            <div className="flex flex-col gap-8 lg:col-span-2">
+              {/* logo */}
+              <Link href="/" className="flex w-fit items-center gap-2.5">
+                <span className="flex h-8 w-8 items-center justify-center rounded-sm bg-primary">
+                  <svg
+                    width="18"
+                    height="18"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="white"
+                    strokeWidth="2.2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    aria-hidden="true"
+                  >
+                    <path d="M3 17l4-8 4 4 3-5 4 9" />
+                    <path d="M3 21h18" />
+                  </svg>
+                </span>
+                <span className="text-base font-semibold tracking-tight text-foreground">
+                  Paurakh Travels
+                </span>
+              </Link>
 
-            {/* tagline */}
-            <p className="max-w-xs text-sm leading-relaxed">
-              {profile?.tagline}
-            </p>
-
-            {/* social icons */}
-            <div className="flex items-center gap-3">
-              {SOCIAL_LINKS.map((s) => (
-                <Link
-                  key={s?.label}
-                  href={s?.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label={s?.label}
-                  className="flex size-8 items-center justify-center rounded-md text-[oklch(0.55_0_0)] transition-colors hover:bg-[oklch(0.2_0.008_285)] hover:text-[oklch(0.97_0_0)]"
-                >
-                  {s?.icon}
-                </Link>
-              ))}
-            </div>
-
-            {/* newsletter */}
-            <div className="flex flex-col gap-3">
-              <p className="text-xs font-semibold tracking-widest text-[oklch(0.45_0_0)] uppercase">
-                Newsletter
+              {/* tagline */}
+              <p className="max-w-xs text-sm leading-relaxed">
+                {profile?.tagline}
               </p>
-              <p className="text-sm">
-                Trip ideas and trail dispatches, straight to your inbox.
-              </p>
-              <div className="flex gap-2">
-                <EmailInput placeholder="you@example.com" className="h-9" />
-                <Button className="h-9">Subscribe</Button>
+
+              {/* social icons */}
+              <div className="flex items-center gap-3">
+                {SOCIAL_LINKS.map((s) => (
+                  <Link
+                    key={s?.label}
+                    href={s?.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={s?.label}
+                    className="flex size-8 items-center justify-center rounded-md text-[oklch(0.55_0_0)] transition-colors hover:bg-[oklch(0.2_0.008_285)] hover:text-[oklch(0.97_0_0)]"
+                  >
+                    {s?.icon}
+                  </Link>
+                ))}
+              </div>
+
+              {/* newsletter */}
+              <div className="flex flex-col gap-3">
+                <p className="text-xs font-semibold tracking-widest text-[oklch(0.45_0_0)] uppercase">
+                  Newsletter
+                </p>
+                <p className="text-sm">
+                  Trip ideas and trail dispatches, straight to your inbox.
+                </p>
+                <div className="flex gap-2">
+                  <EmailInput placeholder="you@example.com" className="h-9" />
+                  <Button className="h-9">Subscribe</Button>
+                </div>
               </div>
             </div>
-          </div>
 
-          {/* nav columns */}
-          {NAV_COLUMNS.map((col) => (
-            <div key={col.heading} className="flex flex-col gap-4">
-              <p className="text-xs font-semibold tracking-widest text-[oklch(0.45_0_0)] uppercase">
-                {col.heading}
-              </p>
-              <ul className="flex flex-col gap-2.5">
-                {col.links.map((link) => (
-                  <li key={link.label}>
-                    <Link
-                      href={link.href}
-                      className="text-sm transition-colors hover:text-[oklch(0.97_0_0)]"
-                    >
-                      {link.label}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
+            {/* nav columns */}
+            {NAV_COLUMNS.map((col) => (
+              <div key={col.heading} className="flex flex-col gap-4">
+                <p className="text-xs font-semibold tracking-widest text-[oklch(0.45_0_0)] uppercase">
+                  {col.heading}
+                </p>
+                <ul className="flex flex-col gap-2.5">
+                  {col.links.map((link) => (
+                    <li key={link.label}>
+                      <Link
+                        href={link.href}
+                        className="text-sm transition-colors hover:text-[oklch(0.97_0_0)]"
+                      >
+                        {link.label}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </SectionContent>
+        </footer>
+      </Section>
+      <LastFooter />
+    </>
+  )
+}
+
+function LastFooter() {
+  return (
+    <>
+      <Section size={"sm"} className="pt-0">
+        <SectionContent constrained asChild>
+          <div className="flex flex-col gap-3 text-xs text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
+            <p>
+              © {new Date().getFullYear()} Paurakh Travels. All rights reserved.
+            </p>
+            <div className="flex items-center gap-5">
+              <Link
+                href="/privacy"
+                className="transition-colors hover:text-[oklch(0.75_0_0)]"
+              >
+                Privacy Policy
+              </Link>
+              <Link
+                href="/terms"
+                className="transition-colors hover:text-[oklch(0.75_0_0)]"
+              >
+                Terms of Service
+              </Link>
+              <Link
+                href="/cookies"
+                className="transition-colors hover:text-[oklch(0.75_0_0)]"
+              >
+                Cookie Settings
+              </Link>
             </div>
-          ))}
-        </div>
-
-        {/* ── bottom bar ── */}
-        <div className="flex flex-col gap-3 text-xs text-[oklch(0.45_0_0)] sm:flex-row sm:items-center sm:justify-between">
-          <p>
-            © {new Date().getFullYear()} Paurakh Travels. All rights reserved.
-          </p>
-          <div className="flex items-center gap-5">
-            <Link
-              href="/privacy"
-              className="transition-colors hover:text-[oklch(0.75_0_0)]"
-            >
-              Privacy Policy
-            </Link>
-            <Link
-              href="/terms"
-              className="transition-colors hover:text-[oklch(0.75_0_0)]"
-            >
-              Terms of Service
-            </Link>
-            <Link
-              href="/cookies"
-              className="transition-colors hover:text-[oklch(0.75_0_0)]"
-            >
-              Cookie Settings
-            </Link>
           </div>
-        </div>
-      </footer>
-    </Section>
+        </SectionContent>
+      </Section>
+    </>
   )
 }

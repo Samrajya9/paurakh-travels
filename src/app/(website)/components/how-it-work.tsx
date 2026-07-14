@@ -1,6 +1,7 @@
 "use client"
 
-import { Section } from "@/components/ui/section"
+import { Section, SectionContent } from "@/components/ui/section"
+import { cn } from "@/lib/utils"
 import {
   MapPin,
   Ticket,
@@ -45,32 +46,36 @@ const howItWorkContents: Step[] = [
 
 export default function HowItWork() {
   return (
-    <Section
-      width="constrained"
-      className="flex flex-col items-center justify-between gap-x-28 gap-y-14 lg:flex-row lg:gap-y-6 lg:py-24"
-    >
-      <div className="relative min-h-80 w-full flex-1 overflow-clip rounded-lg sm:min-h-100 lg:min-h-180">
-        <Image
-          src={"/images/how-it-work-image.jpg"}
-          fill
-          alt="Image of a Mountain"
-          className="object-cover"
-        />
-      </div>
-      <div className="w-full flex-1">
-        <p className="text-sm font-semibold tracking-widest text-muted-foreground">
-          HOW IT WORKS
-        </p>
-        <h2 className="font-playfair text-3xl leading-[1.15] font-semibold tracking-wide sm:text-3xl md:text-4xl lg:text-5xl">
-          One Click for you
-        </h2>
-        <div className="mt-6 space-y-8">
-          {howItWorkContents.map((step) => (
-            <StepComponent key={step.title} {...step} />
-          ))}
-        </div>
-      </div>
-    </Section>
+    <>
+      <Section className="bg-muted" size={"xl"}>
+        <SectionContent
+          constrained
+          className="flex flex-col items-center justify-between gap-x-28 gap-y-14 lg:flex-row lg:gap-y-6"
+        >
+          <div className="relative min-h-80 w-full flex-1 overflow-clip rounded-lg sm:min-h-100 lg:min-h-180">
+            <Image
+              src={"/images/how-it-work-image.jpg"}
+              fill
+              alt="Image of a Mountain"
+              className="object-cover"
+            />
+          </div>
+          <div className="w-full flex-1">
+            <p className="text-sm font-semibold tracking-widest text-muted-foreground">
+              HOW IT WORKS
+            </p>
+            <h2 className="font-playfair text-3xl leading-[1.15] font-semibold tracking-wide sm:text-3xl md:text-4xl lg:text-5xl">
+              One Click for you
+            </h2>
+            <div className="mt-6 space-y-8">
+              {howItWorkContents.map((step) => (
+                <StepComponent key={step.title} {...step} />
+              ))}
+            </div>
+          </div>
+        </SectionContent>
+      </Section>
+    </>
   )
 }
 

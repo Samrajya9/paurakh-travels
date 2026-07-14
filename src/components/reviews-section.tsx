@@ -8,7 +8,7 @@ import {
   CarouselContent,
   CarouselItem,
 } from "@/components/ui/carousel"
-import { Section } from "@/components/ui/section"
+import { Section, SectionContent } from "@/components/ui/section"
 
 // ── data ────────────────────────────────────────────────────────────────────
 
@@ -210,68 +210,70 @@ export function ReviewsSection() {
   )
 
   return (
-    <Section width="fullWidth" className="overflow-hidden py-20">
-      {/* header */}
-      <div className="mx-auto mb-14 max-w-2xl px-6 text-center lg:px-10">
-        <p className="mb-3 text-xs font-semibold tracking-widest text-primary uppercase">
-          Trusted by trekkers
-        </p>
-        <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
-          The Paurakh Experience,
-          <br />
-          in their words
-        </h2>
-        <p className="mt-4 text-base text-muted-foreground">
-          Over 1,200 guided journeys. Here&apos;s what our trekkers say.
-        </p>
-      </div>
+    <Section>
+      <SectionContent>
+        {/* header */}
+        <div className="mx-auto mb-14 max-w-2xl px-6 text-center lg:px-10">
+          <p className="mb-3 text-xs font-semibold tracking-widest text-primary uppercase">
+            Trusted by trekkers
+          </p>
+          <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
+            The Paurakh Experience,
+            <br />
+            in their words
+          </h2>
+          <p className="mt-4 text-base text-muted-foreground">
+            Over 1,200 guided journeys. Here&apos;s what our trekkers say.
+          </p>
+        </div>
 
-      {/* row 1 — scrolls forward (left → right visually) */}
-      <Carousel
-        opts={{ loop: true, align: "start" }}
-        plugins={[autoScrollForward.current]}
-        className="w-full"
-      >
-        <CarouselContent className="mb-4 -ml-4">
-          {ROW_ONE.map((review) => (
-            <CarouselItem
-              key={review.name}
-              className="basis-[85%] pl-4 sm:basis-[45%] lg:basis-[32%] xl:basis-[28%]"
-            >
-              <ReviewCard review={review} />
-            </CarouselItem>
-          ))}
-        </CarouselContent>
-      </Carousel>
-
-      {/* row 2 — scrolls backward (right → left visually) */}
-      <Carousel
-        opts={{ loop: true, align: "start" }}
-        plugins={[autoScrollBackward.current]}
-        className="w-full"
-      >
-        <CarouselContent className="-ml-4">
-          {ROW_TWO.map((review) => (
-            <CarouselItem
-              key={review.name}
-              className="basis-[85%] pl-4 sm:basis-[45%] lg:basis-[32%] xl:basis-[28%]"
-            >
-              <ReviewCard review={review} />
-            </CarouselItem>
-          ))}
-        </CarouselContent>
-      </Carousel>
-
-      {/* footer cta */}
-      <div className="mt-12 flex justify-center px-6">
-        <a
-          href="/reviews"
-          className="inline-flex h-10 items-center gap-2 rounded-full border border-border bg-card px-6 text-sm font-medium shadow-sm transition-colors hover:bg-accent"
+        {/* row 1 — scrolls forward (left → right visually) */}
+        <Carousel
+          opts={{ loop: true, align: "start" }}
+          plugins={[autoScrollForward.current]}
+          className="w-full"
         >
-          See all 200+ reviews
-          <Star className="size-3.5 fill-primary text-primary" />
-        </a>
-      </div>
+          <CarouselContent className="mb-4 -ml-4">
+            {ROW_ONE.map((review) => (
+              <CarouselItem
+                key={review.name}
+                className="basis-[85%] pl-4 sm:basis-[45%] lg:basis-[32%] xl:basis-[28%]"
+              >
+                <ReviewCard review={review} />
+              </CarouselItem>
+            ))}
+          </CarouselContent>
+        </Carousel>
+
+        {/* row 2 — scrolls backward (right → left visually) */}
+        <Carousel
+          opts={{ loop: true, align: "start" }}
+          plugins={[autoScrollBackward.current]}
+          className="w-full"
+        >
+          <CarouselContent className="-ml-4">
+            {ROW_TWO.map((review) => (
+              <CarouselItem
+                key={review.name}
+                className="basis-[85%] pl-4 sm:basis-[45%] lg:basis-[32%] xl:basis-[28%]"
+              >
+                <ReviewCard review={review} />
+              </CarouselItem>
+            ))}
+          </CarouselContent>
+        </Carousel>
+
+        {/* footer cta */}
+        <div className="mt-12 flex justify-center px-6">
+          <a
+            href="/reviews"
+            className="inline-flex h-10 items-center gap-2 rounded-full border border-border bg-card px-6 text-sm font-medium shadow-sm transition-colors hover:bg-accent"
+          >
+            See all 200+ reviews
+            <Star className="size-3.5 fill-primary text-primary" />
+          </a>
+        </div>
+      </SectionContent>
     </Section>
   )
 }
