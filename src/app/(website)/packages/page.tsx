@@ -1,9 +1,14 @@
 import { Section, SectionContent, SectionHeader } from "@/components/ui/section"
+import PackageListing from "./components/package-listing"
 
 export default function PackagesPage() {
   return (
     <>
-      <Section aria-labelledby="hero-heading" size={"sm"} className="border">
+      <Section
+        aria-labelledby="hero-heading"
+        size={"sm"}
+        className="space-y-20"
+      >
         <SectionHeader constrained>
           <p className="font-hanken-grotesk text-xs font-semibold tracking-wider text-primary">
             CURATED JOURNEYS
@@ -21,12 +26,8 @@ export default function PackagesPage() {
           </p>
         </SectionHeader>
 
-        <SectionContent
-          constrained
-          className="flex min-h-20 items-start justify-start gap-4 border"
-        >
-          <div className="h-20 max-w-90 flex-1 border"></div>
-          <div className="h-20 flex-1 border"></div>
+        <SectionContent constrained asChild>
+          <PackageListing />
         </SectionContent>
       </Section>
     </>
