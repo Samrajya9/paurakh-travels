@@ -1,7 +1,34 @@
 import { Section, SectionContent, SectionHeader } from "@/components/ui/section"
 import PackageListing from "./components/package-listing"
+import { parsePackageFilters, toURLSearchParams } from "@/lib/package-filters"
+import { PackageFiltersProvider } from "@/context/package-filters.context"
+import { getAllRegions } from "@/services/region.service"
+import { getAllDifficulties } from "@/services/difficulty.service"
+import { getAllActivities } from "@/services/activity.service"
+import { getAllThemes } from "@/services/theme.service"
+import { getAllSeasons } from "@/services/season.service"
+import { getAllCategories } from "@/services/category.service"
 
-export default function PackagesPage() {
+interface PackagesPageProps {
+  searchParams: Promise<Record<string, string | string[] | undefined>>
+}
+
+export default async function PackagesPage({
+  searchParams,
+}: PackagesPageProps) {
+  const resolved = await searchParams
+
+  const filters = parsePackageFilters(toURLSearchParams(resolved))
+
+  const [regions, difficulties, activities, themes, seasons, categories] =
+    await Promise.all([
+      getAllRegions(),
+      getAllDifficulties(),
+      getAllActivities(),
+      getAllThemes(),
+      getAllSeasons(),
+      getAllCategories(),
+    ])
   return (
     <>
       <Section
@@ -26,9 +53,21 @@ export default function PackagesPage() {
           </p>
         </SectionHeader>
 
-        <SectionContent constrained asChild>
-          <PackageListing />
-        </SectionContent>
+        <PackageFiltersProvider
+          initialFilters={filters}
+          initialPackages={[]}
+          initialTotal={0}
+          regions={regions}
+          difficulties={difficulties}
+          activities={activities}
+          themes={themes}
+          seasons={seasons}
+          categories={categories}
+        >
+          <SectionContent constrained asChild>
+            <PackageListing />
+          </SectionContent>
+        </PackageFiltersProvider>
       </Section>
     </>
   )

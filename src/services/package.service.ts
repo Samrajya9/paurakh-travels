@@ -204,21 +204,84 @@ export async function createPackage(dto: CreatePackageInput) {
 export interface GetAllPackagesOptions {
   search?: string
   difficultyId?: string
+  categoryId?: string
+  regionId?: string
+  activityIds?: string[]
+  themeIds?: string[]
+  seasonIds?: string[]
 }
 
+// export async function getAllPackages(
+//   options: GetAllPackagesOptions = {}
+// ): Promise<Package[]> {
+//   const { search, difficultyId } = options
+
+//   const where = {
+//     ...(search && {
+//       // MySQL's default collation is already case-insensitive, so no
+//       // `mode: "insensitive"` here — that option isn't supported on the
+//       // mysql provider and would throw at runtime.
+//       name: { contains: search },
+//     }),
+//     ...(difficultyId && { difficultyId }),
+//   } satisfies PrismaClient.PackageWhereInput
+
+//   const packages = await prismaClient.package.findMany({
+//     where,
+//     select: packageSelect,
+//     orderBy: { name: "asc" },
+//   })
+
+//   return Promise.all(
+//     packages.map(async (pkg) => ({
+//       ...pkg,
+//       images: await getAttachmentsForEntity(EntityType.PACKAGE, pkg.id),
+//     }))
+//   )
+// }
+
+// ----------------------------------------------------------------- findOne
 export async function getAllPackages(
   options: GetAllPackagesOptions = {}
 ): Promise<Package[]> {
-  const { search, difficultyId } = options
+  const {
+    search,
+    difficultyId,
+    categoryId,
+    regionId,
+    activityIds,
+    themeIds,
+    seasonIds,
+  } = options
 
   const where = {
-    ...(search && {
-      // MySQL's default collation is already case-insensitive, so no
-      // `mode: "insensitive"` here — that option isn't supported on the
-      // mysql provider and would throw at runtime.
-      name: { contains: search },
-    }),
+    ...(search && { name: { contains: search } }),
     ...(difficultyId && { difficultyId }),
+    ...(categoryId && { categoryId }),
+    // Package has no direct regionId — region lives on Place, reached via
+    // Itinerary -> ItineraryPlace -> Place. "Some itinerary has some place
+    // in this region" is the correct semantics for "package visits region X".
+    ...(regionId && {
+      itineraries: {
+        some: {
+          places: {
+            some: { place: { regionId } },
+          },
+        },
+      },
+    }),
+    ...(activityIds &&
+      activityIds.length > 0 && {
+        activities: { some: { activityId: { in: activityIds } } },
+      }),
+    ...(themeIds &&
+      themeIds.length > 0 && {
+        themes: { some: { themeId: { in: themeIds } } },
+      }),
+    ...(seasonIds &&
+      seasonIds.length > 0 && {
+        seasons: { some: { seasonId: { in: seasonIds } } },
+      }),
   } satisfies PrismaClient.PackageWhereInput
 
   const packages = await prismaClient.package.findMany({
@@ -234,9 +297,6 @@ export async function getAllPackages(
     }))
   )
 }
-
-// ----------------------------------------------------------------- findOne
-
 export async function getPackageById(id: string) {
   return findPackageByIdOrThrow(id)
 }

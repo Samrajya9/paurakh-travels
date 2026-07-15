@@ -1,25 +1,16 @@
-import { Button } from "@/components/ui/button"
-import { Checkbox } from "@/components/ui/checkbox"
-import { Label } from "@/components/ui/label"
+// filters/difficulty-filter.tsx
+"use client"
+import { SingleSelectFilter } from "./single-select-filter"
+import { usePackageFilters } from "@/context/package-filters.context"
 
 export default function DifficultyFilter() {
+  const { difficulties, filters, setFilter } = usePackageFilters()
   return (
-    <div className="space-y-3 py-4">
-      <p className="text-md font-hanken-grotesk font-medium tracking-wide">
-        Difficulty
-      </p>
-
-      <div className="flex flex-col gap-3">
-        <Button size={"lg"}>Easy</Button>
-
-        <Button size={"lg"} variant={"secondary"}>
-          Medium
-        </Button>
-
-        <Button size={"lg"} variant={"secondary"}>
-          Hard
-        </Button>
-      </div>
-    </div>
+    <SingleSelectFilter
+      title="Difficulty"
+      options={difficulties}
+      value={filters.difficultyId}
+      onChange={(value) => setFilter("difficultyId", value)}
+    />
   )
 }

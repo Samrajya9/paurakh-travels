@@ -1,14 +1,16 @@
-// app/
-// └── packages/
-//     └── page.tsx
-
 import { Button } from "@/components/ui/button"
 import RegionFilter from "./filters/region-filter"
 import ActivityFilter from "./filters/activity-filter"
 import ThemeFilter from "./filters/theme-filter"
 import DifficultyFilter from "./filters/difficulty-filter"
+import SeasonFilter from "./filters/season-filter"
+import CategoryFilter from "./filters/category-filter"
+import SearchFilter from "./filters/search-filter"
 
-// components/
+// app/
+// └── packages/
+//     └── page.tsx
+// // components/
 // └── packages/
 //     ├── package-listing.tsx        // Two-column layout
 //     ├── package-filters.tsx        // Left sidebar
@@ -19,7 +21,6 @@ import DifficultyFilter from "./filters/difficulty-filter"
 //     ├── package-pagination.tsx
 //     └── filters/
 //         ├── region-filter.tsx
-//         ├── destination-filter.tsx
 //         ├── difficulty-filter.tsx
 //         ├── duration-filter.tsx
 //         ├── theme-filter.tsx
@@ -29,7 +30,7 @@ export default function PackageFilters() {
   return (
     <>
       <div className="max-w-70 flex-1">
-        <div className="flex items-center justify-between gap-1 border-b pb-4">
+        <div className="flex h-16 items-center justify-between gap-1 border-b pb-4">
           <h2 className="font-playfair text-3xl font-semibold tracking-wide">
             Filters
           </h2>
@@ -39,11 +40,13 @@ export default function PackageFilters() {
             </p>
           </Button>
         </div>
-
+        <SearchFilter />
         <RegionFilter />
         <ActivityFilter />
         <ThemeFilter />
+        <SeasonFilter />
         <DifficultyFilter />
+        <CategoryFilter />
       </div>
     </>
   )

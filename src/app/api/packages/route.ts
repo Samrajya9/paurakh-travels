@@ -7,11 +7,18 @@ import { createPackage, getAllPackages } from "@/services/package.service"
 export async function GET(req: NextRequest) {
   try {
     const { searchParams } = new URL(req.url)
-    const search = searchParams.get("q") ?? undefined
-    const difficultyId = searchParams.get("difficultyId") ?? undefined
 
-    const packages = await getAllPackages({ search, difficultyId })
-    return NextResponse.json(packages)
+    const packages = await getAllPackages({
+      search: searchParams.get("q") ?? undefined,
+      difficultyId: searchParams.get("difficultyId") ?? undefined,
+      categoryId: searchParams.get("categoryId") ?? undefined,
+      regionId: searchParams.get("regionId") ?? undefined,
+      activityIds: searchParams.get("activityIds")?.split(",").filter(Boolean),
+      themeIds: searchParams.get("themeIds")?.split(",").filter(Boolean),
+      seasonIds: searchParams.get("seasonIds")?.split(",").filter(Boolean),
+    })
+
+    return NextResponse.json({ packages, total: packages.length })
   } catch (error) {
     return handleApiError(error)
   }
