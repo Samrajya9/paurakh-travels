@@ -9,6 +9,7 @@ export default function Page() {
   return (
     <>
       <HeroSection />
+
       <BestRegionBento />
       <FeaturedPackageSection />
       <ReviewsSection />
