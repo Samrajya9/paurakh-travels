@@ -12,6 +12,8 @@ export default function PackageActiveFilters() {
     <div className="flex flex-wrap items-center gap-2">
       {activeFilters.map((chip) => (
         <Button
+          key={`${chip.key}`}
+          size={"lg"}
           variant="secondary"
           onClick={chip.onRemove}
           aria-label={`Remove ${chip.label} filter`}

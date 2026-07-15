@@ -8,6 +8,7 @@ import { getAllActivities } from "@/services/activity.service"
 import { getAllThemes } from "@/services/theme.service"
 import { getAllSeasons } from "@/services/season.service"
 import { getAllCategories } from "@/services/category.service"
+import { getAllPackages } from "@/services/package.service"
 
 interface PackagesPageProps {
   searchParams: Promise<Record<string, string | string[] | undefined>>
@@ -20,15 +21,23 @@ export default async function PackagesPage({
 
   const filters = parsePackageFilters(toURLSearchParams(resolved))
 
-  const [regions, difficulties, activities, themes, seasons, categories] =
-    await Promise.all([
-      getAllRegions(),
-      getAllDifficulties(),
-      getAllActivities(),
-      getAllThemes(),
-      getAllSeasons(),
-      getAllCategories(),
-    ])
+  const [
+    packages,
+    regions,
+    difficulties,
+    activities,
+    themes,
+    seasons,
+    categories,
+  ] = await Promise.all([
+    getAllPackages(filters),
+    getAllRegions(),
+    getAllDifficulties(),
+    getAllActivities(),
+    getAllThemes(),
+    getAllSeasons(),
+    getAllCategories(),
+  ])
   return (
     <>
       <Section
@@ -55,8 +64,8 @@ export default async function PackagesPage({
 
         <PackageFiltersProvider
           initialFilters={filters}
-          initialPackages={[]}
-          initialTotal={0}
+          initialPackages={packages}
+          initialTotal={packages.length}
           regions={regions}
           difficulties={difficulties}
           activities={activities}

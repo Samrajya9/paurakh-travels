@@ -1,5 +1,6 @@
 import ActivityFilter from "./filters/activity-filter"
 import PackageActiveFilters from "./package-active-filters"
+import { PackageGrid } from "./package-grid"
 
 export default function PackageResults() {
   return (
@@ -11,6 +12,7 @@ export default function PackageResults() {
           </p>
         </div>
         <PackageActiveFilters />
+        <PackageGrid />
       </div>
     </>
   )

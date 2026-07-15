@@ -2,9 +2,6 @@
 
 import { PackageCard } from "@/components/cards/package-card"
 import { Section, SectionContent } from "@/components/ui/section"
-import { ArrowRight } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import Link from "next/link"
 import { ViewExpeditionsLink } from "@/components/links/view-expeditions-link"
 
 const packageData = {

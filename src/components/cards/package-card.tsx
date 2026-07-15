@@ -19,6 +19,7 @@ import { Button, buttonVariants } from "@/components/ui/button"
 import { useAuth } from "@/context/auth.context"
 import { toast } from "sonner"
 import PackageLike from "../package-like"
+import { Package } from "@/types/package.type"
 
 interface Difficulty {
   id: string
@@ -58,25 +59,11 @@ interface PackageImage {
   }
 }
 
-export interface TravelPackage {
-  id: string
-  slug: string
-  name: string
-  description: string
-  basePrice: string
-  difficulty: Difficulty
-  groupDiscounts: GroupDiscount[]
-  itineraries: Itinerary[]
-  images: PackageImage[]
-  minGroupSize?: number
-  maxGroupSize?: number
-}
-
 interface PackageCardProps {
-  pkg: TravelPackage
+  pkg: Package
   className?: string
   isLiked?: boolean
-  onLikeToggle?: (pkg: TravelPackage) => void
+  onLikeToggle?: (pkg: Package) => void
 }
 
 export function PackageCard({
@@ -98,19 +85,13 @@ export function PackageCard({
     lowestDiscountPrice !== null && lowestDiscountPrice < basePrice
 
   const maxElevation = pkg.itineraries
-    .flatMap((it) => it.destinations ?? [])
-    .reduce((max, d) => Math.max(max, d.destination.elevation), 0)
+    .flatMap((it) => it.places ?? [])
+    .reduce((max, d) => Math.max(max, d.place.elevation), 0)
 
   const sortedTiers = [...pkg.groupDiscounts].sort(
     (a, b) => a.minPeople - b.minPeople
   )
   const highestTier = sortedTiers[sortedTiers.length - 1]?.minPeople
-  const groupSizeLabel =
-    pkg.minGroupSize && pkg.maxGroupSize
-      ? `${pkg.minGroupSize}–${pkg.maxGroupSize}`
-      : highestTier
-        ? `${highestTier}+`
-        : "—"
 
   const handleLikeClick = (e: React.MouseEvent) => {
     e.preventDefault()
@@ -130,7 +111,7 @@ export function PackageCard({
                 <div className="relative aspect-4/3 w-full">
                   <Image
                     src={img.image.url}
-                    alt={img.image.altText}
+                    alt={img.image.altText ?? pkg.name}
                     fill
                     className="object-cover"
                     sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
@@ -232,9 +213,3 @@ export function PackageCard({
     </Card>
   )
 }
-
-/**
- * TODO
- * when the application opens i need to fetch all the user liked pacakges
- * and the pass liked = {userLikedPacakges.inlcude (pkg.id)}
- */
