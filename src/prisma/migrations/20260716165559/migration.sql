@@ -173,6 +173,18 @@ CREATE TABLE `package_group_discounts` (
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
+CREATE TABLE `package_regions` (
+    `id` VARCHAR(191) NOT NULL,
+    `package_id` VARCHAR(191) NOT NULL,
+    `region_id` VARCHAR(191) NOT NULL,
+    `created_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+
+    INDEX `package_regions_region_id_idx`(`region_id`),
+    UNIQUE INDEX `package_regions_package_id_region_id_key`(`package_id`, `region_id`),
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
 CREATE TABLE `packages` (
     `id` VARCHAR(191) NOT NULL,
     `slug` VARCHAR(191) NOT NULL,
@@ -315,6 +327,12 @@ ALTER TABLE `package_faqs` ADD CONSTRAINT `package_faqs_faq_id_fkey` FOREIGN KEY
 
 -- AddForeignKey
 ALTER TABLE `package_group_discounts` ADD CONSTRAINT `package_group_discounts_package_id_fkey` FOREIGN KEY (`package_id`) REFERENCES `packages`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `package_regions` ADD CONSTRAINT `package_regions_package_id_fkey` FOREIGN KEY (`package_id`) REFERENCES `packages`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `package_regions` ADD CONSTRAINT `package_regions_region_id_fkey` FOREIGN KEY (`region_id`) REFERENCES `regions`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `packages` ADD CONSTRAINT `packages_difficulty_id_fkey` FOREIGN KEY (`difficulty_id`) REFERENCES `difficulties`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;

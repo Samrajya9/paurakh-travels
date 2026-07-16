@@ -5,6 +5,8 @@ import * as argon2 from "argon2"
 export const prisma = new PrismaClient()
 
 const PEPPER = process.env.PEPPER
+console.log("PEPPER", PEPPER)
+
 if (!PEPPER) {
   throw new Error("PEPPER env var is missing — seed cannot hash passwords.")
 }

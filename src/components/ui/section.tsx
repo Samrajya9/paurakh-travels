@@ -4,6 +4,8 @@ import { Slot } from "radix-ui"
 import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "@/lib/utils"
 
+const SectionContext = React.createContext<boolean | null>(null)
+
 const sectionVariants = cva("w-full space-y-4", {
   variants: {
     size: {
@@ -49,7 +51,7 @@ function SectionContent({
   constrained = false,
   ...props
 }: SectionContentProps) {
-  useSectionContext("SectionContent")
+  useSectionContext()
 
   const Comp = asChild ? Slot.Root : "div"
 
@@ -72,8 +74,7 @@ function SectionHeader({
   constrained = false,
   ...props
 }: SectionHeaderProps) {
-  useSectionContext("SectionHeader")
-
+  useSectionContext()
   const Comp = asChild ? Slot.Root : "div"
 
   return (
@@ -85,18 +86,15 @@ function SectionHeader({
   )
 }
 
-const SectionContext = React.createContext<boolean | null>(null)
-
-function useSectionContext(componentName: string) {
+function useSectionContext() {
   const context = React.useContext(SectionContext)
 
-  if (context === null) {
-    throw new Error(`${componentName} must be used within a <Section>.`)
+  if (!context) {
+    throw new Error("Section components must be used inside <Section>.")
   }
 
   return context
 }
-
 Section.displayName = "Section"
 SectionHeader.displayName = "SectionHeader"
 SectionContent.displayName = "SectionContent"
