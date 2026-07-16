@@ -1,7 +1,6 @@
 "use client"
 
 import { Section, SectionContent } from "@/components/ui/section"
-import { cn } from "@/lib/utils"
 import {
   MapPin,
   Ticket,
@@ -52,6 +51,7 @@ export default function HowItWork() {
           constrained
           className="flex flex-col items-center justify-between gap-x-28 gap-y-14 lg:flex-row lg:gap-y-6"
         >
+          {/* Left */}
           <div className="relative min-h-80 w-full flex-1 overflow-clip rounded-lg sm:min-h-100 lg:min-h-180">
             <Image
               src={"/images/how-it-work-image.jpg"}
@@ -60,6 +60,8 @@ export default function HowItWork() {
               className="object-cover"
             />
           </div>
+          {/* RIGHT */}
+
           <div className="w-full flex-1">
             <p className="text-sm font-semibold tracking-widest text-muted-foreground">
               HOW IT WORKS

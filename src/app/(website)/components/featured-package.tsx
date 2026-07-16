@@ -17,18 +17,22 @@ export default function FeaturedPackageSection() {
 function FeaturedPackageSectionHeader() {
   return (
     <SectionHeader
-      className="flex w-full items-end justify-between gap-4"
+      className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between"
       constrained
     >
-      <div>
-        <p className="text-sm font-semibold tracking-widest text-muted-foreground">
-          Tour packages
+      <div className="space-y-1">
+        <p className="text-sm font-semibold tracking-widest text-muted-foreground uppercase">
+          Tour Packages
         </p>
-        <h2 className="font-playfair text-3xl leading-[1.15] font-semibold tracking-wide sm:text-3xl md:text-4xl lg:text-5xl">
+
+        <h2 className="font-playfair text-3xl leading-tight font-semibold tracking-wide sm:text-4xl lg:text-5xl">
           Our Tourist Destinations
         </h2>
       </div>
-      <ViewExpeditionsLink />
+
+      <div className="self-start lg:self-end">
+        <ViewExpeditionsLink />
+      </div>
     </SectionHeader>
   )
 }

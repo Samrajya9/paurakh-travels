@@ -50,29 +50,55 @@ export default function BestRegionBento() {
   )
 }
 
+// function BestRegionBentoHeader() {
+//   return (
+//     <>
+//       <SectionHeader className="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between lg:gap-12">
+//         <div className="flex-2 space-y-1">
+//           <Button variant={"link"} asChild className="px-0">
+//             <Link href={"/packages"}>
+//               <span className="upper tracking-[0.2em]">BEST REGIONS</span>
+//               <ArrowRight className="-translate-y-px" />
+//             </Link>
+//           </Button>
+//           <h2 className="font-playfair text-3xl leading-[1.15] font-semibold tracking-wide sm:text-3xl md:text-4xl lg:text-5xl">
+//             Discover the Best Regions
+//           </h2>
+//         </div>
+//         <div className="flex-1">
+//           <p className="text-base leading-relaxed tracking-wide text-muted-foreground">
+//             Extraordinary natural beauty, enjoy the rich culture, and experience
+//             the friendliness of the local people in these legendary regions.
+//           </p>
+//         </div>
+//       </SectionHeader>
+//     </>
+//   )
+// }
+
 function BestRegionBentoHeader() {
   return (
-    <>
-      <SectionHeader className="flex w-full items-start justify-between gap-6">
-        <div className="flex-2 space-y-1">
-          <Button variant={"link"} asChild className="px-0">
-            <Link href={"/packages"}>
-              <span className="upper tracking-[0.2em]">BEST REGIONS</span>
-              <ArrowRight className="-translate-y-px" />
-            </Link>
-          </Button>
-          <h2 className="font-playfair text-3xl leading-[1.15] font-semibold tracking-wide sm:text-3xl md:text-4xl lg:text-5xl">
-            Discover the Best Regions
-          </h2>
-        </div>
-        <div className="flex-1">
-          <p className="text-base leading-relaxed tracking-wide text-muted-foreground">
-            Extraordinary natural beauty, enjoy the rich culture, and experience
-            the friendliness of the local people in these legendary regions.
-          </p>
-        </div>
-      </SectionHeader>
-    </>
+    <SectionHeader className="flex w-full flex-col gap-6 lg:flex-row lg:items-start lg:justify-between lg:gap-12">
+      <div className="w-full lg:flex-2">
+        <Button variant="link" asChild className="mb-2 px-0">
+          <Link href="/packages">
+            <span className="tracking-[0.2em] uppercase">BEST REGIONS</span>
+            <ArrowRight className="-translate-y-px" />
+          </Link>
+        </Button>
+
+        <h2 className="font-playfair text-3xl leading-tight font-semibold tracking-wide sm:text-4xl lg:text-5xl">
+          Discover the Best Regions
+        </h2>
+      </div>
+
+      <div className="w-full lg:flex-1">
+        <p className="text-sm leading-relaxed tracking-wide text-muted-foreground sm:text-base">
+          Extraordinary natural beauty, enjoy the rich culture, and experience
+          the friendliness of the local people in these legendary regions.
+        </p>
+      </div>
+    </SectionHeader>
   )
 }
 
