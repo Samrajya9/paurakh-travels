@@ -43,7 +43,7 @@ const regions = [
 
 export default function BestRegionBento() {
   return (
-    <Section className="space-y-8 outline">
+    <Section className="space-y-8">
       <BestRegionBentoHeader />
       <BestRegionBentoSectionContent />
     </Section>
@@ -53,7 +53,7 @@ export default function BestRegionBento() {
 function BestRegionBentoHeader() {
   return (
     <>
-      <SectionHeader className="flex w-full items-start justify-between gap-6 outline">
+      <SectionHeader className="flex w-full items-start justify-between gap-6">
         <div className="flex-2 space-y-1">
           <Button variant={"link"} asChild className="px-0">
             <Link href={"/packages"}>
@@ -78,7 +78,7 @@ function BestRegionBentoHeader() {
 
 function BestRegionBentoSectionContent() {
   return (
-    <SectionContent className="grid grid-cols-1 gap-4 outline sm:h-[700px] sm:grid-cols-3 sm:grid-rows-2 lg:h-[800px]">
+    <SectionContent className="grid grid-cols-1 gap-4 sm:h-[700px] sm:grid-cols-3 sm:grid-rows-2 lg:h-[800px]">
       {regions.map((region, index) => (
         <div
           key={region.slug}

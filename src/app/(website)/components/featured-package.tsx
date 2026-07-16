@@ -6,7 +6,7 @@ import { ViewExpeditionsLink } from "@/components/links/view-expeditions-link"
 export default function FeaturedPackageSection() {
   return (
     <>
-      <Section className="space-y-8 outline">
+      <Section className="space-y-8">
         <FeaturedPackageSectionHeader />
         <FeaturedPackageSectionContent />
       </Section>
@@ -17,7 +17,7 @@ export default function FeaturedPackageSection() {
 function FeaturedPackageSectionHeader() {
   return (
     <SectionHeader
-      className="flex w-full items-end justify-between gap-4 outline"
+      className="flex w-full items-end justify-between gap-4"
       constrained
     >
       <div>
@@ -36,7 +36,7 @@ function FeaturedPackageSectionHeader() {
 function FeaturedPackageSectionContent() {
   return (
     <SectionContent constrained>
-      <div className="mx-auto grid max-w-9xl grid-cols-1 gap-6 outline sm:grid-cols-2 lg:grid-cols-3 xl:gap-8">
+      <div className="mx-auto grid max-w-9xl grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:gap-8">
         {/* {packages?.map((pkg, index) => (
               <PackageCard key={index} pkg={pkg} />
             ))} */}

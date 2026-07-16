@@ -1,11 +1,8 @@
 "use client"
 
-import { Button } from "@/components/ui/button"
 import RotatingText from "@/components/ui/rotating-text"
-import { Section, SectionContent } from "@/components/ui/section"
+import { Section, SectionContent, SectionHeader } from "@/components/ui/section"
 import { cn } from "@/lib/utils"
-import { ArrowRight } from "lucide-react"
-import Link from "next/link"
 import { useRef } from "react"
 import Image from "next/image"
 import Autoplay from "embla-carousel-autoplay"
@@ -19,9 +16,11 @@ import { ViewExpeditionsLink } from "@/components/links/view-expeditions-link"
 export default function HeroSection() {
   return (
     <>
-      <Section aria-labelledby="hero-heading" className="">
-        <SectionContent constrained>
-          <HeroHeader className="mb-8 sm:mb-14" />
+      <Section aria-labelledby="hero-heading" className="space-y-12">
+        <SectionHeader constrained className="">
+          <HeroHeader />
+        </SectionHeader>
+        <SectionContent constrained className="">
           <HeroImage />
         </SectionContent>
       </Section>
