@@ -28,7 +28,7 @@ export default async function EditPackagePage({ params }: RouteContext) {
     activityIds: pkg.activities.map((a) => a.activity.id),
     seasonIds: pkg.seasons.map((s) => s.season.id),
     themeIds: pkg.themes.map((t) => t.theme.id),
-    imageId: pkg.images[0]?.image.id ?? "",
+    imageIds: pkg.images.map((image) => image.image.id),
     itineraries: pkg.itineraries.map((itinerary) => ({
       dayNumber: itinerary.dayNumber,
       title: itinerary.title,

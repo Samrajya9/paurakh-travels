@@ -19,7 +19,7 @@ const defaultValues: CreatePackageInput = {
   activityIds: [],
   seasonIds: [],
   themeIds: [],
-  imageId: "",
+  imageIds: [],
   itineraries: [
     {
       dayNumber: 1,

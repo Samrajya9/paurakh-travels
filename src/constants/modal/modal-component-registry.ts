@@ -15,4 +15,5 @@ export const MODAL_REGISTRY = {
   CREATE_SEASON_MODAL_ID: "create-season",
   EDIT_SEASON_MODAL_ID: "edit-season",
   IMAGE_PICKER_MODAL_ID: "image-picker",
+  MULTI_IMAGE_PICKER_MODAL_ID: "multi-image-picker",
 }

@@ -27,7 +27,7 @@ import { Textarea } from "@/components/ui/textarea"
 import DifficultySelect from "../../packages/difficulties/components/difficulty-select"
 import CategorySelect from "../../categories/components/category-select"
 import TagToggleGroup from "@/components/inputs/tag-toggle-group"
-import ImageSelector from "../../media/components/image-selector"
+import MultiImagePicker from "@/components/multi-image-picker/multi-image-picker"
 
 // Owns the top-level, optional `groupDiscounts` field array.
 function PackageGroupDiscountsField() {
@@ -619,7 +619,8 @@ const PackageFormFields = () => {
                 <FieldDescription>
                   The main image for the package.
                 </FieldDescription>
-                <ImageSelector {...field} />
+                {/* <ImageSelector {...field} /> */}
+                <MultiImagePicker {...field} />
                 {fieldState.invalid && (
                   <FieldError errors={[fieldState.error]} />
                 )}

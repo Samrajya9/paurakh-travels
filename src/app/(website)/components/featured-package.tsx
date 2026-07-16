@@ -1,7 +1,7 @@
-"use client"
-
 import { Section, SectionContent, SectionHeader } from "@/components/ui/section"
 import { ViewExpeditionsLink } from "@/components/links/view-expeditions-link"
+import { PackageCard } from "@/components/cards/package-card"
+import { getAllPackages } from "@/services/package.service"
 
 export default function FeaturedPackageSection() {
   return (
@@ -33,13 +33,15 @@ function FeaturedPackageSectionHeader() {
   )
 }
 
-function FeaturedPackageSectionContent() {
+async function FeaturedPackageSectionContent() {
+  const { packages } = await getAllPackages({ limit: 3 })
+
   return (
     <SectionContent constrained>
       <div className="mx-auto grid max-w-9xl grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:gap-8">
-        {/* {packages?.map((pkg, index) => (
-              <PackageCard key={index} pkg={pkg} />
-            ))} */}
+        {packages?.map((pkg) => (
+          <PackageCard key={pkg.id} pkg={pkg} />
+        ))}
       </div>
     </SectionContent>
   )
