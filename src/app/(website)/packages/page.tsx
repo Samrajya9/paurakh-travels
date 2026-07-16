@@ -73,7 +73,7 @@ export default async function PackagesPage({
           seasons={seasons}
           categories={categories}
         >
-          <SectionContent constrained asChild>
+          <SectionContent constrained>
             <PackageListing />
           </SectionContent>
         </PackageFiltersProvider>

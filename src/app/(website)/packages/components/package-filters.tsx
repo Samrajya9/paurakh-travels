@@ -8,12 +8,21 @@ import SeasonFilter from "./filters/season-filter"
 import CategoryFilter from "./filters/category-filter"
 import SearchFilter from "./filters/search-filter"
 import { usePackageFilters } from "@/context/package-filters.context"
+import { cn } from "@/lib/utils"
 
-export default function PackageFilters() {
+type PackageFiltersProps = React.ComponentProps<"div"> & {}
+
+export default function PackageFilters({
+  className,
+  ...props
+}: PackageFiltersProps) {
   const { clearAll } = usePackageFilters()
   return (
     <>
-      <div className="max-w-70 flex-1 space-y-4">
+      <div
+        className={cn(`w-full max-w-70 flex-1 space-y-4`, className)}
+        {...props}
+      >
         <div className="flex h-12 items-center justify-between gap-1 border-b pb-4">
           <h2 className="font-playfair text-3xl font-semibold tracking-wide">
             Filters
