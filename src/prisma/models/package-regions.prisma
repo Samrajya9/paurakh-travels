@@ -1,0 +1,14 @@
+model PackageRegion {
+    id        String @id @default(cuid())
+    packageId String @map("package_id")
+    regionId  String @map("region_id")
+
+    package Package @relation(fields: [packageId], references: [id], onDelete: Cascade)
+    region  Region  @relation(fields: [regionId], references: [id], onDelete: Cascade)
+
+    createdAt DateTime @default(now()) @map("created_at")
+
+    @@unique([packageId, regionId])
+    @@index([regionId])
+    @@map("package_regions")
+}

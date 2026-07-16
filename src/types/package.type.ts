@@ -10,6 +10,8 @@ import { itinerarySelect } from "./itinerary.type"
 import { faqSelect } from "./faq.type"
 import type { PackageGroupDiscount } from "./package-group-discount.type"
 import { packageGroupDiscountSelect } from "./package-group-discount.type"
+import { regionSelect } from "./region.type"
+import { Pagination } from "./pagination.type"
 
 export const packageSelect = {
   id: true,
@@ -26,6 +28,13 @@ export const packageSelect = {
   category: {
     select: categorySelect,
   },
+  regions: {
+    select: {
+      id: true,
+      region: { select: regionSelect },
+    },
+  },
+
   activities: {
     select: {
       id: true,
@@ -82,4 +91,28 @@ export type Package = Omit<PackagePayload, "basePrice" | "groupDiscounts"> & {
   basePrice: number
   groupDiscounts: PackageGroupDiscount[]
   images: ImageAttachment[]
+  metaData: {
+    totalDuration: number
+    maxElevation: number
+    minPrice: number
+  }
+}
+
+// Named list-item type instead of an inline Pick<> repeated in two places
+export type PackageListItem = Pick<
+  Package,
+  | "id"
+  | "name"
+  | "slug"
+  | "description"
+  | "basePrice"
+  | "images"
+  | "metaData"
+  | "difficultyId"
+  | "difficulty"
+>
+
+export type PackageListResult = {
+  packages: PackageListItem[]
+  pagination: Pagination
 }

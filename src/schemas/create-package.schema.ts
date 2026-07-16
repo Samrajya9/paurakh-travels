@@ -50,9 +50,8 @@ export const CreatePackageSchema = z.object({
   difficultyId: z.cuid2("Invalid difficulty id"),
   categoryId: z.cuid2("Invalid category id"),
 
-  // Zero or more tag-style associations. Omitting a key means "none of
-  // these" — no min(1), since a package needn't have activities,
-  // seasons, or themes assigned.
+  regionIds: z.array(z.cuid2("Invalid region id")).optional(),
+
   activityIds: z.array(z.cuid2("Invalid activity id")).optional(),
   seasonIds: z.array(z.cuid2("Invalid season id")).optional(),
   themeIds: z.array(z.cuid2("Invalid theme id")).optional(),
@@ -70,9 +69,6 @@ export const CreatePackageSchema = z.object({
     .min(1, "At least one FAQ is required")
     .optional(),
 
-  // Zero or more group discount tiers. Omitting the key entirely means
-  // "no discounts" — no min(1) here, unlike faqs, since an empty set is
-  // the normal case, not an edge case.
   groupDiscounts: z
     .array(PackageGroupDiscountSchema)
     .optional()

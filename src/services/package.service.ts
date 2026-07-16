@@ -11,7 +11,7 @@ import {
 import { EntityType } from "@/constants/enums/entity-type"
 import type { CreatePackageInput } from "@/schemas/create-package.schema"
 import type { UpdatePackageInput } from "@/schemas/update-package.schema"
-import { Package, packageSelect } from "@/types/package.type"
+import { Package, PackageListResult, packageSelect } from "@/types/package.type"
 
 // ------------------------------------------------------------------ helpers
 
@@ -122,6 +122,19 @@ async function replaceThemesForPackage(packageId: string, themeIds: string[]) {
   })
 }
 
+async function replaceRegionsForPackage(
+  packageId: string,
+  regionIds: string[]
+) {
+  await prismaClient.packageRegion.deleteMany({ where: { packageId } })
+
+  if (regionIds.length === 0) return
+
+  await prismaClient.packageRegion.createMany({
+    data: regionIds.map((regionId) => ({ packageId, regionId })),
+  })
+}
+
 // ------------------------------------------------------------------ create
 
 export async function createPackage(dto: CreatePackageInput) {
@@ -133,6 +146,7 @@ export async function createPackage(dto: CreatePackageInput) {
     activityIds,
     seasonIds,
     themeIds,
+    regionIds, // ← added
     ...packageData
   } = dto
 
@@ -184,6 +198,10 @@ export async function createPackage(dto: CreatePackageInput) {
       await replaceThemesForPackage(pkg.id, themeIds)
     }
 
+    if (regionIds) {
+      await replaceRegionsForPackage(pkg.id, regionIds)
+    }
+
     if (imageId) {
       await attachImageToEntity({
         imageId,
@@ -205,71 +223,37 @@ export interface GetAllPackagesOptions {
   search?: string
   difficultyId?: string
   categoryId?: string
-  regionId?: string
+  regionIds?: string[] // ← was regionId?: string
   activityIds?: string[]
   themeIds?: string[]
   seasonIds?: string[]
+  page?: number
+  limit?: number
 }
 
-// export async function getAllPackages(
-//   options: GetAllPackagesOptions = {}
-// ): Promise<Package[]> {
-//   const { search, difficultyId } = options
-
-//   const where = {
-//     ...(search && {
-//       // MySQL's default collation is already case-insensitive, so no
-//       // `mode: "insensitive"` here — that option isn't supported on the
-//       // mysql provider and would throw at runtime.
-//       name: { contains: search },
-//     }),
-//     ...(difficultyId && { difficultyId }),
-//   } satisfies PrismaClient.PackageWhereInput
-
-//   const packages = await prismaClient.package.findMany({
-//     where,
-//     select: packageSelect,
-//     orderBy: { name: "asc" },
-//   })
-
-//   return Promise.all(
-//     packages.map(async (pkg) => ({
-//       ...pkg,
-//       images: await getAttachmentsForEntity(EntityType.PACKAGE, pkg.id),
-//     }))
-//   )
-// }
-
-// ----------------------------------------------------------------- findOne
 export async function getAllPackages(
   options: GetAllPackagesOptions = {}
-): Promise<Package[]> {
+): Promise<PackageListResult> {
   const {
     search,
     difficultyId,
     categoryId,
-    regionId,
+    regionIds,
     activityIds,
     themeIds,
     seasonIds,
+    page = 1,
+    limit = 12,
   } = options
 
   const where = {
     ...(search && { name: { contains: search } }),
     ...(difficultyId && { difficultyId }),
     ...(categoryId && { categoryId }),
-    // Package has no direct regionId — region lives on Place, reached via
-    // Itinerary -> ItineraryPlace -> Place. "Some itinerary has some place
-    // in this region" is the correct semantics for "package visits region X".
-    ...(regionId && {
-      itineraries: {
-        some: {
-          places: {
-            some: { place: { regionId } },
-          },
-        },
-      },
-    }),
+    ...(regionIds &&
+      regionIds.length > 0 && {
+        regions: { some: { regionId: { in: regionIds } } },
+      }),
     ...(activityIds &&
       activityIds.length > 0 && {
         activities: { some: { activityId: { in: activityIds } } },
@@ -284,19 +268,73 @@ export async function getAllPackages(
       }),
   } satisfies PrismaClient.PackageWhereInput
 
-  const packages = await prismaClient.package.findMany({
-    where,
-    select: packageSelect,
-    orderBy: { name: "asc" },
-  })
+  const [packages, total] = await prismaClient.$transaction([
+    prismaClient.package.findMany({
+      where,
+      skip: (page - 1) * limit,
+      take: limit,
+      orderBy: { name: "asc" },
+      select: packageSelect,
+    }),
+    prismaClient.package.count({
+      where,
+    }),
+  ])
 
-  return Promise.all(
-    packages.map(async (pkg) => ({
-      ...pkg,
-      images: await getAttachmentsForEntity(EntityType.PACKAGE, pkg.id),
-    }))
+  const result = await Promise.all(
+    packages.map(async (pkg) => {
+      let maxElevation = 0
+
+      for (const itinerary of pkg.itineraries) {
+        for (const itineraryPlace of itinerary.places) {
+          if (itineraryPlace.place.elevation > maxElevation) {
+            maxElevation = itineraryPlace.place.elevation
+          }
+        }
+      }
+
+      let minPrice = pkg.basePrice
+
+      if (pkg.groupDiscounts.length > 0) {
+        minPrice = pkg.groupDiscounts[0].price
+
+        for (const discount of pkg.groupDiscounts) {
+          // Decimal comparisons must use .lessThan()
+          if (discount.price.lessThan(minPrice)) {
+            minPrice = discount.price
+          }
+        }
+      }
+
+      return {
+        id: pkg.id,
+        name: pkg.name,
+        slug: pkg.slug,
+        description: pkg.description,
+        basePrice: Number(pkg.basePrice),
+        difficultyId: pkg.difficultyId,
+        difficulty: pkg.difficulty,
+        images: await getAttachmentsForEntity(EntityType.PACKAGE, pkg.id),
+        metaData: {
+          totalDuration: pkg.itineraries.length,
+          maxElevation,
+          minPrice: Number(minPrice),
+        },
+      }
+    })
   )
+
+  return {
+    packages: result,
+    pagination: {
+      page,
+      limit,
+      total,
+      totalPages: Math.ceil(total / limit),
+    },
+  }
 }
+
 export async function getPackageById(id: string) {
   return findPackageByIdOrThrow(id)
 }
@@ -310,10 +348,47 @@ export async function getPackageBySlug(slug: string): Promise<Package> {
   if (!pkg) {
     throw new AppError(`Package "${slug}" not found.`, 404)
   }
+  let maxElevation = 0
+
+  for (const itinerary of pkg.itineraries) {
+    for (const itineraryPlace of itinerary.places) {
+      if (itineraryPlace.place.elevation > maxElevation) {
+        maxElevation = itineraryPlace.place.elevation
+      }
+    }
+  }
+
+  let minPrice = pkg.basePrice
+
+  if (pkg.groupDiscounts.length > 0) {
+    minPrice = pkg.groupDiscounts[0].price
+
+    for (const discount of pkg.groupDiscounts) {
+      // Decimal comparisons must use .lessThan()
+      if (discount.price.lessThan(minPrice)) {
+        minPrice = discount.price
+      }
+    }
+  }
 
   const images = await getAttachmentsForEntity(EntityType.PACKAGE, pkg.id)
 
-  return { ...pkg, images }
+  return {
+    ...pkg,
+    basePrice: Number(pkg.basePrice),
+    groupDiscounts: pkg.groupDiscounts.map((discount) => {
+      return {
+        ...discount,
+        price: Number(discount.price),
+      }
+    }),
+    images,
+    metaData: {
+      totalDuration: pkg.itineraries.length,
+      maxElevation,
+      minPrice: Number(minPrice),
+    },
+  }
 }
 
 // ------------------------------------------------------------------ update
@@ -329,6 +404,7 @@ export async function updatePackageById(id: string, dto: UpdatePackageInput) {
     activityIds,
     seasonIds,
     themeIds,
+    regionIds, // ← added
     ...packageData
   } = dto
 
@@ -370,6 +446,10 @@ export async function updatePackageById(id: string, dto: UpdatePackageInput) {
 
     if (themeIds !== undefined) {
       await replaceThemesForPackage(id, themeIds)
+    }
+
+    if (regionIds !== undefined) {
+      await replaceRegionsForPackage(id, regionIds)
     }
 
     return findPackageByIdOrThrow(id)

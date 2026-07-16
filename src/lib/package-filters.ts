@@ -1,18 +1,23 @@
 export interface PackageFilterState {
-  q?: string
-  regionId?: string
   difficultyId?: string
   categoryId?: string
+  regionIds: string[] // ← was regionId?: string (single)
   activityIds: string[]
   themeIds: string[]
   seasonIds: string[]
+  q?: string
 }
 
-const SINGLE_KEYS = ["regionId", "difficultyId", "categoryId", "q"] as const
-const ARRAY_KEYS = ["activityIds", "themeIds", "seasonIds"] as const
+const SINGLE_KEYS = ["difficultyId", "categoryId", "q"] as const
+const ARRAY_KEYS = [
+  "regionIds",
+  "activityIds",
+  "themeIds",
+  "seasonIds",
+] as const
 
 export function emptyPackageFilters(): PackageFilterState {
-  return { activityIds: [], themeIds: [], seasonIds: [] }
+  return { regionIds: [], activityIds: [], themeIds: [], seasonIds: [] }
 }
 
 export function toURLSearchParams(
@@ -32,9 +37,9 @@ export function parsePackageFilters(
   searchParams: URLSearchParams
 ): PackageFilterState {
   return {
-    regionId: searchParams.get("regionId") ?? undefined,
     difficultyId: searchParams.get("difficultyId") ?? undefined,
     categoryId: searchParams.get("categoryId") ?? undefined,
+    regionIds: searchParams.get("regionIds")?.split(",").filter(Boolean) ?? [],
     activityIds:
       searchParams.get("activityIds")?.split(",").filter(Boolean) ?? [],
     themeIds: searchParams.get("themeIds")?.split(",").filter(Boolean) ?? [],

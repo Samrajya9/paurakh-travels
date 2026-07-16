@@ -5,7 +5,8 @@ model Region {
     destinationId String      @map("destination_id")
     destination   Destination @relation(fields: [destinationId], references: [id], onDelete: Restrict)
 
-    places Place[]
+    places   Place[]
+    packages PackageRegion[]
 
     createdAt DateTime @default(now()) @map("created_at")
     updatedAt DateTime @updatedAt @map("updated_at")

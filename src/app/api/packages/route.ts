@@ -8,17 +8,19 @@ export async function GET(req: NextRequest) {
   try {
     const { searchParams } = new URL(req.url)
 
-    const packages = await getAllPackages({
+    const result = await getAllPackages({
       search: searchParams.get("q") ?? undefined,
       difficultyId: searchParams.get("difficultyId") ?? undefined,
       categoryId: searchParams.get("categoryId") ?? undefined,
-      regionId: searchParams.get("regionId") ?? undefined,
+      regionIds: searchParams.get("regionIds")?.split(",").filter(Boolean),
       activityIds: searchParams.get("activityIds")?.split(",").filter(Boolean),
       themeIds: searchParams.get("themeIds")?.split(",").filter(Boolean),
       seasonIds: searchParams.get("seasonIds")?.split(",").filter(Boolean),
+      page: Number(searchParams.get("page") ?? 1),
+      limit: Number(searchParams.get("limit") ?? 12),
     })
 
-    return NextResponse.json({ packages, total: packages.length })
+    return NextResponse.json(result)
   } catch (error) {
     return handleApiError(error)
   }

@@ -4,7 +4,6 @@ import { usePackageFilters } from "@/context/package-filters.context"
 
 export function PackageGrid() {
   const { packages } = usePackageFilters()
-  console.log(packages)
 
   return (
     <>

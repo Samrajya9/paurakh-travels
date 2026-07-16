@@ -60,10 +60,34 @@ interface PackageImage {
 }
 
 interface PackageCardProps {
-  pkg: Package
+  pkg: Pick<
+    Package,
+    | "id"
+    | "name"
+    | "slug"
+    | "description"
+    | "basePrice"
+    | "images"
+    | "metaData"
+    | "difficultyId"
+    | "difficulty"
+  >
   className?: string
   isLiked?: boolean
-  onLikeToggle?: (pkg: Package) => void
+  onLikeToggle?: (
+    pkg: Pick<
+      Package,
+      | "id"
+      | "name"
+      | "slug"
+      | "description"
+      | "basePrice"
+      | "images"
+      | "metaData"
+      | "difficultyId"
+      | "difficulty"
+    >
+  ) => void
 }
 
 export function PackageCard({
@@ -74,24 +98,15 @@ export function PackageCard({
 }: PackageCardProps) {
   const [liked, setLiked] = React.useState(isLiked)
 
-  const totalDays = pkg.itineraries.length
+  const totalDays = pkg.metaData.totalDuration
 
   const basePrice = Number(pkg.basePrice)
-  const lowestDiscountPrice = pkg.groupDiscounts.length
-    ? Math.min(...pkg.groupDiscounts.map((d) => Number(d.price)))
-    : null
+  const lowestDiscountPrice = pkg.metaData.minPrice
 
   const hasDiscount =
     lowestDiscountPrice !== null && lowestDiscountPrice < basePrice
 
-  const maxElevation = pkg.itineraries
-    .flatMap((it) => it.places ?? [])
-    .reduce((max, d) => Math.max(max, d.place.elevation), 0)
-
-  const sortedTiers = [...pkg.groupDiscounts].sort(
-    (a, b) => a.minPeople - b.minPeople
-  )
-  const highestTier = sortedTiers[sortedTiers.length - 1]?.minPeople
+  const maxElevation = pkg.metaData.maxElevation
 
   const handleLikeClick = (e: React.MouseEvent) => {
     e.preventDefault()

@@ -64,8 +64,8 @@ export default async function PackagesPage({
 
         <PackageFiltersProvider
           initialFilters={filters}
-          initialPackages={packages}
-          initialTotal={packages.length}
+          initialPackages={packages.packages}
+          initialTotal={packages.pagination.total}
           regions={regions}
           difficulties={difficulties}
           activities={activities}

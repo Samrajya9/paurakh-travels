@@ -15,9 +15,10 @@ import type { Activity } from "@/types/activity.type"
 import type { Theme } from "@/types/theme.type"
 import type { Season } from "@/types/season.type"
 import type { Category } from "@/types/category.type"
+import type { PackageListItem } from "@/types/package.type"
 
-type SingleFilterKey = "regionId" | "difficultyId" | "categoryId" | "q"
-type ArrayFilterKey = "activityIds" | "themeIds" | "seasonIds"
+type SingleFilterKey = "difficultyId" | "categoryId" | "q" // regionId removed
+type ArrayFilterKey = "regionIds" | "activityIds" | "themeIds" | "seasonIds" // regionIds added
 
 export interface ActiveFilterChip {
   /** unique React key — "regionId" for singles, "activityIds:cle123" for array entries */
@@ -37,7 +38,7 @@ interface FilterOptions {
 
 interface PackageFiltersContextValue extends FilterOptions {
   filters: PackageFilterState
-  packages: Package[]
+  packages: PackageListItem[]
   total: number
   isLoading: boolean
   activeFilters: ActiveFilterChip[]
@@ -62,7 +63,7 @@ export function usePackageFilters() {
 
 interface PackageFiltersProviderProps extends FilterOptions {
   initialFilters: PackageFilterState
-  initialPackages: Package[]
+  initialPackages: PackageListItem[]
   initialTotal: number
   children: React.ReactNode
 }
@@ -108,7 +109,7 @@ export function PackageFiltersProvider({
       .then((res) => res.json())
       .then((data) => {
         setPackages(data.packages)
-        setTotal(data.total)
+        setTotal(data.pagination.total)
       })
       .catch((err) => {
         if (err.name !== "AbortError") console.error(err)
@@ -164,13 +165,13 @@ export function PackageFiltersProvider({
   const activeFilters = React.useMemo<ActiveFilterChip[]>(() => {
     const chips: ActiveFilterChip[] = []
 
-    if (filters.regionId) {
-      const region = regions.find((r) => r.id === filters.regionId)
+    for (const regionId of filters.regionIds) {
+      const region = regions.find((r) => r.id === regionId)
       if (region) {
         chips.push({
-          key: "regionId",
+          key: `regionIds:${regionId}`,
           label: region.name,
-          onRemove: () => clearFilter("regionId"),
+          onRemove: () => toggleArrayFilter("regionIds", regionId),
         })
       }
     }
