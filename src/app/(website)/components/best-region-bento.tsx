@@ -1,6 +1,6 @@
 "use client"
 
-import { Section, SectionContent } from "@/components/ui/section"
+import { Section, SectionContent, SectionHeader } from "@/components/ui/section"
 import { ArrowRight } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
@@ -43,50 +43,55 @@ const regions = [
 
 export default function BestRegionBento() {
   return (
-    <Section>
-      <SectionContent>
-        <Header />
-        <div className="grid grid-cols-1 gap-4 sm:h-[700px] sm:grid-cols-3 sm:grid-rows-2 lg:h-[800px]">
-          {regions.map((region, index) => (
-            <div
-              key={region.slug}
-              className={
-                index === 0 || index === 3
-                  ? "h-72 sm:col-span-2 sm:h-auto"
-                  : "h-72 sm:col-span-1 sm:h-auto"
-              }
-            >
-              <RegionBentoCard {...region} />
-            </div>
-          ))}
-        </div>
-      </SectionContent>
+    <Section className="space-y-8 outline">
+      <BestRegionBentoHeader />
+      <BestRegionBentoSectionContent />
     </Section>
   )
 }
 
-function Header() {
+function BestRegionBentoHeader() {
   return (
-    <div className="mb-10 flex w-full items-start justify-between gap-6">
-      <div className="flex-2 space-y-1">
-        <Button variant={"link"} asChild className="px-0">
-          <Link href={"/packages"}>
-            <span className="upper tracking-[0.2em]">BEST REGIONS</span>
-            <ArrowRight className="-translate-y-px" />
-          </Link>
-        </Button>
-        <h2 className="font-playfair text-3xl leading-[1.15] font-semibold tracking-wide sm:text-3xl md:text-4xl lg:text-5xl">
-          Discover the Best Regions
-        </h2>
-      </div>
+    <>
+      <SectionHeader className="flex w-full items-start justify-between gap-6 outline">
+        <div className="flex-2 space-y-1">
+          <Button variant={"link"} asChild className="px-0">
+            <Link href={"/packages"}>
+              <span className="upper tracking-[0.2em]">BEST REGIONS</span>
+              <ArrowRight className="-translate-y-px" />
+            </Link>
+          </Button>
+          <h2 className="font-playfair text-3xl leading-[1.15] font-semibold tracking-wide sm:text-3xl md:text-4xl lg:text-5xl">
+            Discover the Best Regions
+          </h2>
+        </div>
+        <div className="flex-1">
+          <p className="text-base leading-relaxed tracking-wide text-muted-foreground">
+            Extraordinary natural beauty, enjoy the rich culture, and experience
+            the friendliness of the local people in these legendary regions.
+          </p>
+        </div>
+      </SectionHeader>
+    </>
+  )
+}
 
-      <div className="flex-1">
-        <p className="text-base leading-relaxed tracking-wide text-muted-foreground">
-          Extraordinary natural beauty, enjoy the rich culture, and experience
-          the friendliness of the local people in these legendary regions.
-        </p>
-      </div>
-    </div>
+function BestRegionBentoSectionContent() {
+  return (
+    <SectionContent className="grid grid-cols-1 gap-4 outline sm:h-[700px] sm:grid-cols-3 sm:grid-rows-2 lg:h-[800px]">
+      {regions.map((region, index) => (
+        <div
+          key={region.slug}
+          className={
+            index === 0 || index === 3
+              ? "h-72 sm:col-span-2 sm:h-auto"
+              : "h-72 sm:col-span-1 sm:h-auto"
+          }
+        >
+          <RegionBentoCard {...region} />
+        </div>
+      ))}
+    </SectionContent>
   )
 }
 
