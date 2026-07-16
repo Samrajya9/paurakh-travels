@@ -48,7 +48,26 @@ export async function attachImageToEntity(dto: CreateImageAttachmentInput) {
     throwIfDuplicateAttachment(error)
   }
 }
+// add alongside the existing functions
 
+export async function attachImagesToEntity(
+  entityType: EntityType,
+  entityId: string,
+  imageIds: string[]
+) {
+  if (imageIds.length === 0) return []
+
+  // skipDuplicates is supported on MySQL (compiles to INSERT ... IGNORE) —
+  // unlike attachImageToEntity, a duplicate here is silently a no-op rather
+  // than a 409, since this is "ensure these are attached," not "attach this
+  // one specific thing."
+  await prismaClient.imageAttachment.createMany({
+    data: imageIds.map((imageId) => ({ imageId, entityType, entityId })),
+    skipDuplicates: true,
+  })
+
+  return getAttachmentsForEntity(entityType, entityId)
+}
 // ----------------------------------------------------------------- findAll
 
 export async function getAttachmentsForEntity(

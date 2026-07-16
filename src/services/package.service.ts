@@ -5,6 +5,7 @@ import { AppError } from "@/lib/errors"
 import { createItinerary } from "@/services/itinerary.service"
 import { createFaq } from "@/services/faq.service"
 import {
+  attachImagesToEntity,
   attachImageToEntity,
   getAttachmentsForEntity,
 } from "@/services/image-attachment.service"
@@ -99,6 +100,20 @@ async function replaceActivitiesForPackage(
   })
 }
 
+async function replaceImagesForPackage(packageId: string, imageIds: string[]) {
+  // Direct deleteMany rather than looping detachImageFromEntity — that
+  // function expects attachment ids (not image ids) and enforces
+  // one-at-a-time existence checks, which is right for a single explicit
+  // "remove this image" click but wasteful for a full wipe-and-recreate.
+  await prismaClient.imageAttachment.deleteMany({
+    where: { entityType: EntityType.PACKAGE, entityId: packageId },
+  })
+
+  if (imageIds.length === 0) return
+
+  await attachImagesToEntity(EntityType.PACKAGE, packageId, imageIds)
+}
+
 async function replaceSeasonsForPackage(
   packageId: string,
   seasonIds: string[]
@@ -142,7 +157,7 @@ export async function createPackage(dto: CreatePackageInput) {
     itineraries,
     faqs,
     groupDiscounts,
-    imageId,
+    imageIds,
     activityIds,
     seasonIds,
     themeIds,
@@ -202,12 +217,8 @@ export async function createPackage(dto: CreatePackageInput) {
       await replaceRegionsForPackage(pkg.id, regionIds)
     }
 
-    if (imageId) {
-      await attachImageToEntity({
-        imageId,
-        entityId: pkg.id,
-        entityType: EntityType.PACKAGE,
-      })
+    if (imageIds && imageIds.length > 0) {
+      await attachImagesToEntity(EntityType.PACKAGE, pkg.id, imageIds)
     }
 
     // 5. Return the full package with itineraries + faqs + discounts attached
@@ -400,7 +411,7 @@ export async function updatePackageById(id: string, dto: UpdatePackageInput) {
     itineraries,
     faqs,
     groupDiscounts,
-    imageId,
+    imageIds,
     activityIds,
     seasonIds,
     themeIds,
@@ -450,6 +461,9 @@ export async function updatePackageById(id: string, dto: UpdatePackageInput) {
 
     if (regionIds !== undefined) {
       await replaceRegionsForPackage(id, regionIds)
+    }
+    if (imageIds !== undefined) {
+      await replaceImagesForPackage(id, imageIds)
     }
 
     return findPackageByIdOrThrow(id)

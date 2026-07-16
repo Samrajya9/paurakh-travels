@@ -611,7 +611,7 @@ const PackageFormFields = () => {
           />
 
           <Controller
-            name="imageId"
+            name="imageIds"
             control={form.control}
             render={({ field, fieldState }) => (
               <Field data-invalid={fieldState.invalid}>
