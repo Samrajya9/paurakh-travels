@@ -6,6 +6,16 @@ import { cn } from "@/lib/utils"
 
 const SectionContext = React.createContext<boolean | null>(null)
 
+function useSectionContext() {
+  const context = React.useContext(SectionContext)
+
+  if (!context) {
+    throw new Error("Section components must be used inside <Section>.")
+  }
+
+  return context
+}
+
 const sectionVariants = cva("w-full space-y-4", {
   variants: {
     size: {
@@ -40,6 +50,29 @@ function Section({ className, size, asChild = false, ...props }: SectionProps) {
   )
 }
 
+type SectionHeaderProps = React.ComponentProps<"div"> & {
+  asChild?: boolean
+  constrained?: boolean
+}
+
+function SectionHeader({
+  className,
+  asChild = false,
+  constrained = false,
+  ...props
+}: SectionHeaderProps) {
+  useSectionContext()
+  const Comp = asChild ? Slot.Root : "div"
+
+  return (
+    <Comp
+      data-slot="section-header"
+      className={cn(constrained && "mx-auto max-w-9xl", className)}
+      {...props}
+    />
+  )
+}
+
 type SectionContentProps = React.ComponentProps<"div"> & {
   asChild?: boolean
   constrained?: boolean
@@ -64,37 +97,6 @@ function SectionContent({
   )
 }
 
-type SectionHeaderProps = React.ComponentProps<"div"> & {
-  asChild?: boolean
-  constrained?: boolean
-}
-function SectionHeader({
-  className,
-  asChild = false,
-  constrained = false,
-  ...props
-}: SectionHeaderProps) {
-  useSectionContext()
-  const Comp = asChild ? Slot.Root : "div"
-
-  return (
-    <Comp
-      data-slot="section-header"
-      className={cn(constrained && "mx-auto max-w-9xl", className)}
-      {...props}
-    />
-  )
-}
-
-function useSectionContext() {
-  const context = React.useContext(SectionContext)
-
-  if (!context) {
-    throw new Error("Section components must be used inside <Section>.")
-  }
-
-  return context
-}
 Section.displayName = "Section"
 SectionHeader.displayName = "SectionHeader"
 SectionContent.displayName = "SectionContent"
