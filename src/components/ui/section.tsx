@@ -4,6 +4,7 @@ import { Slot } from "radix-ui"
 import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "@/lib/utils"
 
+// Update
 const SectionContext = React.createContext<boolean | null>(null)
 
 function useSectionContext() {
