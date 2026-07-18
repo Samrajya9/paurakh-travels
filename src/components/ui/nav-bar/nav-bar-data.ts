@@ -11,5 +11,5 @@ export const navBarData: NavItemConfig[] = [
   { title: "expeditions", data: mockNavBarData.expeditions },
   { title: "regions", data: mockNavBarData.regions },
   { title: "seasons", data: mockNavBarData.seasons },
-  { title: "about", url: "/about" },
+  { title: "about", url: "/about-us" },
 ]

@@ -3,6 +3,8 @@ import { Section, SectionContent, SectionHeader } from "@/components/ui/section"
 import { cn } from "@/lib/utils"
 import { P, paragraphVariants } from "@/components/ui/paragraph"
 import { H1, H2 } from "@/components/ui/heading"
+import { Button } from "@/components/ui/button"
+import Link from "next/link"
 
 export const metadata: Metadata = {
   title: "Terms & Conditions | Paurakh Travels",
@@ -25,9 +27,9 @@ const SECTIONS: { title: string; body: React.ReactNode }[] = [
         <strong>{COMPANY_NAME}</strong> ({COMPANY_ADDRESS}, &quot;we&quot;,
         &quot;us&quot;, or &quot;our&quot;) through this website. By submitting
         a booking request, you agree to these terms. Our{" "}
-        <a href="/privacy" className="underline">
+        <Link href="/privacy-policy" className="underline">
           Privacy Policy
-        </a>{" "}
+        </Link>{" "}
         explains separately how we handle your personal information.
       </P>
     ),
@@ -201,9 +203,9 @@ const SECTIONS: { title: string; body: React.ReactNode }[] = [
     body: (
       <P variant="md">
         Questions about these terms? Reach us at{" "}
-        <a href={`mailto:${CONTACT_EMAIL}`} className="underline">
-          {CONTACT_EMAIL}
-        </a>
+        <Button variant={"link"} size={"lg"} asChild className="px-0">
+          <Link href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</Link>
+        </Button>
         .
       </P>
     ),

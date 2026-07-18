@@ -20,7 +20,7 @@ const NAV_COLUMNS = [
   {
     heading: "Company",
     links: [
-      { label: "About Us", href: "/about" },
+      { label: "About Us", href: "/about-us" },
       { label: "Our Team", href: "/team" },
       { label: "Blog", href: "/blog" },
       { label: "Careers", href: "/careers" },
