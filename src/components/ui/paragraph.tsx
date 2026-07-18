@@ -1,3 +1,4 @@
+import { cn } from "@/lib/utils"
 import { cva, VariantProps } from "class-variance-authority"
 import React from "react"
 
@@ -23,5 +24,7 @@ export const paragraphVariants = cva("font-hanken-grotesk text-foreground", {
 type PProps = React.ComponentProps<"p"> & VariantProps<typeof paragraphVariants>
 
 export function P({ variant, className, ...props }: PProps) {
-  return <p className={paragraphVariants({ variant, className })} {...props} />
+  return (
+    <p className={cn(paragraphVariants({ variant }), className)} {...props} />
+  )
 }

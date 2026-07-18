@@ -228,7 +228,7 @@ function LastFooter() {
                 Terms of Service
               </Link>
               <Link
-                href="/cookies"
+                href="/cookie-policy"
                 className="transition-colors hover:text-[oklch(0.75_0_0)]"
               >
                 Cookie Settings

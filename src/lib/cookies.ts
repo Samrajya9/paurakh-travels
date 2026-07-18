@@ -1,4 +1,3 @@
-import type { ResponseCookie } from "next/dist/compiled/@edge-runtime/cookies"
 import { clientEnv } from "@/env/client"
 
 const isSecure = clientEnv.NEXT_PUBLIC_APP_URL.startsWith("https")
@@ -9,7 +8,7 @@ export const accessTokenCookieOptions = {
   secure: isSecure,
   path: "/",
   maxAge: 60 * 20,
-} satisfies Partial<ResponseCookie>
+}
 
 export const refreshTokenCookieOptions = {
   httpOnly: true,
@@ -17,7 +16,7 @@ export const refreshTokenCookieOptions = {
   secure: isSecure,
   path: "/",
   maxAge: 60 * 60 * 24 * 7, // 7 days
-} satisfies Partial<ResponseCookie>
+}
 
 export function serializeCookie(
   name: string,
