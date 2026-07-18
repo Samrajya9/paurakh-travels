@@ -9,6 +9,8 @@ import { getAllThemes } from "@/services/theme.service"
 import { getAllSeasons } from "@/services/season.service"
 import { getAllCategories } from "@/services/category.service"
 import { getAllPackages } from "@/services/package.service"
+import { P } from "@/components/ui/paragraph"
+import { H1 } from "@/components/ui/heading"
 
 interface PackagesPageProps {
   searchParams: Promise<Record<string, string | string[] | undefined>>
@@ -46,20 +48,15 @@ export default async function PackagesPage({
         className="space-y-20"
       >
         <SectionHeader constrained>
-          <p className="font-hanken-grotesk text-xs font-semibold tracking-wider text-primary">
+          <P variant={"xs"} className="mb-2 font-semibold text-primary">
             CURATED JOURNEYS
-          </p>
-          <h1
-            id="hero-heading"
-            className="max-w-4xl font-playfair text-4xl leading-[1.1] font-bold tracking-wide sm:text-4xl md:text-5xl lg:text-7xl"
-          >
-            Explore the High Peaks
-          </h1>
-          <p className="mt-4 max-w-4xl font-hanken-grotesk text-base leading-6 tracking-wide">
+          </P>
+          <H1 id="hero-heading">Explore the High Peaks</H1>
+          <P className="mt-3 max-w-4xl" variant={"md"}>
             Discover your next legendary ascent. From the spiritual trails of
             the Khumbu to the technical challenges of Mustang, our curated
             expeditions are designed for those who seek the extraordinary.
-          </p>
+          </P>
         </SectionHeader>
 
         <PackageFiltersProvider

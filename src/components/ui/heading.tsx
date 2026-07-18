@@ -1,15 +1,20 @@
 import { cn } from "@/lib/utils"
 import { cva, type VariantProps } from "class-variance-authority"
 
-export const headingVariants = cva("", {
+export const headingVariants = cva("font-playfair", {
   variants: {
     variant: {
-      h1: "max-w-2xl scroll-m-20 text-2xl leading-tight font-bold tracking-tight text-foreground sm:text-3xl",
-      h2: "scroll-m-20 text-xl font-semibold tracking-tight text-foreground",
-      h3: "scroll-m-20 text-lg font-semibold tracking-tight text-foreground",
-      h4: "scroll-m-20 text-base font-semibold tracking-tight text-foreground",
-      h5: "scroll-m-20 text-sm font-medium tracking-tight text-foreground",
-      h6: "scroll-m-20 text-sm font-medium tracking-tight text-muted-foreground",
+      h1: "text-4xl leading-[1.1] font-bold tracking-wide sm:text-4xl md:text-5xl lg:text-7xl",
+
+      h2: "text-2xl leading-[1.15] font-bold tracking-wide sm:text-3xl md:text-4xl",
+
+      h3: "text-xl leading-[1.2] font-semibold tracking-wide sm:text-2xl md:text-3xl",
+
+      h4: "text-lg leading-[1.3] font-semibold tracking-wide sm:text-xl md:text-2xl",
+
+      h5: "text-base leading-[1.4] font-semibold tracking-normal sm:text-lg md:text-xl",
+
+      h6: "text-sm leading-[1.5] font-semibold tracking-normal sm:text-base md:text-lg",
     },
   },
   defaultVariants: {
@@ -19,7 +24,7 @@ export const headingVariants = cva("", {
 
 export type HeadingVariantProps = VariantProps<typeof headingVariants>
 
-interface H1Props extends React.ComponentProps<"h1"> {}
+type H1Props = React.ComponentProps<"h1">
 
 export function H1({ className, ...props }: H1Props) {
   return (
@@ -29,7 +34,8 @@ export function H1({ className, ...props }: H1Props) {
     />
   )
 }
-interface H2Props extends React.ComponentProps<"h2"> {}
+
+type H2Props = React.ComponentProps<"h2"> & {}
 
 export function H2({ className, ...props }: H2Props) {
   return (
@@ -40,7 +46,7 @@ export function H2({ className, ...props }: H2Props) {
   )
 }
 
-interface H3Props extends React.ComponentProps<"h3"> {}
+type H3Props = React.ComponentProps<"h3"> & {}
 
 export function H3({ className, ...props }: H3Props) {
   return (
@@ -51,7 +57,7 @@ export function H3({ className, ...props }: H3Props) {
   )
 }
 
-interface H4Props extends React.ComponentProps<"h4"> {}
+type H4Props = React.ComponentProps<"h4"> & {}
 
 export function H4({ className, ...props }: H4Props) {
   return (
@@ -62,7 +68,7 @@ export function H4({ className, ...props }: H4Props) {
   )
 }
 
-interface H5Props extends React.ComponentProps<"h5"> {}
+type H5Props = React.ComponentProps<"h5"> & {}
 
 export function H5({ className, ...props }: H5Props) {
   return (
@@ -73,7 +79,7 @@ export function H5({ className, ...props }: H5Props) {
   )
 }
 
-interface H6Props extends React.ComponentProps<"h6"> {}
+type H6Props = React.ComponentProps<"h6"> & {}
 
 export function H6({ className, ...props }: H6Props) {
   return (

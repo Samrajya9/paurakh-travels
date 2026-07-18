@@ -5,6 +5,7 @@ import { EmailInput } from "./inputs/email-input"
 import { Section, SectionContent } from "./ui/section"
 import { useCompanyProfile } from "@/context/company-profile-context"
 
+// TODO : Need to add all those page because it is causing errors on production
 const NAV_COLUMNS = [
   {
     heading: "Explore",
@@ -215,7 +216,7 @@ function LastFooter() {
             </p>
             <div className="flex items-center gap-5">
               <Link
-                href="/privacy"
+                href="/privacy-policy"
                 className="transition-colors hover:text-[oklch(0.75_0_0)]"
               >
                 Privacy Policy
